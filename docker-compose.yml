@@ -16,5 +16,18 @@ services:
     volumes:
       - streaming-db-data:/var/lib/postgresql/data
 
+  rtmp:
+    build: ./apps/rtmp-server
+    ports:
+      - "1935:1935"
+      - "8080:8080"
+    volumes:
+      - ./hls:/var/www/html/hls
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge  
 volumes:
   streaming-db-data:
