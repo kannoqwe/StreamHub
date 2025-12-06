@@ -38,11 +38,16 @@ export { Prisma }
 
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node")
-path.join(process.cwd(), "prisma/generated/query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-linux-musl-openssl-3.0.x.so.node")
+path.join(process.cwd(), "prisma/generated/libquery_engine-linux-musl-openssl-3.0.x.so.node")
 
 /**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Stream
+ * 
+ */
+export type Stream = Prisma.StreamModel

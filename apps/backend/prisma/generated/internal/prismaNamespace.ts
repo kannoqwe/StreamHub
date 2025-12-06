@@ -388,7 +388,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Stream: 'Stream'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user"
+    modelProps: "user" | "stream"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -482,6 +483,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Stream: {
+      payload: Prisma.$StreamPayload<ExtArgs>
+      fields: Prisma.StreamFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StreamFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StreamFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>
+        }
+        findFirst: {
+          args: Prisma.StreamFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StreamFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>
+        }
+        findMany: {
+          args: Prisma.StreamFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>[]
+        }
+        create: {
+          args: Prisma.StreamCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>
+        }
+        createMany: {
+          args: Prisma.StreamCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StreamCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>[]
+        }
+        delete: {
+          args: Prisma.StreamDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>
+        }
+        update: {
+          args: Prisma.StreamUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>
+        }
+        deleteMany: {
+          args: Prisma.StreamDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StreamUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StreamUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>[]
+        }
+        upsert: {
+          args: Prisma.StreamUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StreamPayload>
+        }
+        aggregate: {
+          args: Prisma.StreamAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStream>
+        }
+        groupBy: {
+          args: Prisma.StreamGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StreamGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StreamCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StreamCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -527,11 +602,29 @@ export const UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   refreshToken: 'refreshToken',
+  streamKey: 'streamKey',
+  streamKeyLastRegenerated: 'streamKeyLastRegenerated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const StreamScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  status: 'status',
+  viewerCount: 'viewerCount',
+  pickViewer: 'pickViewer',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StreamScalarFieldEnum = (typeof StreamScalarFieldEnum)[keyof typeof StreamScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -603,6 +696,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StreamStatus'
+ */
+export type EnumStreamStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StreamStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'StreamStatus[]'
+ */
+export type ListEnumStreamStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StreamStatus[]'>
     
 
 
@@ -707,6 +814,7 @@ export interface PrismaClientOptions {
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  stream?: Prisma.StreamOmit
 }
 
 /* Types for Logging */

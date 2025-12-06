@@ -3,19 +3,21 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UserService } from '@modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { compare, encrypt } from '@common/utils/encryption';
 import { RegisterDto } from '@modules/auth/dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '@/types';
+import { StreamService } from '@modules/stream/stream.service';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private usersService: UsersService,
+        private usersService: UserService,
         private jwtService: JwtService,
         private configService: ConfigService,
+        private streamService: StreamService,
     ) {}
 
     async login(username: string, password: string) {
@@ -27,19 +29,19 @@ export class AuthService {
     }
 
     async register(data: RegisterDto) {
-        const existingUser = await this.usersService.findUserByUUID(
-            data.username,
-        );
+        const existingUser = await this.usersService.findUser(data.username);
         if (existingUser) {
             throw new ConflictException('Username already exists');
         }
 
         const hashedPassword = await encrypt(data.password);
+        const streamKey = this.streamService.generateKey();
 
         const user = await this.usersService.createUser({
             username: data.username,
             email: data.email,
             password: hashedPassword,
+            streamKey,
         });
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -68,13 +70,13 @@ export class AuthService {
         let payload: JwtPayload;
         try {
             payload = await this.jwtService.verifyAsync(oldToken, {
-                secret: this.configService.get<string>('jwt.accessSecret'),
+                secret: this.configService.get<string>('jwt.refreshSecret'),
             });
         } catch {
             throw new UnauthorizedException('Refresh Token expired');
         }
 
-        const user = await this.usersService.findUserByUUID(payload.userId);
+        const user = await this.usersService.findUser(payload.userId);
         if (!user || !user.refreshToken)
             throw new UnauthorizedException('User not logged in');
 
@@ -91,7 +93,7 @@ export class AuthService {
     }
 
     async validateUser(username: string, password: string) {
-        const user = await this.usersService.findUserByUUID(username);
+        const user = await this.usersService.findUser(username);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }

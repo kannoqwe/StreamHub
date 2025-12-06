@@ -13,7 +13,7 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { RegisterDto } from '@modules/auth/dto/register.dto';
-import { JwtGuard } from '@modules/auth/jwt.guard';
+import { JwtGuard } from '@common/guards/jwt.guard';
 import { CookieOptions, Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 
@@ -86,8 +86,8 @@ export class AuthController {
     @Get('stats')
     getStats(@Req() req: Request) {
         return {
-            userId: req.user?.userId,
-            username: req.user?.username,
+            userId: req.user.userId,
+            username: req.user.username,
         };
     }
 }

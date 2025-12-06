@@ -9,11 +9,39 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique
-  email        String   @unique
+  id           Int     @id @default(autoincrement())
+  username     String  @unique
+  email        String  @unique
   password     String
   refreshToken String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+
+  streamKey                String    @unique
+  streamKeyLastRegenerated DateTime?
+
+  stream Stream?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stream {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  title  String?
+  status StreamStatus @default(LIVE)
+
+  viewerCount Int       @default(0)
+  pickViewer  Int       @default(0)
+  startedAt   DateTime
+  endedAt     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum StreamStatus {
+  ENDED
+  LIVE
 }

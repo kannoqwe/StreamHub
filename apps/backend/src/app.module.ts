@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '@modules/auth/auth.module';
-import { UsersModule } from '@modules/users/users.module';
+import { UserModule } from '@modules/user/user.module';
 import { PrismaModule } from '@modules/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
@@ -8,6 +8,7 @@ import { validationSchema } from '@config/validation.schema';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import path from 'node:path';
+import { StreamModule } from '@modules/stream/stream.module';
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import path from 'node:path';
         ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 10 }]),
         PrismaModule,
         AuthModule,
-        UsersModule,
+        UserModule,
+        StreamModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

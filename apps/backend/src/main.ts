@@ -17,6 +17,7 @@ async function bootstrap() {
             transform: true,
         }),
     );
+    app.use(require('express').urlencoded({ extended: true }));
 
     const configService = app.get(ConfigService);
     const port = configService.get('PORT') as string;

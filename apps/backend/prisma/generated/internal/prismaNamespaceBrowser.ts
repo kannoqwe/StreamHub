@@ -48,7 +48,8 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Stream: 'Stream'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -73,11 +74,29 @@ export const UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   refreshToken: 'refreshToken',
+  streamKey: 'streamKey',
+  streamKeyLastRegenerated: 'streamKeyLastRegenerated',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const StreamScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  status: 'status',
+  viewerCount: 'viewerCount',
+  pickViewer: 'pickViewer',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StreamScalarFieldEnum = (typeof StreamScalarFieldEnum)[keyof typeof StreamScalarFieldEnum]
 
 
 export const SortOrder = {

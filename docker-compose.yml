@@ -1,4 +1,18 @@
 services:
+  backend:
+    build: ./apps/backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    env_file:
+      - .env
+    command: sh -c "pnpm run prisma:generate && pnpm start:dev"
+
+
   db:
     image: postgres:17
     ports:
@@ -14,7 +28,7 @@ services:
       - POSTGRES_USER
       - POSTGRES_DB
     volumes:
-      - streaming-db-data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 
   rtmp:
     build: ./apps/rtmp-server
@@ -23,11 +37,8 @@ services:
       - "8080:8080"
     volumes:
       - ./hls:/var/www/html/hls
-    networks:
-      - appnet
+    depends_on:
+      - backend
 
-networks:
-  appnet:
-    driver: bridge  
 volumes:
-  streaming-db-data:
+  pgdata:
