@@ -11,7 +11,7 @@ COPY . .
 
 RUN pnpm run prisma:generate
 RUN pnpm run build
-RUN pnpm prune --prod
+# RUN pnpm prune --prod
 
 FROM node:22-alpine AS runtime
 
