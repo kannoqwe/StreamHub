@@ -10,7 +10,10 @@ services:
       - db
     env_file:
       - .env
-    command: sh -c "pnpm run prisma:generate && pnpm start:dev"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=500
+    command: pnpm start:dev
 
 
   db:
