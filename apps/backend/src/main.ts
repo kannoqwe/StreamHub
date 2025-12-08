@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 
+import { urlencoded } from 'express';
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
@@ -17,7 +19,7 @@ async function bootstrap() {
             transform: true,
         }),
     );
-    app.use(require('express').urlencoded({ extended: true }));
+    app.use(urlencoded({ extended: true }));
 
     const configService = app.get(ConfigService);
     const port = configService.get('PORT') as string;
