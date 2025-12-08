@@ -1,9 +1,14 @@
 export default () => ({
-    port: parseInt(process.env.PORT!, 10) || 3000,
+    port: parseInt(process.env.PORT!, 10),
     nodeEnv: process.env.NODE_ENV || 'development',
 
     database: {
         url: process.env.DATABASE_URL,
+    },
+
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT!),
     },
 
     jwt: {

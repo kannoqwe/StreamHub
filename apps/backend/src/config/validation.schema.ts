@@ -14,4 +14,7 @@ export const validationSchema = Joi.object({
     JWT_REFRESH_SECRET: Joi.string().min(32).required(),
 
     FRONTEND_URL: Joi.string().uri().default('http://localhost:5173'),
+
+    REDIS_HOST: Joi.string().required(),
+    REDIS_PORT: Joi.number().default(6379),
 });

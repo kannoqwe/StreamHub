@@ -1,23 +1,25 @@
 services:
   backend:
     build: ./apps/backend
+    restart: always
     ports:
-      - "3000:3000"
+      - "${PORT}:3000"
     volumes:
       - ./apps/backend:/app
       - /app/node_modules
     depends_on:
       - db
+      - redis
     env_file:
       - .env
     environment:
-      - CHOKIDAR_USEPOLLING=true
-      - CHOKIDAR_INTERVAL=500
+      - REDIS_HOST=redis
     command: pnpm start:dev
 
 
   db:
     image: postgres:17
+    restart: always
     ports:
       - "5432:5432"
     healthcheck:
@@ -33,8 +35,17 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  redis: 
+    image: redis:8.4.0-alpine
+    restart: always
+    ports: 
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+
   rtmp:
     build: ./apps/rtmp-server
+    restart: always
     ports:
       - "1935:1935"
       - "8080:8080"
@@ -45,3 +56,4 @@ services:
 
 volumes:
   pgdata:
+  redis_data:
