@@ -9,6 +9,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import path from 'node:path';
 import { StreamModule } from '@modules/stream/stream.module';
+import { RedisModule } from '@modules/redis/redis.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { StreamModule } from '@modules/stream/stream.module';
         }),
         ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 10 }]),
         PrismaModule,
+        RedisModule,
         AuthModule,
         UserModule,
         StreamModule,
