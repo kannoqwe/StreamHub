@@ -4,7 +4,6 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
-import { UserRepository } from '@modules/user/user.repository';
 import { StreamRepository } from '@modules/stream/stream.repository';
 import { Stream } from '@generated/client';
 import { UserService } from '@modules/user/user.service';
@@ -13,7 +12,6 @@ import { ONE_HOUR_MS, validateCooldown } from '@common/utils/time';
 @Injectable()
 export class StreamService {
     constructor(
-        private userRepository: UserRepository,
         private streamRepository: StreamRepository,
         private userService: UserService,
     ) {}
@@ -23,7 +21,7 @@ export class StreamService {
     }
 
     async startStream(streamKey: string): Promise<Stream | null> {
-        const user = await this.userRepository.findByStreamKey(streamKey);
+        const user = await this.userService.findByStreamKey(streamKey);
         if (!user) throw new ForbiddenException('Invalid stream key');
 
         // ensure user active stream
@@ -33,7 +31,7 @@ export class StreamService {
     }
 
     async endStream(streamKey: string) {
-        const user = await this.userRepository.findByStreamKey(streamKey);
+        const user = await this.userService.findByStreamKey(streamKey);
         if (!user) throw new ForbiddenException('Invalid stream key');
 
         return this.streamRepository.end(user.id);
@@ -47,7 +45,7 @@ export class StreamService {
 
         const newKey = this.generateKey();
 
-        await this.userRepository.update(userId, {
+        await this.userService.updateUser(userId, {
             streamKey: newKey,
             streamKeyLastRegenerated: new Date(),
         });
