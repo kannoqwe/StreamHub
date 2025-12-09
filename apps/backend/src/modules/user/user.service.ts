@@ -9,10 +9,18 @@ export class UserService {
 
     async findUser(index: string | number): Promise<User | null> {
         if (typeof index === 'string') {
-            return this.usersRepository.findByUsername(index);
+            return this.findByUsername(index);
         } else {
-            return this.usersRepository.findByUUID(index);
+            return this.findByUUID(index);
         }
+    }
+
+    async findByUsername(username: string): Promise<User | null> {
+        return this.usersRepository.findByUsername(username);
+    }
+
+    async findByUUID(uuid: number): Promise<User | null> {
+        return this.usersRepository.findByUUID(uuid);
     }
 
     async updateUser(userId: number, data: UserUpdateInput): Promise<User> {
