@@ -27,16 +27,16 @@ export class StreamService {
         if (!user) throw new ForbiddenException('Invalid stream key');
 
         // ensure user active stream
-        await this.streamRepository.endStream(user.id);
+        await this.streamRepository.end(user.id);
 
-        return this.streamRepository.startStream(user.id);
+        return this.streamRepository.start(user.id);
     }
 
     async endStream(streamKey: string) {
         const user = await this.userRepository.findByStreamKey(streamKey);
         if (!user) throw new ForbiddenException('Invalid stream key');
 
-        return this.streamRepository.endStream(user.id);
+        return this.streamRepository.end(user.id);
     }
 
     async regenerateStreamKey(userId: number) {
@@ -52,6 +52,8 @@ export class StreamService {
             streamKeyLastRegenerated: new Date(),
         });
 
-        return newKey;
+        return {
+            streamKey: newKey,
+        };
     }
 }
