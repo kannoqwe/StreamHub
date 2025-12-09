@@ -6,7 +6,7 @@ import { StreamStatus } from '@generated/enums';
 export class StreamRepository {
     constructor(private prismaService: PrismaService) {}
 
-    async startStream(userId: number) {
+    async start(userId: number) {
         return this.prismaService.stream.create({
             data: {
                 userId,
@@ -16,7 +16,7 @@ export class StreamRepository {
         });
     }
 
-    async endStream(userId: number) {
+    async end(userId: number) {
         return this.prismaService.stream.updateMany({
             where: {
                 userId,
