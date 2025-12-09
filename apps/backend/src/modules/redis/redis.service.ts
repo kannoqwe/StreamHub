@@ -13,12 +13,18 @@ export class RedisService implements OnModuleDestroy {
         this._client.disconnect();
     }
 
-    async set(key: string, value: string, ttlInSeconds: number): Promise<void> {
-        await this._client.set(key, value, 'EX', ttlInSeconds);
+    async set<T = string>(
+        key: string,
+        value: T,
+        ttlInSeconds: number,
+    ): Promise<void> {
+        const data = typeof value === 'string' ? value : JSON.stringify(value);
+        await this._client.set(key, data, 'EX', ttlInSeconds);
     }
 
-    async get(key: string): Promise<string | null> {
-        return this._client.get(key);
+    async get<T>(key: string): Promise<T | null> {
+        const data = await this._client.get(key);
+        return data ? (JSON.parse(data) as T) : null;
     }
 
     async delete(key: string): Promise<number> {
