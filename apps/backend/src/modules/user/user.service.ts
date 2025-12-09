@@ -12,28 +12,6 @@ export class UserService {
         private redisService: RedisService,
     ) {}
 
-    async findByUsername(username: string): Promise<User | null> {
-        const userId = await this.redisService.get<number>(
-            UserKeys.usernameIndex(username),
-        );
-        if (userId) {
-            const cached = await this.redisService.get<User>(
-                UserKeys.data(userId),
-            );
-            if (cached) return cached;
-        }
-
-        const user = await this.usersRepository.findByUsername(username);
-        if (!user) return null;
-
-        await this.redisService.set<number>(
-            UserKeys.usernameIndex(username),
-            user.id,
-            300,
-        );
-        return user;
-    }
-
     async findById(userId: number): Promise<User | null> {
         const cached = await this.redisService.get<User>(UserKeys.data(userId));
         if (cached) return cached;
@@ -41,21 +19,56 @@ export class UserService {
         const user = await this.usersRepository.findById(userId);
         if (!user) return null;
 
-        await this.redisService.set<User>(UserKeys.data(userId), user);
+        await this.cacheUser(user);
+        return user;
+    }
+
+    async findByUsername(username: string): Promise<User | null> {
+        const userId = await this.redisService.get<number>(
+            UserKeys.usernameIndex(username),
+        );
+        if (userId) {
+            const user = await this.findById(userId);
+            if (user) return user;
+        }
+
+        const user = await this.usersRepository.findByUsername(username);
+        if (!user) return null;
+
+        await this.cacheUser(user);
+
         return user;
     }
 
     async updateUser(userId: number, data: UserUpdateInput): Promise<User> {
-        await this.redisService.delete(UserKeys.data(userId));
+        const oldUser = await this.findById(userId);
+        const updatedUser = await this.usersRepository.update(userId, data);
 
-        return await this.usersRepository.update(userId, data);
+        if (oldUser && data.username && oldUser.username !== data.username)
+            await this.redisService.delete(
+                UserKeys.usernameIndex(oldUser.username),
+            );
+
+        await this.cacheUser(updatedUser);
+
+        return updatedUser;
     }
 
     async createUser(data: UserCreateInput): Promise<User> {
         const user = await this.usersRepository.create(data);
-
-        await this.redisService.set<User>(UserKeys.data(user.id), user);
+        await this.cacheUser(user);
 
         return user;
+    }
+
+    private async cacheUser(user: User) {
+        await Promise.all([
+            this.redisService.set<User>(UserKeys.data(user.id), user),
+            this.redisService.set<number>(
+                UserKeys.usernameIndex(user.username),
+                user.id,
+                300,
+            ),
+        ]);
     }
 }
