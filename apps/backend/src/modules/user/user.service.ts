@@ -40,14 +40,44 @@ export class UserService {
         return user;
     }
 
+    async findByStreamKey(streamKey: string): Promise<User | null> {
+        const userId = await this.redisService.get<number>(
+            UserKeys.streamKeyIndex(streamKey),
+        );
+        if (userId) {
+            const user = await this.findById(userId);
+            if (user) return user;
+        }
+
+        const user = await this.usersRepository.findByStreamKey(streamKey);
+        if (!user) return null;
+
+        await this.redisService.set<number>(
+            UserKeys.streamKeyIndex(streamKey),
+            user.id,
+            300,
+        );
+
+        await this.cacheUser(user);
+
+        return user;
+    }
+
     async updateUser(userId: number, data: UserUpdateInput): Promise<User> {
         const oldUser = await this.findById(userId);
         const updatedUser = await this.usersRepository.update(userId, data);
 
-        if (oldUser && data.username && oldUser.username !== data.username)
+        if (oldUser && data.username && oldUser.username !== data.username) {
             await this.redisService.delete(
                 UserKeys.usernameIndex(oldUser.username),
             );
+        }
+
+        if (oldUser && data.streamKey && oldUser.streamKey !== data.streamKey) {
+            await this.redisService.delete(
+                UserKeys.streamKeyIndex(oldUser.streamKey),
+            );
+        }
 
         await this.cacheUser(updatedUser);
 
