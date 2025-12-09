@@ -16,6 +16,12 @@ import { RegisterDto } from '@modules/auth/dto/register.dto';
 import { JwtGuard } from '@common/guards/jwt.guard';
 import { CookieOptions, Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
+import {
+    LoginResponse,
+    LogoutResponse,
+    RefreshResponse,
+    RegisterResponse,
+} from '@modules/auth/interfaces/response.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -33,7 +39,7 @@ export class AuthController {
     async login(
         @Body() loginDto: LoginDto,
         @Res({ passthrough: true }) res: Response,
-    ) {
+    ): Promise<LoginResponse> {
         const tokens = await this.authService.login(
             loginDto.username,
             loginDto.password,
@@ -45,7 +51,9 @@ export class AuthController {
 
     @HttpCode(HttpStatus.CREATED)
     @Post('register')
-    register(@Body() registerDto: RegisterDto) {
+    async register(
+        @Body() registerDto: RegisterDto,
+    ): Promise<RegisterResponse> {
         return this.authService.register(registerDto);
     }
 
@@ -54,7 +62,7 @@ export class AuthController {
     async logout(
         @Req() req: Request,
         @Res({ passthrough: true }) res: Response,
-    ) {
+    ): Promise<LogoutResponse> {
         const refreshToken = req.cookies['refreshToken'] as string;
         if (refreshToken) await this.authService.logout(refreshToken);
 
@@ -71,7 +79,7 @@ export class AuthController {
     async refresh(
         @Req() req: Request,
         @Res({ passthrough: true }) res: Response,
-    ) {
+    ): Promise<RefreshResponse> {
         const refreshCookie = req.cookies['refreshToken'] as string;
         if (!refreshCookie)
             throw new UnauthorizedException('Refresh Token expired');

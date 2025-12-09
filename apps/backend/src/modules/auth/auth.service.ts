@@ -44,9 +44,11 @@ export class AuthService {
             streamKey,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password: _, ...userWithoutPass } = user;
-        return userWithoutPass;
+        return {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+        };
     }
 
     async logout(refreshToken: string) {
