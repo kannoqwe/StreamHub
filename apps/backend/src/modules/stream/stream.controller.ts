@@ -11,6 +11,7 @@ import { StreamService } from '@modules/stream/stream.service';
 import { RtmpEventDto } from '@modules/stream/dto/stream.dto';
 import { JwtGuard } from '@common/guards/jwt.guard';
 import { Request } from 'express';
+import { RegenerateResponse } from '@modules/stream/interfaces/response.interface';
 
 @Controller('stream')
 export class StreamController {
@@ -31,7 +32,7 @@ export class StreamController {
     @UseGuards(JwtGuard)
     @HttpCode(HttpStatus.OK)
     @Post('generate_key')
-    async generateKey(@Req() req: Request) {
+    async generateKey(@Req() req: Request): Promise<RegenerateResponse> {
         return this.streamService.regenerateStreamKey(req.user.userId);
     }
 }
