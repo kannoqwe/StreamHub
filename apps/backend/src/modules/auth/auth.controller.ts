@@ -38,9 +38,9 @@ export class AuthController {
             loginDto.username,
             loginDto.password,
         );
-        res.cookie('refreshToken', tokens.refresh_token, this.cookieOptions);
+        res.cookie('refreshToken', tokens.refreshToken, this.cookieOptions);
 
-        return { access_token: tokens.access_token };
+        return { accessToken: tokens.accessToken };
     }
 
     @HttpCode(HttpStatus.CREATED)
@@ -77,9 +77,9 @@ export class AuthController {
             throw new UnauthorizedException('Refresh Token expired');
 
         const tokens = await this.authService.refreshToken(refreshCookie);
-        res.cookie('refreshToken', tokens.refresh_token, this.cookieOptions);
+        res.cookie('refreshToken', tokens.refreshToken, this.cookieOptions);
 
-        return { access_token: tokens.access_token };
+        return { accessToken: tokens.accessToken };
     }
 
     @UseGuards(JwtGuard)

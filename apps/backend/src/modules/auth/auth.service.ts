@@ -84,7 +84,7 @@ export class AuthService {
         if (!isMatch) throw new UnauthorizedException('Invalid refresh token');
 
         const tokens = await this.generateTokens(payload);
-        const hashedToken = await encrypt(tokens.refresh_token);
+        const hashedToken = await encrypt(tokens.refreshToken);
 
         await this.usersService.updateUser(user.id, {
             refreshToken: hashedToken,
@@ -117,8 +117,8 @@ export class AuthService {
         });
 
         return {
-            access_token: accessToken,
-            refresh_token: refreshToken,
+            accessToken,
+            refreshToken,
         };
     }
 }
