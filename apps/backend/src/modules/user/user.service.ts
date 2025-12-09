@@ -16,7 +16,7 @@ export class UserService {
         if (typeof index === 'string') {
             return this.findByUsername(index);
         } else {
-            return this.findByUUID(index);
+            return this.findById(index);
         }
     }
 
@@ -42,11 +42,11 @@ export class UserService {
         return user;
     }
 
-    async findByUUID(userId: number): Promise<User | null> {
+    async findById(userId: number): Promise<User | null> {
         const cached = await this.redisService.get<User>(UserKeys.data(userId));
         if (cached) return cached;
 
-        const user = await this.usersRepository.findByUUID(userId);
+        const user = await this.usersRepository.findById(userId);
         if (!user) return null;
 
         await this.redisService.set<User>(UserKeys.data(userId), user);
