@@ -29,7 +29,9 @@ export class AuthService {
     }
 
     async register(data: RegisterDto) {
-        const existingUser = await this.usersService.findUser(data.username);
+        const existingUser = await this.usersService.findByUsername(
+            data.username,
+        );
         if (existingUser) {
             throw new ConflictException('Username already exists');
         }
@@ -78,7 +80,7 @@ export class AuthService {
             throw new UnauthorizedException('Refresh Token expired');
         }
 
-        const user = await this.usersService.findUser(payload.userId);
+        const user = await this.usersService.findById(payload.userId);
         if (!user || !user.refreshToken)
             throw new UnauthorizedException('User not logged in');
 
@@ -95,7 +97,7 @@ export class AuthService {
     }
 
     async validateUser(username: string, password: string) {
-        const user = await this.usersService.findUser(username);
+        const user = await this.usersService.findByUsername(username);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }

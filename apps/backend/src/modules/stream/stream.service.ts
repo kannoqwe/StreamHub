@@ -40,7 +40,7 @@ export class StreamService {
     }
 
     async regenerateStreamKey(userId: number) {
-        const user = await this.userService.findUser(userId);
+        const user = await this.userService.findById(userId);
         if (!user) throw new UnauthorizedException('User not logged in');
 
         validateCooldown(user.streamKeyLastRegenerated, ONE_HOUR_MS);

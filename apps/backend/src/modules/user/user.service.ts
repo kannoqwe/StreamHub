@@ -12,14 +12,6 @@ export class UserService {
         private redisService: RedisService,
     ) {}
 
-    async findUser(index: string | number): Promise<User | null> {
-        if (typeof index === 'string') {
-            return this.findByUsername(index);
-        } else {
-            return this.findById(index);
-        }
-    }
-
     async findByUsername(username: string): Promise<User | null> {
         const userId = await this.redisService.get<number>(
             UserKeys.usernameIndex(username),
