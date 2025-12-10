@@ -1,6 +1,0 @@
-{
-	"dependencies": {
-		"@nestjs/bullmq": "^11.0.4",
-		"bullmq": "^5.65.1"
-	}
-}
