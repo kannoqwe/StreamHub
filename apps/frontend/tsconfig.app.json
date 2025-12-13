@@ -23,9 +23,10 @@
 
         /* Paths */
         "paths": {
-            "app/*": ["src/app/*"],
-            "components/*": ["src/components/*"],
-            "hooks/*": ["src/hooks/*"]
+            "@/": ["src/*"],
+            "@components/*": ["src/components/*"],
+            "@features/*": ["src/features/*"],
+            "@types/*": ["src/types/*"]
         }
     },
     "include": ["src"]
