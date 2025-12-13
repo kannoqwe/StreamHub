@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import { Navbar } from '@components/layout/Navbar';
 import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { Sidebar } from '@components/layout/Sidebar';
 
 export const MainLayout = () => {
     const { isDark } = useTheme();
@@ -16,6 +17,10 @@ export const MainLayout = () => {
                     setSidebarOpen(!sidebarOpen);
                 }}
             />
+
+            <div className="flex pt-14 h-screen overflow-hidden">
+                <Sidebar isOpen={sidebarOpen} />
+            </div>
 
             <main className="pt-14 min-h-screen">
                 <Outlet />
