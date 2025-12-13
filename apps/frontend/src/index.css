@@ -1,2 +1,23 @@
 @import "tailwindcss" source(".");
 @plugin "@tailwindcss/forms";
+
+@theme {
+    --font-family-sans: 'Inter', sans-serif;
+
+    --color-primary-50: #f0fdf4;
+    --color-primary-500: #22c55e;
+
+    --color-accent-50: #fdf2f6;
+    --color-accent-100: #fce7ef;
+    --color-accent-200: #fad0e0;
+    --color-accent-300: #f7aabf;
+    --color-accent-400: #f2739b;
+    --color-accent-500: #e43f6f;
+    --color-accent-600: #d02656;
+    --color-accent-700: #af1b42;
+    --color-accent-800: #921838;
+    --color-accent-900: #7a1833;
+    --color-accent-950: #430818;
+
+    --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
