@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import React from 'react';
-import { LuHouse, LuCompass, LuUsers } from 'react-icons/lu';
+import { LuHouse, LuCompass } from 'react-icons/lu';
 import { Button } from '@components/ui/Button';
 
 interface SidebarProps {
@@ -36,9 +36,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 >
                     <LuCompass className="w-4 h-4" /> Browse
                 </Link>
-                <button className="w-full flex items-center gap-3 px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400 rounded-lg transition-colors text-sm font-medium">
-                    <LuUsers className="w-4 h-4" /> Community
-                </button>
             </div>
             <div className="flex-1 overflow-y-auto px-3 space-y-1 py-4 border-t border-zinc-200 dark:border-zinc-800 custom-scrollbar">
                 <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
