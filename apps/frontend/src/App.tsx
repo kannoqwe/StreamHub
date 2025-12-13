@@ -1,12 +1,13 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes/AppRoutes';
-import { MainLayout } from '@components/layout/MainLayout';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 export const App = () => {
     return (
         <BrowserRouter>
-            <MainLayout />
-            <AppRoutes />
+            <ThemeProvider>
+                <AppRoutes />
+            </ThemeProvider>
         </BrowserRouter>
     );
 };

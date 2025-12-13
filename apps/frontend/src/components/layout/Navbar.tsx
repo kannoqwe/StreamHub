@@ -2,17 +2,21 @@ import React from 'react';
 import {
     LuAlignJustify as MenuIcon,
     LuMoon as MoonIcon,
+    LuSun as SunIcon,
     LuSearch as SearchIcon,
 } from 'react-icons/lu';
 import { Link } from 'react-router-dom';
 import logo from '@/assets/logo.svg';
 import { Button } from '@components/ui/Button';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface NavbarProps {
     toggleSidebar: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
+    const { isDark, toggleTheme } = useTheme();
+
     return (
         <nav className="h-14 fixed top-0 left-0 right-0 z-50 glass border-b border-zinc-200 dark:border-zinc-800 px-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -24,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
                 </button>
                 <Link to="/" className="flex items-center gap-2 group">
                     <div className="text-accent-500 group-hover:scale-105 transition-transform duration-300">
-                        <img className="w-8 h-8" src={logo} alt="Logo" />
+                        <img src={logo} className="w-8 h-8" alt="logo" />
                     </div>
                     <span className="font-bold text-xl text-zinc-900 dark:text-white hidden sm:block tracking-tight">
                         StreamHub
@@ -44,8 +48,15 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
             </div>
 
             <div className="flex items-center gap-2">
-                <button className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-lg transition-colors text-zinc-600 dark:text-zinc-300">
-                    <MoonIcon className="w-5 h-5" />
+                <button
+                    onClick={toggleTheme}
+                    className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors text-zinc-600 dark:text-zinc-300"
+                >
+                    {isDark ? (
+                        <SunIcon className="w-5 h-5" />
+                    ) : (
+                        <MoonIcon className="w-5 h-5" />
+                    )}
                 </button>
 
                 <div className="flex gap-3 items-center">
