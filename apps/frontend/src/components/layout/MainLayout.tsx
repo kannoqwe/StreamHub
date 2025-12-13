@@ -12,19 +12,22 @@ export const MainLayout = () => {
         <div
             className={`min-h-screen transition-colors duration-200 ${isDark ? 'dark bg-zinc-950' : 'bg-zinc-50'}`}
         >
-            <Navbar
-                toggleSidebar={() => {
-                    setSidebarOpen(!sidebarOpen);
-                }}
-            />
+            <div className="relative z-10 font-sans text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col">
+                <Navbar
+                    toggleSidebar={() => {
+                        setSidebarOpen(!sidebarOpen);
+                    }}
+                />
 
-            <div className="flex pt-14 h-screen overflow-hidden">
-                <Sidebar isOpen={sidebarOpen} />
+                <div className="flex pt-14 h-screen overflow-hidden">
+                    <Sidebar isOpen={sidebarOpen} />
+                    <main
+                        className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'lg:ml-60' : 'ml-0'} overflow-y-auto`}
+                    >
+                        <Outlet />
+                    </main>
+                </div>
             </div>
-
-            <main className="pt-14 min-h-screen">
-                <Outlet />
-            </main>
         </div>
     );
 };
