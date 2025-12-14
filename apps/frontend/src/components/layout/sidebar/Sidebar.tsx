@@ -2,12 +2,16 @@ import { Link, useLocation } from 'react-router-dom';
 import React from 'react';
 import { LuHouse, LuCompass } from 'react-icons/lu';
 import { Button } from '@components/ui/Button';
+import { useAuthStore } from '../../stores/authStore';
+import { Avatar } from '@components/ui';
+import { MOCK_STREAMS } from '../../mock';
 
 interface SidebarProps {
     isOpen: boolean;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+    const { user } = useAuthStore();
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
 
@@ -41,19 +45,49 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2">
                     Following
                 </p>
-                <div className="p-3 text-center bg-zinc-50 dark:bg-zinc-900 rounded-lg mx-1">
-                    <p className="text-xs text-zinc-500 mb-2">
-                        Log in to follow
-                    </p>
-                    <Link to="/login">
-                        <Button
-                            variant="outline"
-                            className="w-full text-xs py-1 h-7"
+                {user ? (
+                    MOCK_STREAMS.map((stream) => (
+                        <Link
+                            key={stream.id}
+                            to={`/stream/${stream.id}`}
+                            className="flex items-center gap-3 px-2 py-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors group"
                         >
-                            Log In
-                        </Button>
-                    </Link>
-                </div>
+                            <Avatar
+                                src={stream.streamer.avatar}
+                                size="sm"
+                                status={true}
+                            />
+                            <div className="flex-1 overflow-hidden">
+                                <div className="flex justify-between items-center">
+                                    <p className="font-medium text-zinc-700 dark:text-zinc-300 text-sm truncate">
+                                        {stream.streamer.username}
+                                    </p>
+                                    <span className="flex items-center gap-1 text-[10px] text-zinc-500">
+                                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+                                        {Math.floor(stream.viewerCount / 1000)}k
+                                    </span>
+                                </div>
+                                <p className="text-[10px] text-zinc-400 truncate group-hover:text-accent-500 transition-colors">
+                                    {stream.category}
+                                </p>
+                            </div>
+                        </Link>
+                    ))
+                ) : (
+                    <div className="p-3 text-center bg-zinc-50 dark:bg-zinc-900 rounded-lg mx-1">
+                        <p className="text-xs text-zinc-500 mb-2">
+                            Log in to follow
+                        </p>
+                        <Link to="/login">
+                            <Button
+                                variant="outline"
+                                className="w-full text-xs py-1 h-7"
+                            >
+                                Log In
+                            </Button>
+                        </Link>
+                    </div>
+                )}
 
                 <p className="px-3 text-[10px] font-bold text-zinc-500 uppercase tracking-wider mt-6 mb-2">
                     Recommended
