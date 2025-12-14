@@ -3,14 +3,17 @@ import { LuMail, LuLock, LuArrowRight } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '@components/layout/AuthLayout';
 import { Button, Input } from '@components/ui';
+import { useAuthStore } from '../../stores/authStore';
 
 export const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useAuthStore();
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        await login(username, password);
         navigate('/');
     };
 
