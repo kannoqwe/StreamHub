@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { Navbar } from '@components/layout/Navbar';
+import { Navbar } from '@components/layout/navbar/Navbar';
 import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Sidebar } from '@components/layout/Sidebar';
