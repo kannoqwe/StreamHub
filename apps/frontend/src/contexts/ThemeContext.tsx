@@ -4,6 +4,7 @@ import React, {
     useState,
     useEffect,
     ReactNode,
+    useMemo,
 } from 'react';
 
 export interface ThemeContextType {
@@ -33,17 +34,30 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
     useEffect(() => {
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        const root = document.documentElement;
 
         if (isDark) {
-            document.documentElement.classList.add('dark');
+            root.classList.add('dark');
         } else {
-            document.documentElement.classList.remove('dark');
+            root.classList.remove('dark');
         }
     }, [isDark]);
 
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e: MediaQueryListEvent) => {
+            if (!localStorage.getItem('theme')) {
+                setIsDark(e.matches);
+            }
+        };
+
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
+
+    const value = useMemo(() => ({ isDark, toggleTheme }), [isDark]);
+
     return (
-        <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-            {children}
-        </ThemeContext.Provider>
+        <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
     );
 };

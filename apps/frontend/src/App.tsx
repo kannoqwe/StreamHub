@@ -4,11 +4,11 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 export const App = () => {
     return (
-        <BrowserRouter>
-            <ThemeProvider>
+        <ThemeProvider>
+            <BrowserRouter>
                 <AppRoutes />
-            </ThemeProvider>
-        </BrowserRouter>
+            </BrowserRouter>
+        </ThemeProvider>
     );
 };
 
