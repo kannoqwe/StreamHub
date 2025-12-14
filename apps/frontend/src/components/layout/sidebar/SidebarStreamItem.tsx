@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { Avatar } from '@components/ui';
 import { Stream } from '@types';
 
-interface SidebarChannelItemProps {
+interface SidebarStreamItemProps {
     stream: Stream;
 }
 
-export const SidebarChannelItem: React.FC<SidebarChannelItemProps> = ({
+export const SidebarStreamItem: React.FC<SidebarStreamItemProps> = ({
     stream,
 }) => {
     return (
