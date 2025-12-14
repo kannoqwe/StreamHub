@@ -25,7 +25,7 @@
             "@/": ["src/*"],
             "@components/*": ["src/components/*"],
             "@features/*": ["src/features/*"],
-            "@types/*": ["src/types/*"]
+            "@types": ["src/types/index.ts"]
         }
     },
     "include": ["src"]

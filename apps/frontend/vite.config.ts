@@ -13,7 +13,7 @@ export default defineConfig(() => {
                 '@': resolve(__dirname, 'src'),
                 '@components': resolve(__dirname, 'src/components'),
                 '@features': resolve(__dirname, 'src/features'),
-                '@types': resolve(__dirname, 'src/types'),
+                '@types': resolve(__dirname, 'src/types/index.ts'),
             },
         },
     };
