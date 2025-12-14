@@ -3,15 +3,18 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuUser, LuMail, LuLock, LuCheck } from 'react-icons/lu';
 import { Button, Input } from '@components/ui';
+import { useAuthStore } from '../../stores/authStore';
 
 export const RegisterPage = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { register } = useAuthStore();
     const navigate = useNavigate();
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        await register(username, email, password);
         navigate('/');
     };
 
