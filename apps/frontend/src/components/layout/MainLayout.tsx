@@ -9,7 +9,7 @@ export const MainLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const location = useLocation();
 
-    const isAuthPage = ['/login', '/register'].includes(location.pathname);
+    const isAuthPage = ['/login', '/signup'].includes(location.pathname);
 
     return (
         <div
