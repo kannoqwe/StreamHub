@@ -43,7 +43,7 @@ export const FeaturedHero: React.FC<FeaturedHeroProps> = ({ stream }) => {
                     <Button
                         variant="primary"
                         icon={<LuVideo className="w-4 h-4" />}
-                        onClick={() => navigate(`/stream/${stream.streamer}`)}
+                        onClick={() => navigate(`/${stream.streamer.username}`)}
                     >
                         Watch Now
                     </Button>

@@ -9,7 +9,7 @@ interface StreamCardProps {
 
 export const StreamCard: React.FC<StreamCardProps> = ({ stream }) => {
     return (
-        <Link to={`/stream/${stream.id}`} className="group block">
+        <Link to={`/${stream.streamer.username}`} className="group block">
             <div className="relative aspect-video rounded-xl overflow-hidden mb-3 bg-zinc-200 dark:bg-zinc-800">
                 <img
                     src={stream.thumbnail}
