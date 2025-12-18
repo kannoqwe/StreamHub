@@ -23,3 +23,40 @@
 
     --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+@layer base {
+    :root {
+        --sb-track: var(--color-zinc-50);
+        --sb-thumb: var(--color-accent-500);
+        color-scheme: light;
+    }
+
+    :where(.dark, .dark *) {
+        --sb-track: var(--color-zinc-950);
+        --sb-thumb: var(--color-accent-500);
+        color-scheme: dark;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--sb-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--sb-thumb);
+        border: 2px solid var(--sb-track);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--sb-thumb-hover);
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
+}
