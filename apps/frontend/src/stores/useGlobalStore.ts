@@ -2,42 +2,39 @@ import { create } from 'zustand';
 import { Stream } from '@types';
 import { streamService } from '../services/streamService';
 
-interface StreamState {
+interface GlobalState {
     recommended: Stream[];
     followed: Stream[];
-
-    isRecommendedLoading: boolean;
-    isFollowedLoading: boolean;
+    isLoading: boolean;
 
     fetchRecommended: () => Promise<void>;
-    fetchFollowed: () => Promise<void>;
+    fetchFollowed: () => void;
 }
 
-export const useStreamStore = create<StreamState>((set) => ({
+export const useGlobalStore = create<GlobalState>((set) => ({
     recommended: [],
     followed: [],
-    isRecommendedLoading: false,
-    isFollowedLoading: false,
+    isLoading: false,
 
     fetchRecommended: async () => {
-        set({ isRecommendedLoading: true });
+        set({ isLoading: true });
         try {
             const data = await streamService.getRecommendedStreams();
-            set({ recommended: data, isRecommendedLoading: false });
+            set({ recommended: data, isLoading: false });
         } catch (error) {
             console.error('Failed to fetch recommended', error);
-            set({ isRecommendedLoading: false });
+            set({ isLoading: false });
         }
     },
 
     fetchFollowed: async () => {
-        set({ isFollowedLoading: true });
+        set({ isLoading: true });
         try {
             const data = await streamService.getFollowedStreams();
-            set({ followed: data, isFollowedLoading: false });
+            set({ followed: data, isLoading: false });
         } catch (error) {
             console.error('Failed to fetch followed', error);
-            set({ isFollowedLoading: false });
+            set({ isLoading: false });
         }
     },
 }));

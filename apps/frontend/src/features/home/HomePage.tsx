@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useHomeStore } from './stores/homeStore';
+import { useHomeStore } from './stores/useHomeStore';
 import { FeaturedHero } from './components/FeaturedHero';
 import { CategoryGrid } from './components/CategoryGrid';
 import { LiveChannels } from './components/LiveChannels';

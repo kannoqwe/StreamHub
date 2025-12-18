@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { useStreamStore } from '../../../stores/streamStore';
+import { useGlobalStore } from '../../../stores/useGlobalStore';
 import { SidebarStreamItem } from './SidebarStreamItem';
 
 export const RecommendedList = () => {
-    const { recommended, isRecommendedLoading, fetchRecommended } =
-        useStreamStore();
+    const { recommended, isLoading, fetchRecommended } = useGlobalStore();
 
     useEffect(() => {
         void fetchRecommended();
@@ -16,7 +15,7 @@ export const RecommendedList = () => {
                 Recommended
             </p>
 
-            {isRecommendedLoading
+            {isLoading
                 ? [1, 2, 3].map((i) => (
                       <div
                           key={i}

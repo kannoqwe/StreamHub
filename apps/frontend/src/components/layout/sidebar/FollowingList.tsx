@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@components/ui';
 import { useAuthStore } from '../../../stores/authStore';
-import { useStreamStore } from '../../../stores/streamStore';
+import { useGlobalStore } from '../../../stores/useGlobalStore';
 import { SidebarStreamItem } from './SidebarStreamItem';
 import { useEffect } from 'react';
 
 export const FollowingList = () => {
     const { user } = useAuthStore();
-    const { followed, isFollowedLoading, fetchFollowed } = useStreamStore();
+    const { followed, isLoading, fetchFollowed } = useGlobalStore();
 
     useEffect(() => {
         if (user) {
@@ -35,7 +35,7 @@ export const FollowingList = () => {
                         </Button>
                     </Link>
                 </div>
-            ) : isFollowedLoading ? (
+            ) : isLoading ? (
                 [1, 2].map((i) => (
                     <div
                         key={i}
@@ -53,7 +53,7 @@ export const FollowingList = () => {
                 ))
             )}
 
-            {user && !isFollowedLoading && followed.length === 0 && (
+            {user && !isLoading && followed.length === 0 && (
                 <div className="px-3 text-xs text-zinc-500">
                     You don't follow anyone yet.
                 </div>
