@@ -1,6 +1,7 @@
 export interface User {
     id: number;
     username: string;
+    displayName: string;
     avatar: string;
     bio?: string;
     followers: number;
