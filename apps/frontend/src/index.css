@@ -23,23 +23,27 @@
 
     --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
 @layer base {
     :root {
-        --sb-track: var(--color-zinc-50);
-        --sb-thumb: var(--color-accent-500);
+        --sb-track: transparent;
+        --sb-thumb: var(--color-zinc-300);
+        --sb-thumb-hover: var(--color-zinc-400);
         color-scheme: light;
     }
 
     :where(.dark, .dark *) {
-        --sb-track: var(--color-zinc-950);
-        --sb-thumb: var(--color-accent-500);
+        --sb-track: transparent;
+        --sb-thumb: var(--color-zinc-700);
+        --sb-thumb-hover: var(--color-zinc-600);
         color-scheme: dark;
     }
 
     ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 6px;
+        height: 6px;
     }
+
 
     ::-webkit-scrollbar-track {
         background: var(--sb-track);
@@ -47,8 +51,12 @@
 
     ::-webkit-scrollbar-thumb {
         background: var(--sb-thumb);
-        border: 2px solid var(--sb-track);
         border-radius: 10px;
+        transition: background 0.2s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--sb-thumb-hover);
     }
 
     * {
