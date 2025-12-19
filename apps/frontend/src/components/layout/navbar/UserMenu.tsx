@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuBell, LuUser, LuSettings, LuLogOut } from 'react-icons/lu';
 import { Avatar } from '@components/ui';
-import { useAuthStore } from '../../../stores/authStore';
+import { useAuthStore } from '../../../stores/useAuthStore';
 import { User } from '@types';
 
 interface UserMenuProps {

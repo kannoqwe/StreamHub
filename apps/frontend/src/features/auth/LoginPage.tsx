@@ -3,7 +3,7 @@ import { LuMail, LuLock, LuArrowRight } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '@components/layout/AuthLayout';
 import { Button, Input } from '@components/ui';
-import { useAuthStore } from '../../stores/authStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 
 export const LoginPage = () => {
     const [username, setUsername] = useState('');

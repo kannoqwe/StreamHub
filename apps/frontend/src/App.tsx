@@ -2,7 +2,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes/AppRoutes';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { useEffect } from 'react';
-import { useAuthStore } from './stores/authStore';
+import { useAuthStore } from './stores/useAuthStore';
 import { FullPageLoader } from '@components/ui/PageLoader';
 
 export const App = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { LuMoon as MoonIcon, LuSun as SunIcon } from 'react-icons/lu';
 import { useTheme } from '../../../contexts/ThemeContext';
-import { useAuthStore } from '../../../stores/authStore';
+import { useAuthStore } from '../../../stores/useAuthStore';
 import { NavbarLogo } from './NavbarLogo';
 import { NavbarSearch } from './NavbarSearch';
 import { UserMenu } from './UserMenu';

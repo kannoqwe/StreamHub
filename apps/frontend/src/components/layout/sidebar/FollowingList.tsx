@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@components/ui';
-import { useAuthStore } from '../../../stores/authStore';
+import { useAuthStore } from '../../../stores/useAuthStore';
 import { useGlobalStore } from '../../../stores/useGlobalStore';
 import { SidebarStreamItem } from './SidebarStreamItem';
 import { useEffect } from 'react';

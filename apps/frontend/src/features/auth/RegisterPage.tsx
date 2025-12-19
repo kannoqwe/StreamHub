@@ -3,7 +3,7 @@ import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LuUser, LuMail, LuLock, LuCheck } from 'react-icons/lu';
 import { Button, Input } from '@components/ui';
-import { useAuthStore } from '../../stores/authStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 
 export const RegisterPage = () => {
     const [username, setUsername] = useState('');
