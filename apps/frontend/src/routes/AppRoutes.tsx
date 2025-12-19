@@ -4,6 +4,7 @@ import { MainLayout } from '@components/layout/MainLayout';
 import { NotFoundPage } from '@features/notfound/NotFoundPage';
 import { LoginPage } from '@features/auth/LoginPage';
 import { RegisterPage } from '@features/auth/RegisterPage';
+import { StreamPage } from '@features/stream/StreamPage';
 
 export const AppRoutes = () => (
     <Routes>
@@ -11,6 +12,8 @@ export const AppRoutes = () => (
             <Route index element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<RegisterPage />} />
+
+            <Route path="/:username" element={<StreamPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
