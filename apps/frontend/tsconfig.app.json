@@ -23,6 +23,7 @@
         /* Paths */
         "paths": {
             "@/": ["src/*"],
+            "@api": ["src/api/index.ts"],
             "@components/*": ["src/components/*"],
             "@features/*": ["src/features/*"],
             "@types": ["src/types/index.ts"]

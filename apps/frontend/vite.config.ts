@@ -20,7 +20,8 @@ export default defineConfig(() => {
         },
         resolve: {
             alias: {
-                '@': resolve(__dirname, 'src'),
+                '@': resolve(__dirname, 'src/'),
+                '@api': resolve(__dirname, 'src/api/index.ts'),
                 '@components': resolve(__dirname, 'src/components'),
                 '@features': resolve(__dirname, 'src/features'),
                 '@types': resolve(__dirname, 'src/types/index.ts'),
