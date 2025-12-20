@@ -19,6 +19,12 @@ async function bootstrap() {
             transform: true,
         }),
     );
+    app.enableCors({
+        origin: 'http://localhost:5173',
+        credentials: true,
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    });
     app.use(urlencoded({ extended: true }));
 
     const configService = app.get(ConfigService);
