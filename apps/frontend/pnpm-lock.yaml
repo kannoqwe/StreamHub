@@ -37,7 +37,7 @@ importers:
         specifier: ^9.39.1
         version: 9.39.1
       '@streamhub/shared':
-        specifier: file:../../packages/shared
+        specifier: file:..\..\packages\shared
         version: file:../../packages/shared
       '@tailwindcss/forms':
         specifier: ^0.5.10

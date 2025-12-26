@@ -1,6 +1,7 @@
 import { IsString, MinLength } from 'class-validator';
+import { LoginDto as LoginDtoBase } from '@streamhub/shared';
 
-export class LoginDto {
+export class LoginDto implements LoginDtoBase {
     @IsString()
     @MinLength(3)
     username: string;

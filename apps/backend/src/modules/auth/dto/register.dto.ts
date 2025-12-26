@@ -1,6 +1,7 @@
 import { IsEmail, IsString, MinLength, Matches } from 'class-validator';
+import { RegisterDto as RegisterDtoBase } from '@streamhub/shared';
 
-export class RegisterDto {
+export class RegisterDto implements RegisterDtoBase {
     @IsString()
     @MinLength(3, { message: 'Username must be at least 3 characters' })
     @Matches(/^[a-zA-Z0-9_]+$/, {
