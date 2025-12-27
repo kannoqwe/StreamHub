@@ -21,7 +21,7 @@ import {
     LogoutResponse,
     RefreshResponse,
     RegisterResponse,
-} from '@modules/auth/interfaces/response.interface';
+} from '@streamhub/shared';
 
 @Controller('auth')
 export class AuthController {
@@ -40,13 +40,17 @@ export class AuthController {
         @Body() loginDto: LoginDto,
         @Res({ passthrough: true }) res: Response,
     ): Promise<LoginResponse> {
-        const tokens = await this.authService.login(
+        const response = await this.authService.login(
             loginDto.username,
             loginDto.password,
         );
-        res.cookie('refreshToken', tokens.refreshToken, this.cookieOptions);
+        res.cookie(
+            'refreshToken',
+            response.tokens.refreshToken,
+            this.cookieOptions,
+        );
 
-        return { accessToken: tokens.accessToken };
+        return { token: response.tokens.accessToken, user: response.user };
     }
 
     @HttpCode(HttpStatus.CREATED)
@@ -87,7 +91,7 @@ export class AuthController {
         const tokens = await this.authService.refreshToken(refreshCookie);
         res.cookie('refreshToken', tokens.refreshToken, this.cookieOptions);
 
-        return { accessToken: tokens.accessToken };
+        return { token: tokens.accessToken };
     }
 
     @UseGuards(JwtGuard)

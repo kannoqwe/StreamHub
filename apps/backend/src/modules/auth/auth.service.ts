@@ -10,6 +10,8 @@ import { RegisterDto } from '@modules/auth/dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '@/types';
 import { StreamService } from '@modules/stream/stream.service';
+import { UserProfile } from '@streamhub/shared';
+import { Mapper } from '@common/utils/Mapper';
 
 @Injectable()
 export class AuthService {
@@ -21,11 +23,14 @@ export class AuthService {
     ) {}
 
     async login(username: string, password: string) {
-        const user = await this.validateUser(username, password);
+        const userEntity = await this.validateUser(username, password);
+
+        const user = Mapper.mapToUserProfile(userEntity);
 
         const payload: JwtPayload = { userId: user.id, username };
+        const tokens = await this.generateTokens(payload);
 
-        return await this.generateTokens(payload);
+        return { tokens, user };
     }
 
     async register(data: RegisterDto) {
