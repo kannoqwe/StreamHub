@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes/AppRoutes';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { useEffect } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { useAuthStore } from './stores/useAuthStore';
 import { FullPageLoader } from '@components/ui/PageLoader';
 
@@ -15,11 +15,13 @@ export const App = () => {
     if (isLoading) return <FullPageLoader />;
 
     return (
-        <ThemeProvider>
-            <BrowserRouter>
-                <AppRoutes />
-            </BrowserRouter>
-        </ThemeProvider>
+        <StrictMode>
+            <ThemeProvider>
+                <BrowserRouter>
+                    <AppRoutes />
+                </BrowserRouter>
+            </ThemeProvider>
+        </StrictMode>
     );
 };
 

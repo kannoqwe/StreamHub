@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { User } from '@types';
-import { CURRENT_USER } from '../mock';
 import { AuthService } from '@features/auth/services/authService';
 
 interface AuthState {
@@ -31,7 +30,6 @@ export const useAuthStore = create<AuthState>((set) => ({
             });
             localStorage.setItem('token', token);
             set({ user, isLoading: false });
-            console.log(user, token);
         } catch (error: any) {
             set({
                 error: error.response?.data?.error,
@@ -67,10 +65,19 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     checkAuth: async () => {
         const token = localStorage.getItem('token');
-        if (token) {
-            set({ user: CURRENT_USER, isLoading: false });
-        } else {
-            set({ isLoading: false });
+
+        if (!token) {
+            set({ user: null, isLoading: false });
+            return;
+        }
+
+        try {
+            set({ isLoading: true });
+            const user = await AuthService.getMe();
+            set({ user, isLoading: false });
+        } catch {
+            localStorage.removeItem('token');
+            set({ user: null, isLoading: false });
         }
     },
 }));
