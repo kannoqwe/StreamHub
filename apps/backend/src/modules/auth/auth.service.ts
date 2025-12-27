@@ -1,6 +1,7 @@
 import {
     ConflictException,
     Injectable,
+    NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '@modules/user/user.service';
@@ -10,7 +11,6 @@ import { RegisterDto } from '@modules/auth/dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '@/types';
 import { StreamService } from '@modules/stream/stream.service';
-import { UserProfile } from '@streamhub/shared';
 import { Mapper } from '@common/utils/Mapper';
 
 @Injectable()
@@ -99,6 +99,13 @@ export class AuthService {
             refreshToken: hashedToken,
         });
         return tokens;
+    }
+
+    async getMe(userId: number) {
+        const userEntity = await this.usersService.findById(userId);
+        if (!userEntity) throw new NotFoundException('User not found');
+
+        return Mapper.mapToUserProfile(userEntity);
     }
 
     async validateUser(username: string, password: string) {

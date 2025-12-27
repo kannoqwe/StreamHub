@@ -21,6 +21,7 @@ import {
     LogoutResponse,
     RefreshResponse,
     RegisterResponse,
+    UserProfile,
 } from '@streamhub/shared';
 
 @Controller('auth')
@@ -95,11 +96,8 @@ export class AuthController {
     }
 
     @UseGuards(JwtGuard)
-    @Get('stats')
-    getStats(@Req() req: Request) {
-        return {
-            userId: req.user.userId,
-            username: req.user.username,
-        };
+    @Get('me')
+    async getStats(@Req() req: Request): Promise<UserProfile> {
+        return this.authService.getMe(req.user.userId);
     }
 }
