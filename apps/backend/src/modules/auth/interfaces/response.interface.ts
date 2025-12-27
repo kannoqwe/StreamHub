@@ -1,5 +1,3 @@
-import { User } from '@generated/client';
-
 export interface LoginResponse {
     accessToken: string;
 }
