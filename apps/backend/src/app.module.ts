@@ -20,7 +20,7 @@ import { RedisModule } from '@modules/redis/redis.module';
             validationOptions: { abortEarly: false },
             envFilePath: path.join(__dirname, '../../../../.env'),
         }),
-        ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 10 }]),
+        ThrottlerModule.forRoot([{ name: 'default', ttl: 60000, limit: 100 }]),
         PrismaModule,
         RedisModule,
         AuthModule,

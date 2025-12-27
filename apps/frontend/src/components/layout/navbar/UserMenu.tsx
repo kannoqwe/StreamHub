@@ -56,7 +56,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                             </div>
                             <div className="p-1.5 space-y-0.5">
                                 <Link
-                                    to="/profile"
+                                    to={`/${user.username}`}
                                     onClick={() => setIsOpen(false)}
                                     className="flex items-center gap-3 px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 transition-colors text-sm"
                                 >
