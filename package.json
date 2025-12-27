@@ -1,0 +1,8 @@
+{
+    "name": "streamhub",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ]
+}

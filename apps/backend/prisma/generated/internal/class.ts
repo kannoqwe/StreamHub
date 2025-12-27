@@ -22,7 +22,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/app/prisma/generated",
+      "value": "/app/apps/backend/prisma/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -33,10 +33,14 @@ const config: runtime.GetPrismaClientConfig = {
         "fromEnvVar": null,
         "value": "linux-musl-openssl-3.0.x",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "linux-musl-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/app/prisma/schema.prisma",
+    "sourceFilePath": "/app/apps/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "..",
@@ -54,8 +58,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           Int     @id @default(autoincrement())\n  username     String  @unique\n  email        String  @unique\n  password     String\n  refreshToken String?\n\n  streamKey                String    @unique\n  streamKeyLastRegenerated DateTime?\n\n  stream Stream?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Stream {\n  id     Int  @id @default(autoincrement())\n  userId Int  @unique\n  user   User @relation(fields: [userId], references: [id])\n\n  title  String?\n  status StreamStatus @default(LIVE)\n\n  viewerCount Int       @default(0)\n  pickViewer  Int       @default(0)\n  startedAt   DateTime\n  endedAt     DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum StreamStatus {\n  ENDED\n  LIVE\n}\n",
-  "inlineSchemaHash": "da0a1b5e515a81bcb13c8632ec02e00b694bd21fe8dd3c94770c5b16ce4a633f",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client\"\n  binaryTargets = [\"native\", \"linux-musl-openssl-3.0.x\"]\n  output        = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           Int     @id @default(autoincrement())\n  username     String  @unique\n  email        String  @unique\n  password     String\n  refreshToken String?\n\n  streamKey                String    @unique\n  streamKeyLastRegenerated DateTime?\n\n  stream Stream?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Stream {\n  id     Int  @id @default(autoincrement())\n  userId Int  @unique\n  user   User @relation(fields: [userId], references: [id])\n\n  title  String?\n  status StreamStatus @default(LIVE)\n\n  viewerCount Int       @default(0)\n  pickViewer  Int       @default(0)\n  startedAt   DateTime\n  endedAt     DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum StreamStatus {\n  ENDED\n  LIVE\n}\n",
+  "inlineSchemaHash": "2723ca8c7a2ee776092b748801518d95eaf387f022a0b31f81e57cd16568a951",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},
