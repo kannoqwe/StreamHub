@@ -15,13 +15,11 @@ export const App = () => {
     if (isLoading) return <FullPageLoader />;
 
     return (
-        <StrictMode>
-            <ThemeProvider>
-                <BrowserRouter>
-                    <AppRoutes />
-                </BrowserRouter>
-            </ThemeProvider>
-        </StrictMode>
+        <ThemeProvider>
+            <BrowserRouter>
+                <AppRoutes />
+            </BrowserRouter>
+        </ThemeProvider>
     );
 };
 

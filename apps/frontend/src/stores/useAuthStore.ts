@@ -19,7 +19,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             user: null,
             isLoading: true,
             error: null,
@@ -72,15 +72,9 @@ export const useAuthStore = create<AuthState>()(
 
             checkAuth: async () => {
                 const token = localStorage.getItem('token');
-                const existingUser = get().user;
 
                 if (!token) {
                     set({ user: null, isLoading: false });
-                    return;
-                }
-
-                if (existingUser) {
-                    set({ isLoading: false });
                     return;
                 }
 
