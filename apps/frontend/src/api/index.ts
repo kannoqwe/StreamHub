@@ -1,4 +1,5 @@
-import axios, { InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { RefreshResponse } from '@streamhub/shared';
 
 export const $api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}`,
@@ -23,14 +24,15 @@ $api.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._isRetry) {
             originalRequest._isRetry = true;
             try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/auth/refresh`,
-                    {
-                        withCredentials: true,
-                    },
-                );
+                const response: AxiosResponse<RefreshResponse> =
+                    await axios.get(
+                        `${import.meta.env.VITE_API_URL}/auth/refresh`,
+                        {
+                            withCredentials: true,
+                        },
+                    );
 
-                const newToken = response.data.accessToken;
+                const newToken = response.data.token;
                 localStorage.setItem('token', newToken);
 
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
