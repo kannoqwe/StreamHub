@@ -28,7 +28,10 @@ export class AuthService {
         const user = Mapper.mapToUserProfile(userEntity);
 
         const payload: JwtPayload = { userId: user.id, username };
-        const tokens = await this.generateTokens(payload);
+        const tokens = {
+            accessToken: await this.generateAccessToken(payload),
+            refreshToken: await this.generateRefreshToken(payload),
+        };
 
         return { tokens, user };
     }
@@ -60,16 +63,10 @@ export class AuthService {
 
     async logout(refreshToken: string) {
         try {
-            const payload = await this.jwtService.verifyAsync<JwtPayload>(
-                refreshToken,
-                {
-                    secret: this.configService.get('jwt.refreshSecret'),
-                },
-            );
-
-            await this.usersService.updateUser(payload.userId, {
-                refreshToken: null,
+            await this.jwtService.verifyAsync<JwtPayload>(refreshToken, {
+                secret: this.configService.get('jwt.refreshSecret'),
             });
+            // future...
         } catch {
             return;
         }
@@ -86,19 +83,14 @@ export class AuthService {
         }
 
         const user = await this.usersService.findById(payload.userId);
-        if (!user || !user.refreshToken)
-            throw new UnauthorizedException('User not logged in');
+        if (!user) throw new UnauthorizedException('User not logged in');
 
-        const isMatch = await compare(oldToken, user.refreshToken);
-        if (!isMatch) throw new UnauthorizedException('Invalid refresh token');
+        const accessPayload: JwtPayload = {
+            userId: user.id,
+            username: user.username,
+        };
 
-        const tokens = await this.generateTokens(payload);
-        const hashedToken = await encrypt(tokens.refreshToken);
-
-        await this.usersService.updateUser(user.id, {
-            refreshToken: hashedToken,
-        });
-        return tokens;
+        return this.generateAccessToken(accessPayload);
     }
 
     async getMe(userId: number) {
@@ -122,19 +114,17 @@ export class AuthService {
         return user;
     }
 
-    async generateTokens(payload: JwtPayload) {
-        const accessToken = await this.jwtService.signAsync(payload, {
+    async generateAccessToken(payload: JwtPayload) {
+        return this.jwtService.signAsync(payload, {
             secret: this.configService.get<string>('jwt.accessSecret'),
             expiresIn: this.configService.get('jwt.accessExpiration'),
         });
-        const refreshToken = await this.jwtService.signAsync(payload, {
+    }
+
+    async generateRefreshToken(payload: JwtPayload) {
+        return this.jwtService.signAsync(payload, {
             secret: this.configService.get<string>('jwt.refreshSecret'),
             expiresIn: this.configService.get('jwt.refreshExpiration'),
         });
-
-        return {
-            accessToken,
-            refreshToken,
-        };
     }
 }
