@@ -89,10 +89,10 @@ export class AuthController {
         if (!refreshCookie)
             throw new UnauthorizedException('Refresh Token expired');
 
-        const tokens = await this.authService.refreshToken(refreshCookie);
-        res.cookie('refreshToken', tokens.refreshToken, this.cookieOptions);
+        const token = await this.authService.refreshToken(refreshCookie);
+        res.cookie('refreshToken', token, this.cookieOptions);
 
-        return { token: tokens.accessToken };
+        return { token };
     }
 
     @UseGuards(JwtGuard)
