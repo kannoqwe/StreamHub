@@ -3,3 +3,4 @@ dist
 .git
 .idea
 test
+prisma/generated
