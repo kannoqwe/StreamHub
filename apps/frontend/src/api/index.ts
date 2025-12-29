@@ -1,5 +1,6 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { RefreshResponse } from '@streamhub/shared';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export const $api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL}`,
@@ -38,7 +39,7 @@ $api.interceptors.response.use(
                 originalRequest.headers.Authorization = `Bearer ${newToken}`;
                 return $api.request(originalRequest);
             } catch (reAuthError) {
-                localStorage.removeItem('token');
+                useAuthStore.getState().logout();
                 return Promise.reject(reAuthError);
             }
         }

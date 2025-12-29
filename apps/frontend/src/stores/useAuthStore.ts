@@ -67,7 +67,7 @@ export const useAuthStore = create<AuthState>()(
 
             logout: () => {
                 localStorage.removeItem('token');
-                set({ user: null });
+                set({ user: null, isLoading: false });
             },
 
             checkAuth: async () => {
