@@ -80,11 +80,12 @@ export class AuthController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @Post('refresh')
+    @Get('refresh')
     async refresh(
         @Req() req: Request,
         @Res({ passthrough: true }) res: Response,
     ): Promise<RefreshResponse> {
+        console.log('qqe');
         const refreshCookie = req.cookies['refreshToken'] as string;
         if (!refreshCookie)
             throw new UnauthorizedException('Refresh Token expired');
