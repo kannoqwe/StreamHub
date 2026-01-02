@@ -1,6 +1,7 @@
 import {
     ForbiddenException,
     Injectable,
+    NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
@@ -38,6 +39,13 @@ export class StreamService {
         if (!user) throw new ForbiddenException('Invalid stream key');
 
         return this.streamRepository.end(user.id);
+    }
+
+    async getActiveStream(username: string) {
+        const stream =
+            await this.streamRepository.findStreamByUsername(username);
+        if (!stream) throw new NotFoundException('Streamer is offline');
+        return stream;
     }
 
     async regenerateStreamKey(userId: number) {
