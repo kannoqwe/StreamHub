@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
 import { StreamRepository } from '@modules/stream/stream.repository';
-import { Stream } from '@generated/client';
+import { StreamSession } from '@generated/client';
 import { UserService } from '@modules/user/user.service';
 import { ONE_HOUR_MS, validateCooldown } from '@common/utils/time';
 
@@ -20,14 +20,17 @@ export class StreamService {
         return `live_${randomBytes(16).toString('hex')}`;
     }
 
-    async startStream(streamKey: string): Promise<Stream | null> {
+    async startStream(streamKey: string): Promise<StreamSession | null> {
         const user = await this.userService.findByStreamKey(streamKey);
         if (!user) throw new ForbiddenException('Invalid stream key');
 
         // ensure user active stream
         await this.streamRepository.end(user.id);
 
-        return this.streamRepository.start(user.id);
+        return this.streamRepository.start(user.id, {
+            title: 'Untitled Stream',
+            categoryId: 1,
+        });
     }
 
     async endStream(streamKey: string) {

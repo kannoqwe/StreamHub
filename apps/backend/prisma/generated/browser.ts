@@ -22,7 +22,22 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
- * Model Stream
+ * Model Category
  * 
  */
-export type Stream = Prisma.StreamModel
+export type Category = Prisma.CategoryModel
+/**
+ * Model StreamSession
+ * 
+ */
+export type StreamSession = Prisma.StreamSessionModel
+/**
+ * Model ChatMessage
+ * 
+ */
+export type ChatMessage = Prisma.ChatMessageModel
+/**
+ * Model Follow
+ * 
+ */
+export type Follow = Prisma.FollowModel

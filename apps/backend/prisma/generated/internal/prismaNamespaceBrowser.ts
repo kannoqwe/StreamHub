@@ -49,7 +49,10 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Stream: 'Stream'
+  Category: 'Category',
+  StreamSession: 'StreamSession',
+  ChatMessage: 'ChatMessage',
+  Follow: 'Follow'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -73,7 +76,9 @@ export const UserScalarFieldEnum = {
   username: 'username',
   email: 'email',
   password: 'password',
-  refreshToken: 'refreshToken',
+  displayName: 'displayName',
+  bio: 'bio',
+  avatarUrl: 'avatarUrl',
   streamKey: 'streamKey',
   streamKeyLastRegenerated: 'streamKeyLastRegenerated',
   createdAt: 'createdAt',
@@ -83,20 +88,51 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const StreamScalarFieldEnum = {
+export const CategoryScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  title: 'title',
-  status: 'status',
-  viewerCount: 'viewerCount',
-  pickViewer: 'pickViewer',
-  startedAt: 'startedAt',
-  endedAt: 'endedAt',
+  name: 'name',
+  iconUrl: 'iconUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type StreamScalarFieldEnum = (typeof StreamScalarFieldEnum)[keyof typeof StreamScalarFieldEnum]
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const StreamSessionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  thumbnail: 'thumbnail',
+  categoryId: 'categoryId',
+  streamerId: 'streamerId',
+  isLive: 'isLive',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  peakViewers: 'peakViewers',
+  totalViews: 'totalViews'
+} as const
+
+export type StreamSessionScalarFieldEnum = (typeof StreamSessionScalarFieldEnum)[keyof typeof StreamSessionScalarFieldEnum]
+
+
+export const ChatMessageScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt'
+} as const
+
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum]
+
+
+export const FollowScalarFieldEnum = {
+  followerId: 'followerId',
+  followingId: 'followingId',
+  createdAt: 'createdAt'
+} as const
+
+export type FollowScalarFieldEnum = (typeof FollowScalarFieldEnum)[keyof typeof FollowScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -48,9 +48,12 @@ export class AuthService {
         const streamKey = this.streamService.generateKey();
 
         const user = await this.usersService.createUser({
-            username: data.username,
+            username: data.username.toLowerCase(),
             email: data.email,
             password: hashedPassword,
+            displayName: data.username,
+            bio: this.usersService.generateDefaultBio(),
+            avatarUrl: this.usersService.generateDefaultAvatarUrl(),
             streamKey,
         });
 

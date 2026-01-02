@@ -1,8 +1,8 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 export class RtmpEventDto {
     @IsString()
-    @IsOptional() 
+    @IsOptional()
     app: string;
 
     @IsString()
@@ -35,9 +35,17 @@ export class RtmpEventDto {
 
     @IsString()
     @IsOptional()
-    name: string; 
-    
+    name: string;
+
     @IsString()
     @IsOptional()
     type: string;
+}
+
+export class StartSreamDto {
+    @IsString()
+    title: string;
+
+    @IsNumber()
+    categoryId: number;
 }

@@ -91,6 +91,14 @@ export class UserService {
         return user;
     }
 
+    public generateDefaultBio() {
+        return 'This user has not set a bio yet.';
+    }
+
+    public generateDefaultAvatarUrl() {
+        return 'https://emojiisland.com/cdn/shop/products/Emoji_Icon_-_Clown_emoji_grande.png?v=1571606089';
+    }
+
     private async cacheUser(user: User) {
         await Promise.all([
             this.redisService.set<User>(UserKeys.data(user.id), user),
