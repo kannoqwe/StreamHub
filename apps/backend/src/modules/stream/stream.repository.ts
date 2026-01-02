@@ -30,4 +30,24 @@ export class StreamRepository {
             },
         });
     }
+
+    async findStreamByUsername(username: string) {
+        return this.prismaService.streamSession.findFirst({
+            where: {
+                streamer: { username },
+                isLive: true,
+            },
+            include: {
+                streamer: {
+                    select: {
+                        id: true,
+                        displayName: true,
+                        followersCount: true,
+                        bio: true,
+                    },
+                },
+                category: true,
+            },
+        });
+    }
 }
