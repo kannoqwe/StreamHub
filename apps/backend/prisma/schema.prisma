@@ -10,38 +10,87 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  email    String @unique
-  password String
+  id          Int    @id @default(autoincrement())
+  username    String @unique
+  email       String @unique
+  password    String
+  displayName String
+  bio         String
+  avatarUrl   String
 
   streamKey                String    @unique
   streamKeyLastRegenerated DateTime?
 
-  stream Stream?
+  streamSessions StreamSession[]
+  chatMessages   ChatMessage[]
+
+  followers Follow[] @relation("UserFollowers")
+  following Follow[] @relation("UserFollowing")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Stream {
-  id     Int  @id @default(autoincrement())
-  userId Int  @unique
+model Category {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  iconUrl String
+
+  streams StreamSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StreamSession {
+  id        Int     @id @default(autoincrement())
+  title     String
+  thumbnail String?
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  streamerId Int
+  streamer   User @relation(fields: [streamerId], references: [id])
+
+  isLive    Boolean   @default(true)
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  peakViewers Int @default(0)
+  totalViews  Int @default(0)
+
+  messages ChatMessage[]
+
+  @@index([streamerId, isLive])
+}
+
+model ChatMessage {
+  id   Int    @id @default(autoincrement())
+  text String @db.VarChar(500)
+
+  userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  title  String?
-  status StreamStatus @default(LIVE)
-
-  viewerCount Int       @default(0)
-  pickViewer  Int       @default(0)
-  startedAt   DateTime
-  endedAt     DateTime?
+  sessionId Int
+  session   StreamSession @relation(fields: [sessionId], references: [id])
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@index([sessionId, createdAt])
+  @@index([userId, createdAt])
 }
 
-enum StreamStatus {
-  ENDED
-  LIVE
+model Follow {
+  followerId Int
+  follower   User @relation("UserFollowing", fields: [followerId], references: [id])
+
+  followingId Int
+  following   User @relation("UserFollowers", fields: [followingId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([followerId, followingId])
+  @@index([followingId])
+  @@index([followerId])
 }
