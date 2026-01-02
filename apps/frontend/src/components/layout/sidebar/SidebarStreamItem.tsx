@@ -12,7 +12,7 @@ export const SidebarStreamItem: React.FC<SidebarStreamItemProps> = ({
 }) => {
     return (
         <Link
-            to={`/stream/${stream.id}`}
+            to={`/${stream.streamer.username}`}
             className="flex items-center gap-3 px-2 py-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors group"
         >
             <Avatar
