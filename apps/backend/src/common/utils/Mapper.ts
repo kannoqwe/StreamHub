@@ -1,5 +1,6 @@
-import { User } from '@generated/client';
-import { UserProfile } from '@streamhub/shared';
+import { StreamSession, User } from '@generated/client';
+import { UserProfile, Stream } from '@streamhub/shared';
+import { dateToTimestamp } from '@common/utils/time';
 
 export class Mapper {
     static mapToUserProfile(user: User): UserProfile {
@@ -7,10 +8,22 @@ export class Mapper {
             id: user.id,
             username: user.username,
             displayName: user.username,
-            avatar: 'https://www.shutterstock.com/image-vector/clown-face-red-nose-isolated-600nw-2678196061.jpg',
-            bio: 'qwe',
-            followers: 0,
+            avatar: user.avatarUrl,
+            bio: user.bio,
+            followers: user.followersCount,
             isOnline: false,
+        };
+    }
+
+    static mapToStream(stream: StreamSession, streamer: User): Stream {
+        return {
+            id: stream.id,
+            title: stream.title,
+            category: stream.categoryId,
+            viewerCount: 0,
+            streamer: this.mapToUserProfile(streamer),
+            thumbnail: stream.thumbnail,
+            startedAt: dateToTimestamp(stream.startedAt),
         };
     }
 }

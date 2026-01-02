@@ -50,7 +50,6 @@ export class AuthController {
             response.tokens.refreshToken,
             this.cookieOptions,
         );
-        console.log(response.tokens.refreshToken);
 
         return { token: response.tokens.accessToken, user: response.user };
     }

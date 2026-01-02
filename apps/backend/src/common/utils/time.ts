@@ -26,3 +26,7 @@ export function validateCooldown(
         throw new HttpException(msg, HttpStatus.TOO_MANY_REQUESTS);
     }
 }
+
+export function dateToTimestamp(date: Date): number {
+    return Math.floor(date.getTime() / 1000);
+}

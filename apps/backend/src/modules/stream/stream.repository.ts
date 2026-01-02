@@ -38,14 +38,7 @@ export class StreamRepository {
                 isLive: true,
             },
             include: {
-                streamer: {
-                    select: {
-                        id: true,
-                        displayName: true,
-                        followersCount: true,
-                        bio: true,
-                    },
-                },
+                streamer: true,
                 category: true,
             },
         });

@@ -1,8 +1,10 @@
 import {
     Body,
     Controller,
+    Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
     Req,
     UseGuards,
@@ -12,6 +14,7 @@ import { RtmpEventDto } from '@modules/stream/dto/stream.dto';
 import { JwtGuard } from '@common/guards/jwt.guard';
 import { Request } from 'express';
 import { RegenerateResponse } from '@modules/stream/interfaces/response.interface';
+import { Stream } from '@streamhub/shared';
 
 @Controller('stream')
 export class StreamController {
@@ -27,6 +30,11 @@ export class StreamController {
     @Post('end')
     async end(@Body() dto: RtmpEventDto) {
         await this.streamService.endStream(dto.name);
+    }
+
+    @Get('user/:username')
+    async getStream(@Param('username') username: string): Promise<Stream> {
+        return this.streamService.getActiveStream(username);
     }
 
     @UseGuards(JwtGuard)
