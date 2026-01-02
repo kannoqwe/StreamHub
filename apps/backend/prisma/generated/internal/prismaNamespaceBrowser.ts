@@ -81,6 +81,8 @@ export const UserScalarFieldEnum = {
   avatarUrl: 'avatarUrl',
   streamKey: 'streamKey',
   streamKeyLastRegenerated: 'streamKeyLastRegenerated',
+  followersCount: 'followersCount',
+  followingCount: 'followingCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

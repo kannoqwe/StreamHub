@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import path from 'node:path';
 import { StreamModule } from '@modules/stream/stream.module';
 import { RedisModule } from '@modules/redis/redis.module';
+import { FollowModule } from '@modules/follow/follow.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { RedisModule } from '@modules/redis/redis.module';
         AuthModule,
         UserModule,
         StreamModule,
+        FollowModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

@@ -27,10 +27,14 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
+  followersCount: number | null
+  followingCount: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
+  followersCount: number | null
+  followingCount: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -43,6 +47,8 @@ export type UserMinAggregateOutputType = {
   avatarUrl: string | null
   streamKey: string | null
   streamKeyLastRegenerated: Date | null
+  followersCount: number | null
+  followingCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -57,6 +63,8 @@ export type UserMaxAggregateOutputType = {
   avatarUrl: string | null
   streamKey: string | null
   streamKeyLastRegenerated: Date | null
+  followersCount: number | null
+  followingCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -71,6 +79,8 @@ export type UserCountAggregateOutputType = {
   avatarUrl: number
   streamKey: number
   streamKeyLastRegenerated: number
+  followersCount: number
+  followingCount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -79,10 +89,14 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
+  followersCount?: true
+  followingCount?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
+  followersCount?: true
+  followingCount?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -95,6 +109,8 @@ export type UserMinAggregateInputType = {
   avatarUrl?: true
   streamKey?: true
   streamKeyLastRegenerated?: true
+  followersCount?: true
+  followingCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -109,6 +125,8 @@ export type UserMaxAggregateInputType = {
   avatarUrl?: true
   streamKey?: true
   streamKeyLastRegenerated?: true
+  followersCount?: true
+  followingCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -123,6 +141,8 @@ export type UserCountAggregateInputType = {
   avatarUrl?: true
   streamKey?: true
   streamKeyLastRegenerated?: true
+  followersCount?: true
+  followingCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -224,6 +244,8 @@ export type UserGroupByOutputType = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated: Date | null
+  followersCount: number
+  followingCount: number
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -261,6 +283,8 @@ export type UserWhereInput = {
   avatarUrl?: Prisma.StringFilter<"User"> | string
   streamKey?: Prisma.StringFilter<"User"> | string
   streamKeyLastRegenerated?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  followersCount?: Prisma.IntFilter<"User"> | number
+  followingCount?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   streamSessions?: Prisma.StreamSessionListRelationFilter
@@ -279,6 +303,8 @@ export type UserOrderByWithRelationInput = {
   avatarUrl?: Prisma.SortOrder
   streamKey?: Prisma.SortOrder
   streamKeyLastRegenerated?: Prisma.SortOrderInput | Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   streamSessions?: Prisma.StreamSessionOrderByRelationAggregateInput
@@ -300,6 +326,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bio?: Prisma.StringFilter<"User"> | string
   avatarUrl?: Prisma.StringFilter<"User"> | string
   streamKeyLastRegenerated?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  followersCount?: Prisma.IntFilter<"User"> | number
+  followingCount?: Prisma.IntFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   streamSessions?: Prisma.StreamSessionListRelationFilter
@@ -318,6 +346,8 @@ export type UserOrderByWithAggregationInput = {
   avatarUrl?: Prisma.SortOrder
   streamKey?: Prisma.SortOrder
   streamKeyLastRegenerated?: Prisma.SortOrderInput | Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -340,6 +370,8 @@ export type UserScalarWhereWithAggregatesInput = {
   avatarUrl?: Prisma.StringWithAggregatesFilter<"User"> | string
   streamKey?: Prisma.StringWithAggregatesFilter<"User"> | string
   streamKeyLastRegenerated?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  followersCount?: Prisma.IntWithAggregatesFilter<"User"> | number
+  followingCount?: Prisma.IntWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -353,6 +385,8 @@ export type UserCreateInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionCreateNestedManyWithoutStreamerInput
@@ -371,6 +405,8 @@ export type UserUncheckedCreateInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionUncheckedCreateNestedManyWithoutStreamerInput
@@ -388,6 +424,8 @@ export type UserUpdateInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUpdateManyWithoutStreamerNestedInput
@@ -406,6 +444,8 @@ export type UserUncheckedUpdateInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUncheckedUpdateManyWithoutStreamerNestedInput
@@ -424,6 +464,8 @@ export type UserCreateManyInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -437,6 +479,8 @@ export type UserUpdateManyMutationInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -451,6 +495,8 @@ export type UserUncheckedUpdateManyInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -465,12 +511,16 @@ export type UserCountOrderByAggregateInput = {
   avatarUrl?: Prisma.SortOrder
   streamKey?: Prisma.SortOrder
   streamKeyLastRegenerated?: Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -483,6 +533,8 @@ export type UserMaxOrderByAggregateInput = {
   avatarUrl?: Prisma.SortOrder
   streamKey?: Prisma.SortOrder
   streamKeyLastRegenerated?: Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -497,12 +549,16 @@ export type UserMinOrderByAggregateInput = {
   avatarUrl?: Prisma.SortOrder
   streamKey?: Prisma.SortOrder
   streamKeyLastRegenerated?: Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  followersCount?: Prisma.SortOrder
+  followingCount?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -518,16 +574,16 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
 }
 
 export type UserCreateNestedOneWithoutStreamSessionsInput = {
@@ -595,6 +651,8 @@ export type UserCreateWithoutStreamSessionsInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   chatMessages?: Prisma.ChatMessageCreateNestedManyWithoutUserInput
@@ -612,6 +670,8 @@ export type UserUncheckedCreateWithoutStreamSessionsInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   chatMessages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutUserInput
@@ -644,6 +704,8 @@ export type UserUpdateWithoutStreamSessionsInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chatMessages?: Prisma.ChatMessageUpdateManyWithoutUserNestedInput
@@ -661,6 +723,8 @@ export type UserUncheckedUpdateWithoutStreamSessionsInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   chatMessages?: Prisma.ChatMessageUncheckedUpdateManyWithoutUserNestedInput
@@ -677,6 +741,8 @@ export type UserCreateWithoutChatMessagesInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionCreateNestedManyWithoutStreamerInput
@@ -694,6 +760,8 @@ export type UserUncheckedCreateWithoutChatMessagesInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionUncheckedCreateNestedManyWithoutStreamerInput
@@ -726,6 +794,8 @@ export type UserUpdateWithoutChatMessagesInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUpdateManyWithoutStreamerNestedInput
@@ -743,6 +813,8 @@ export type UserUncheckedUpdateWithoutChatMessagesInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUncheckedUpdateManyWithoutStreamerNestedInput
@@ -759,6 +831,8 @@ export type UserCreateWithoutFollowingInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionCreateNestedManyWithoutStreamerInput
@@ -776,6 +850,8 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionUncheckedCreateNestedManyWithoutStreamerInput
@@ -797,6 +873,8 @@ export type UserCreateWithoutFollowersInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionCreateNestedManyWithoutStreamerInput
@@ -814,6 +892,8 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   avatarUrl: string
   streamKey: string
   streamKeyLastRegenerated?: Date | string | null
+  followersCount?: number
+  followingCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   streamSessions?: Prisma.StreamSessionUncheckedCreateNestedManyWithoutStreamerInput
@@ -846,6 +926,8 @@ export type UserUpdateWithoutFollowingInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUpdateManyWithoutStreamerNestedInput
@@ -863,6 +945,8 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUncheckedUpdateManyWithoutStreamerNestedInput
@@ -890,6 +974,8 @@ export type UserUpdateWithoutFollowersInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUpdateManyWithoutStreamerNestedInput
@@ -907,6 +993,8 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   avatarUrl?: Prisma.StringFieldUpdateOperationsInput | string
   streamKey?: Prisma.StringFieldUpdateOperationsInput | string
   streamKeyLastRegenerated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  followersCount?: Prisma.IntFieldUpdateOperationsInput | number
+  followingCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   streamSessions?: Prisma.StreamSessionUncheckedUpdateManyWithoutStreamerNestedInput
@@ -982,6 +1070,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   avatarUrl?: boolean
   streamKey?: boolean
   streamKeyLastRegenerated?: boolean
+  followersCount?: boolean
+  followingCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   streamSessions?: boolean | Prisma.User$streamSessionsArgs<ExtArgs>
@@ -1001,6 +1091,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatarUrl?: boolean
   streamKey?: boolean
   streamKeyLastRegenerated?: boolean
+  followersCount?: boolean
+  followingCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1015,6 +1107,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatarUrl?: boolean
   streamKey?: boolean
   streamKeyLastRegenerated?: boolean
+  followersCount?: boolean
+  followingCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1029,11 +1123,13 @@ export type UserSelectScalar = {
   avatarUrl?: boolean
   streamKey?: boolean
   streamKeyLastRegenerated?: boolean
+  followersCount?: boolean
+  followingCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "email" | "password" | "displayName" | "bio" | "avatarUrl" | "streamKey" | "streamKeyLastRegenerated" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "email" | "password" | "displayName" | "bio" | "avatarUrl" | "streamKey" | "streamKeyLastRegenerated" | "followersCount" | "followingCount" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   streamSessions?: boolean | Prisma.User$streamSessionsArgs<ExtArgs>
   chatMessages?: boolean | Prisma.User$chatMessagesArgs<ExtArgs>
@@ -1062,6 +1158,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     avatarUrl: string
     streamKey: string
     streamKeyLastRegenerated: Date | null
+    followersCount: number
+    followingCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1500,6 +1598,8 @@ export interface UserFieldRefs {
   readonly avatarUrl: Prisma.FieldRef<"User", 'String'>
   readonly streamKey: Prisma.FieldRef<"User", 'String'>
   readonly streamKeyLastRegenerated: Prisma.FieldRef<"User", 'DateTime'>
+  readonly followersCount: Prisma.FieldRef<"User", 'Int'>
+  readonly followingCount: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

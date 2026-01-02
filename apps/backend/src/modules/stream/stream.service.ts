@@ -45,6 +45,7 @@ export class StreamService {
         const stream =
             await this.streamRepository.findStreamByUsername(username);
         if (!stream) throw new NotFoundException('Streamer is offline');
+
         return stream;
     }
 
