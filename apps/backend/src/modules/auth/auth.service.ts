@@ -75,7 +75,7 @@ export class AuthService {
     async refreshToken(oldToken: string) {
         let payload: JwtPayload;
         try {
-            payload = await this.jwtService.verifyAsync(oldToken, {
+            payload = await this.jwtService.verifyAsync<JwtPayload>(oldToken, {
                 secret: this.configService.get<string>('jwt.refreshSecret'),
             });
         } catch {
@@ -83,7 +83,9 @@ export class AuthService {
         }
 
         const user = await this.usersService.findById(payload.userId);
-        if (!user) throw new UnauthorizedException('User not logged in');
+        if (!user) {
+            throw new UnauthorizedException('User not logged in');
+        }
 
         const accessPayload: JwtPayload = {
             userId: user.id,

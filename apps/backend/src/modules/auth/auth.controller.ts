@@ -50,6 +50,7 @@ export class AuthController {
             response.tokens.refreshToken,
             this.cookieOptions,
         );
+        console.log(response.tokens.refreshToken);
 
         return { token: response.tokens.accessToken, user: response.user };
     }
@@ -81,18 +82,12 @@ export class AuthController {
 
     @HttpCode(HttpStatus.OK)
     @Get('refresh')
-    async refresh(
-        @Req() req: Request,
-        @Res({ passthrough: true }) res: Response,
-    ): Promise<RefreshResponse> {
-        console.log('qqe');
+    async refresh(@Req() req: Request): Promise<RefreshResponse> {
         const refreshCookie = req.cookies['refreshToken'] as string;
         if (!refreshCookie)
             throw new UnauthorizedException('Refresh Token expired');
 
         const token = await this.authService.refreshToken(refreshCookie);
-        res.cookie('refreshToken', token, this.cookieOptions);
-
         return { token };
     }
 

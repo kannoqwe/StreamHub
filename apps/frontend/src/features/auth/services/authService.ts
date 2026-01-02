@@ -8,7 +8,9 @@ import {
 
 export const AuthService = {
     async login(data: LoginDto): Promise<LoginResponse> {
-        const response = await $api.post<LoginResponse>('/auth/login', data);
+        const response = await $api.post<LoginResponse>('/auth/login', data, {
+            withCredentials: true,
+        });
         console.log(response);
         return response.data;
     },
@@ -19,7 +21,16 @@ export const AuthService = {
     },
 
     async getMe(): Promise<UserProfile> {
-        const response = await $api.get<UserProfile>('/auth/me');
+        const response = await $api.get<UserProfile>('/auth/me', {
+            withCredentials: true,
+        });
+        return response.data;
+    },
+
+    async logout() {
+        const response = await $api.post<LoginResponse>('/auth/logout', {
+            withCredentials: true,
+        });
         return response.data;
     },
 };

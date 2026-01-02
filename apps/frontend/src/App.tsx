@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes/AppRoutes';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { StrictMode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAuthStore } from './stores/useAuthStore';
 import { FullPageLoader } from '@components/ui/PageLoader';
 
