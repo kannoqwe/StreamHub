@@ -4,6 +4,7 @@ export interface Stream {
     id: number;
     title: string;
     thumbnail?: string | null;
+    key?: string;
     viewerCount: number;
     category: number;
     tags?: string[];

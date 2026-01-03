@@ -1,34 +1,42 @@
 import { create } from 'zustand';
-import { ChatMessage, Stream } from '@types';
-import { MOCK_STREAMS, MOCK_CHAT } from '../../../mock';
+import { ChatMessage } from '@types';
+import { Stream } from '@streamhub/shared';
+import { StreamService } from '../services/streamService';
+import { MOCK_CHAT } from '../../../mock';
 
 interface StreamState {
     currentStream: Stream | null;
     messages: ChatMessage[];
     isLoading: boolean;
+    error: string | null;
 
-    fetchStreamByUsername: (username: string) => Promise<void>;
+    fetchStream: (username: string) => Promise<void>;
     addMessage: (message: ChatMessage) => void;
-    clearStream: () => void;
+    reset: () => void;
 }
 
 export const useStreamStore = create<StreamState>((set) => ({
     currentStream: null,
     messages: [],
     isLoading: false,
+    error: null,
 
-    fetchStreamByUsername: async (username) => {
-        set({ isLoading: true });
-        const stream = MOCK_STREAMS.find(
-            (s) =>
-                s.streamer.displayName.toLowerCase() === username.toLowerCase(),
-        );
-
-        set({
-            currentStream: stream || MOCK_STREAMS[0],
-            messages: MOCK_CHAT,
-            isLoading: false,
-        });
+    fetchStream: async (username: string) => {
+        set({ isLoading: true, error: null });
+        try {
+            const data = await StreamService.getByUsername(username);
+            set({
+                currentStream: data,
+                messages: MOCK_CHAT,
+                isLoading: false,
+            });
+        } catch (err: any) {
+            set({
+                error: err.response?.data?.message || 'Stream not found',
+                isLoading: false,
+                currentStream: null,
+            });
+        }
     },
 
     addMessage: (message) =>
@@ -36,5 +44,11 @@ export const useStreamStore = create<StreamState>((set) => ({
             messages: [...state.messages, message],
         })),
 
-    clearStream: () => set({ currentStream: null, messages: [] }),
+    reset: () =>
+        set({
+            currentStream: null,
+            messages: [],
+            error: null,
+            isLoading: false,
+        }),
 }));

@@ -20,7 +20,7 @@ export const StreamPage: React.FC = () => {
     if (!stream) {
         return (
             <div className="flex-1 flex items-center justify-center text-zinc-500">
-                Channel not found
+                Stream not found
             </div>
         );
     }
@@ -28,7 +28,11 @@ export const StreamPage: React.FC = () => {
     return (
         <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden">
             <main className="flex-1 flex flex-col overflow-y-auto">
-                <StreamPlayer thumbnail={stream.thumbnail} isLive={false} />
+                <StreamPlayer
+                    streamKey={stream.key!}
+                    isLive={true}
+                    thumbnail={stream.thumbnail!}
+                />
 
                 <div className="p-6 max-w-[1600px] mx-auto w-full">
                     <StreamHeader

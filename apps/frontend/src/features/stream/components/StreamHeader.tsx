@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Stream } from '@types';
+import { Stream } from '@streamhub/shared';
 import { Avatar, Button } from '@components/ui';
 import { LuCheck, LuHeart, LuShare2, LuStar } from 'react-icons/lu';
 
@@ -37,7 +37,7 @@ export const StreamHeader: React.FC<StreamHeaderProps> = ({
                             {stream.category}
                         </span>
                         <div className="flex gap-1 flex-wrap ml-2">
-                            {stream.tags.map((t) => (
+                            {stream.tags?.map((t) => (
                                 <span
                                     key={t}
                                     className="text-[10px] bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full text-zinc-600 dark:text-zinc-400 font-medium"

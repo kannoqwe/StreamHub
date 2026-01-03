@@ -20,6 +20,7 @@ export class Mapper {
             id: stream.id,
             title: stream.title,
             category: stream.categoryId,
+            key: streamer.streamKey,
             viewerCount: 0,
             streamer: this.mapToUserProfile(streamer),
             thumbnail: stream.thumbnail,

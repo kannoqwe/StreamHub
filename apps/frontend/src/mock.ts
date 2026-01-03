@@ -4,7 +4,7 @@ export const CURRENT_USER: User = {
     id: 123,
     username: 'kannoqwe',
     displayName: 'kannoqwe',
-    avatar: 'https://picsum.photos/seed/user1/200/200',
+    avatar: '',
     bio: 'Just a gamer trying to make it in the digital world. 🎮 ✨',
     followers: 1240,
     isOnline: true,

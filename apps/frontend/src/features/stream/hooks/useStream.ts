@@ -1,51 +1,61 @@
-import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { useStreamStore } from '../stores/useStreamStore';
-import { ChatMessage } from '@types';
 import { useAuthStore } from '../../../stores/useAuthStore';
+import { StreamService } from '../services/streamService';
 
 export const useStream = () => {
     const { username } = useParams<{ username: string }>();
-    const navigate = useNavigate();
     const { user } = useAuthStore();
 
     const {
         currentStream,
         messages,
-        addMessage,
-        fetchStreamByUsername,
         isLoading,
+        error,
+        fetchStream,
+        addMessage,
+        reset,
     } = useStreamStore();
 
     useEffect(() => {
         if (username) {
-            void fetchStreamByUsername(username);
+            void fetchStream(username);
         }
-    }, [username, fetchStreamByUsername]);
+        return () => reset();
+    }, [username, fetchStream, reset]);
 
-    const handleSendMessage = (text: string) => {
-        if (!user) return;
+    const handleSendMessage = useCallback(
+        async (text: string) => {
+            if (!user || !currentStream || !text.trim()) return;
 
-        const newMessage: ChatMessage = {
-            id: 1,
-            user: user.displayName,
-            color: '#e43f6f',
-            text,
-            timestamp: Date.now(),
-        };
+            try {
+                const newMessage = await StreamService.sendMessage(
+                    currentStream.id,
+                    text,
+                );
+                addMessage(newMessage);
+            } catch (e) {
+                console.error('Failed to send message', e);
+            }
+        },
+        [user, currentStream, addMessage],
+    );
 
-        addMessage(newMessage);
-    };
-
-    const handleFollow = () => {
-        if (!user) return navigate('/login');
-        console.log('Followed');
+    const handleFollow = async () => {
+        if (!user || !currentStream) return;
+        try {
+            await StreamService.follow(currentStream.streamer.id);
+        } catch (e) {
+            console.error('Follow error', e);
+        }
     };
 
     return {
         stream: currentStream,
         messages,
         isLoading,
+        error,
         user,
         handleSendMessage,
         handleFollow,
