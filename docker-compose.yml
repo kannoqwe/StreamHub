@@ -66,8 +66,8 @@ services:
     ports:
       - "1935:1935"
       - "8080:8080"
-    volumes:
-      - ./hls:/var/www/html/hls
+    tmpfs:
+      - /var/www/html/hls:size=2G,mode=777
     depends_on:
       - backend
 
