@@ -1,0 +1,27 @@
+.video-js {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+.video-js .vjs-tech {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+.video-js:focus, .video-js *:focus {
+    outline: none !important;
+}
+
+.vjs-control-bar {
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%) !important;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}

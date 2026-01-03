@@ -20,6 +20,8 @@
         "react-icons": "^5.5.0",
         "react-router-dom": "^7.10.1",
         "video.js": "7.6.5",
+        "videojs-contrib-quality-levels": "^4.1.0",
+        "videojs-hls-quality-selector": "^2.0.0",
         "zustand": "^5.0.9"
     },
     "devDependencies": {
