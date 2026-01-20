@@ -1,45 +1,32 @@
 import { IsString, IsOptional, IsNumber } from 'class-validator';
 
-export class RtmpEventDto {
+export class SrsHookDto {
     @IsString()
     @IsOptional()
-    app: string;
+    action?: string;
 
     @IsString()
     @IsOptional()
-    flashver: string;
+    client_id?: string;
 
     @IsString()
     @IsOptional()
-    swfurl: string;
+    ip?: string;
 
     @IsString()
     @IsOptional()
-    tcurl: string;
+    vhost?: string;
 
     @IsString()
     @IsOptional()
-    pageurl: string;
+    app?: string;
+
+    @IsString()
+    stream: string;
 
     @IsString()
     @IsOptional()
-    addr: string;
-
-    @IsString()
-    @IsOptional()
-    clientid: string;
-
-    @IsString()
-    @IsOptional()
-    call: string;
-
-    @IsString()
-    @IsOptional()
-    name: string;
-
-    @IsString()
-    @IsOptional()
-    type: string;
+    param?: string;
 }
 
 export class StartSreamDto {

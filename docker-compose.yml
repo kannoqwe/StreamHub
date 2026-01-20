@@ -61,13 +61,16 @@ services:
     volumes:
       - redis_data:/data
 
-  rtmp:
-    build: ./apps/rtmp-server
+  srs:
+    image: ossrs/srs:5
+    container_name: srs
     ports:
       - "1935:1935"
+      - "1985:1985"
       - "8080:8080"
-    tmpfs:
-      - /var/www/html/hls:size=2G,mode=777
+    volumes:
+      - ./apps/srs/srs.conf:/usr/local/srs/conf/my_srs.conf
+    command: ./objs/srs -c conf/my_srs.conf
     depends_on:
       - backend
 
