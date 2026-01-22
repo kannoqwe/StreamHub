@@ -1,10 +1,8 @@
 import {
     Body,
     Controller,
-    Get,
     HttpCode,
     HttpStatus,
-    Param,
     Post,
     Req,
     UseGuards,
@@ -17,7 +15,6 @@ import {
     RegenerateResponse,
     SrsHookResponse,
 } from '@modules/stream/interfaces/response.interface';
-import { StreamModel } from '@streamhub/shared';
 
 @Controller('stream')
 export class StreamController {

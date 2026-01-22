@@ -1,19 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '@modules/user/user.repository';
 import { User } from '@generated/client';
 import { UserCreateInput, UserUpdateInput } from '@generated/models/User';
 import { RedisService } from '@modules/redis/redis.service';
 import { UserKeys } from '@common/constants/redis.keys';
-import { ChannelData } from '@streamhub/shared';
-import { Mapper } from '@common/utils/Mapper';
-import { StreamService } from '@modules/stream/stream.service';
 
 @Injectable()
 export class UserService {
     constructor(
         private usersRepository: UserRepository,
         private redisService: RedisService,
-        private streamService: StreamService,
     ) {}
 
     async findById(userId: number): Promise<User | null> {
@@ -65,16 +61,6 @@ export class UserService {
         await this.cacheUser(user);
 
         return user;
-    }
-
-    async findChannelData(username: string): Promise<ChannelData> {
-        const user = await this.findByUsername(username);
-        if (!user) throw new NotFoundException('User not found');
-
-        const userModel = Mapper.mapToUserProfile(user);
-        const streamModel = await this.streamService.getActiveStream(username);
-
-        return { user: userModel, stream: streamModel };
     }
 
     async updateUser(userId: number, data: UserUpdateInput): Promise<User> {
