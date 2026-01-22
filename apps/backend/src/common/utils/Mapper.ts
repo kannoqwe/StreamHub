@@ -1,9 +1,9 @@
 import { StreamSession, User } from '@generated/client';
-import { UserProfile, StreamModel } from '@streamhub/shared';
+import { UserModel, StreamModel } from '@streamhub/shared';
 import { dateToTimestamp } from '@common/utils/time';
 
 export class Mapper {
-    static mapToUserProfile(user: User): UserProfile {
+    static mapToUserProfile(user: User): UserModel {
         return {
             id: user.id,
             username: user.username,

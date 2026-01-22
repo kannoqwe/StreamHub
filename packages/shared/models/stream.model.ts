@@ -1,4 +1,4 @@
-import { UserProfile } from "./user.model";
+import { UserModel } from "./user.model";
 
 export interface StreamModel {
     id: number;
@@ -9,5 +9,5 @@ export interface StreamModel {
     category: number;
     tags?: string[];
     startedAt: number;
-    streamer: UserProfile;
+    streamer: UserModel;
 }

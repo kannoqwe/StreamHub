@@ -1,6 +1,6 @@
 import { $api } from '@api';
 import {
-    UserProfile,
+    UserModel,
     LoginDto,
     RegisterDto,
     LoginResponse,
@@ -20,8 +20,8 @@ export const AuthService = {
         return response.data;
     },
 
-    async getMe(): Promise<UserProfile> {
-        const response = await $api.get<UserProfile>('/auth/me', {
+    async getMe(): Promise<UserModel> {
+        const response = await $api.get<UserModel>('/auth/me', {
             withCredentials: true,
         });
         return response.data;
