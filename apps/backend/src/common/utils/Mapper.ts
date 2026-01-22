@@ -1,5 +1,5 @@
 import { StreamSession, User } from '@generated/client';
-import { UserProfile, Stream } from '@streamhub/shared';
+import { UserProfile, StreamModel } from '@streamhub/shared';
 import { dateToTimestamp } from '@common/utils/time';
 
 export class Mapper {
@@ -15,7 +15,7 @@ export class Mapper {
         };
     }
 
-    static mapToStream(stream: StreamSession, streamer: User): Stream {
+    static mapToStream(stream: StreamSession, streamer: User): StreamModel {
         return {
             id: stream.id,
             title: stream.title,

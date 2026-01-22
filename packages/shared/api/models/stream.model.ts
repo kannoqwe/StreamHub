@@ -1,6 +1,6 @@
 import { UserProfile } from "./user.model";
 
-export interface Stream {
+export interface StreamModel {
     id: number;
     title: string;
     thumbnail?: string | null;

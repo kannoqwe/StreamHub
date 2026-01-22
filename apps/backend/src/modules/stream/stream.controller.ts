@@ -17,7 +17,7 @@ import {
     RegenerateResponse,
     SrsHookResponse,
 } from '@modules/stream/interfaces/response.interface';
-import { Stream } from '@streamhub/shared';
+import { StreamModel } from '@streamhub/shared';
 
 @Controller('stream')
 export class StreamController {
@@ -36,7 +36,7 @@ export class StreamController {
     }
 
     @Get('user/:username')
-    async getStream(@Param('username') username: string): Promise<Stream> {
+    async getStream(@Param('username') username: string): Promise<StreamModel> {
         return this.streamService.getActiveStream(username);
     }
 

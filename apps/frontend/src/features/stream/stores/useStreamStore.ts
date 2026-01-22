@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { ChatMessage } from '@types';
-import { Stream } from '@streamhub/shared';
+import { StreamModel } from '@streamhub/shared';
 import { StreamService } from '../services/streamService';
 import { MOCK_CHAT } from '../../../mock';
 
 interface StreamState {
-    currentStream: Stream | null;
+    currentStream: StreamModel | null;
     messages: ChatMessage[];
     isLoading: boolean;
     error: string | null;

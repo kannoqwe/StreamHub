@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Stream } from '@streamhub/shared';
+import { StreamModel } from '@streamhub/shared';
 import { Avatar, Button } from '@components/ui';
 import { LuCheck, LuHeart, LuShare2, LuStar } from 'react-icons/lu';
 
 interface StreamHeaderProps {
-    stream: Stream;
+    stream: StreamModel;
     isFollowed: boolean;
     onFollow: () => void;
     onSubscribe: () => void;

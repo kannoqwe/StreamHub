@@ -9,7 +9,7 @@ import { StreamRepository } from '@modules/stream/stream.repository';
 import { StreamSession } from '@generated/client';
 import { UserService } from '@modules/user/user.service';
 import { ONE_HOUR_MS, validateCooldown } from '@common/utils/time';
-import { Stream } from '@streamhub/shared';
+import { StreamModel } from '@streamhub/shared';
 import { Mapper } from '@common/utils/Mapper';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class StreamService {
         return this.streamRepository.end(user.id);
     }
 
-    async getActiveStream(username: string): Promise<Stream> {
+    async getActiveStream(username: string): Promise<StreamModel> {
         const stream =
             await this.streamRepository.findStreamByUsername(username);
         if (!stream) throw new NotFoundException('Streamer is offline');
