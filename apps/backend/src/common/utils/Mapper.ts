@@ -19,11 +19,11 @@ export class Mapper {
         return {
             id: stream.id,
             title: stream.title,
+            streamerId: streamer.id,
+            thumbnail: stream.thumbnail,
             category: stream.categoryId,
             key: streamer.streamKey,
             viewerCount: 0,
-            streamer: this.mapToUserProfile(streamer),
-            thumbnail: stream.thumbnail,
             startedAt: dateToTimestamp(stream.startedAt),
         };
     }

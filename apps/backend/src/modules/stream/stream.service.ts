@@ -1,7 +1,6 @@
 import {
     ForbiddenException,
     Injectable,
-    NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
@@ -43,10 +42,10 @@ export class StreamService {
         return this.streamRepository.end(user.id);
     }
 
-    async getActiveStream(username: string): Promise<StreamModel> {
+    async getActiveStream(username: string): Promise<StreamModel | null> {
         const stream =
             await this.streamRepository.findStreamByUsername(username);
-        if (!stream) throw new NotFoundException('Streamer is offline');
+        if (!stream) return null;
 
         return Mapper.mapToStream(stream, stream.streamer);
     }

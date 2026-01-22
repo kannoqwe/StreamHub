@@ -35,11 +35,6 @@ export class StreamController {
         return { code: 0, message: 'Stream ended' };
     }
 
-    @Get('user/:username')
-    async getStream(@Param('username') username: string): Promise<StreamModel> {
-        return this.streamService.getActiveStream(username);
-    }
-
     @UseGuards(JwtGuard)
     @HttpCode(HttpStatus.OK)
     @Post('generate_key')
