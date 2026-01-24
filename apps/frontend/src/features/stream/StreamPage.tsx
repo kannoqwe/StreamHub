@@ -7,6 +7,7 @@ import { FullPageLoader } from '@components/ui';
 
 export const StreamPage: React.FC = () => {
     const {
+        streamer,
         stream,
         messages,
         handleSendMessage,
@@ -17,13 +18,17 @@ export const StreamPage: React.FC = () => {
 
     if (isLoading) return <FullPageLoader />;
 
-    if (!stream) {
+    if (!streamer) {
         return (
             <div className="flex-1 flex items-center justify-center text-zinc-500 font-medium">
-                Stream not found
+                User not found
             </div>
         );
     }
+
+    const isLive = !!stream;
+    const streamKey = stream?.key ?? '';
+    const thumbnail = stream?.thumbnail ?? streamer.avatar;
 
     return (
         <div className="flex h-[calc(100vh-3.5rem)] overflow-hidden bg-zinc-50 dark:bg-zinc-950">
@@ -31,15 +36,16 @@ export const StreamPage: React.FC = () => {
                 <div className="w-full max-w-[1300px] mx-auto lg:pt-4 pb-4">
                     <div className="aspect-video w-full shadow-2xl shadow-black/20">
                         <StreamPlayer
-                            streamKey={stream.key!}
-                            isLive={true}
-                            thumbnail={stream.thumbnail!}
+                            streamKey={streamKey}
+                            isLive={isLive}
+                            thumbnail={thumbnail}
                         />
                     </div>
                 </div>
 
                 <div className="px-4 lg:px-6 max-w-[1300px] mx-auto w-full pb-10">
                     <StreamHeader
+                        streamer={streamer}
                         stream={stream}
                         isFollowed={false}
                         onFollow={handleFollow}
@@ -48,10 +54,10 @@ export const StreamPage: React.FC = () => {
 
                     <section className="mt-8 bg-white dark:bg-zinc-900/40 rounded-xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                         <h3 className="font-bold text-lg mb-4 dark:text-white">
-                            About {stream.streamer.displayName}
+                            About {streamer.displayName}
                         </h3>
                         <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                            {stream.streamer.bio ||
+                            {streamer.bio ||
                                 "This streamer hasn't added a bio yet."}
                         </p>
                     </section>

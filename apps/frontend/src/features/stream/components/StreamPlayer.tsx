@@ -5,7 +5,7 @@ import { VideoJS } from './VideoJsPlayer';
 interface StreamPlayerProps {
     streamKey: string;
     isLive: boolean;
-    thumbnail?: string;
+    thumbnail: string;
 }
 
 export const StreamPlayer: React.FC<StreamPlayerProps> = ({

@@ -1,12 +1,10 @@
 import { $api } from '@api';
 import { ChatMessage } from '@types';
-import { StreamModel } from '@streamhub/shared';
+import { ChannelDto } from '@streamhub/shared';
 
 export const StreamService = {
-    async getByUsername(username: string) {
-        const { data } = await $api.get<StreamModel>(
-            `/stream/user/${username}`,
-        );
+    async getChannelData(username: string) {
+        const { data } = await $api.get<ChannelDto>(`/stream/${username}`);
         return data;
     },
 

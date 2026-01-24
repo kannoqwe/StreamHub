@@ -9,6 +9,7 @@ export const useStream = () => {
     const { user } = useAuthStore();
 
     const {
+        streamer,
         currentStream,
         messages,
         isLoading,
@@ -43,15 +44,16 @@ export const useStream = () => {
     );
 
     const handleFollow = async () => {
-        if (!user || !currentStream) return;
+        if (!user || !currentStream || !streamer) return;
         try {
-            await StreamService.follow(currentStream.streamer.id);
+            await StreamService.follow(streamer.id);
         } catch (e) {
             console.error('Follow error', e);
         }
     };
 
     return {
+        streamer,
         stream: currentStream,
         messages,
         isLoading,

@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 import { ChatMessage } from '@types';
-import { StreamModel } from '@streamhub/shared';
+import { StreamModel, UserModel } from '@streamhub/shared';
 import { StreamService } from '../services/streamService';
 import { MOCK_CHAT } from '../../../mock';
 
 interface StreamState {
+    streamer: UserModel | null;
     currentStream: StreamModel | null;
     messages: ChatMessage[];
     isLoading: boolean;
@@ -16,6 +17,7 @@ interface StreamState {
 }
 
 export const useStreamStore = create<StreamState>((set) => ({
+    streamer: null,
     currentStream: null,
     messages: [],
     isLoading: false,
@@ -24,9 +26,10 @@ export const useStreamStore = create<StreamState>((set) => ({
     fetchStream: async (username: string) => {
         set({ isLoading: true, error: null });
         try {
-            const data = await StreamService.getByUsername(username);
+            const data = await StreamService.getChannelData(username);
             set({
-                currentStream: data,
+                streamer: data.user,
+                currentStream: data.stream,
                 messages: MOCK_CHAT,
                 isLoading: false,
             });
@@ -34,6 +37,7 @@ export const useStreamStore = create<StreamState>((set) => ({
             set({
                 error: err.response?.data?.message || 'Stream not found',
                 isLoading: false,
+                streamer: null,
                 currentStream: null,
             });
         }
@@ -46,6 +50,7 @@ export const useStreamStore = create<StreamState>((set) => ({
 
     reset: () =>
         set({
+            streamer: null,
             currentStream: null,
             messages: [],
             error: null,
