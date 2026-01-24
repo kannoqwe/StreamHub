@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { IngestController } from '@modules/ingest/ingest.controller';
-import { IngestService } from '@modules/ingest/ingest.service';
+import { StreamModule } from '@modules/stream/stream.module';
 
 @Module({
-    imports: [],
+    imports: [StreamModule],
     controllers: [IngestController],
-    providers: [IngestService],
-    exports: [],
 })
 export class IngestModule {}

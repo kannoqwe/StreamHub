@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsNumber } from 'class-validator';
 
-export class SrsHookDto {
+export class IngestDto {
     @IsString()
     @IsOptional()
     action?: string;
