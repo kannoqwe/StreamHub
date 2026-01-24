@@ -1,6 +1,7 @@
 import {
     ForbiddenException,
     Injectable,
+    NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
 import { randomBytes } from 'crypto';
@@ -8,7 +9,7 @@ import { StreamRepository } from '@modules/stream/stream.repository';
 import { StreamSession } from '@generated/client';
 import { UserService } from '@modules/user/user.service';
 import { ONE_HOUR_MS, validateCooldown } from '@common/utils/time';
-import { StreamModel } from '@streamhub/shared';
+import { StreamModel, ChannelDto } from '@streamhub/shared';
 import { Mapper } from '@common/utils/Mapper';
 
 @Injectable()
@@ -48,6 +49,18 @@ export class StreamService {
         if (!stream) return null;
 
         return Mapper.mapToStream(stream, stream.streamer);
+    }
+
+    async getStreamPage(username: string): Promise<ChannelDto> {
+        const user = await this.userService.findByUsername(username);
+        if (!user) throw new NotFoundException('User not found');
+
+        const stream = await this.getActiveStream(username);
+
+        return {
+            user: Mapper.mapToUserProfile(user),
+            stream,
+        };
     }
 
     async regenerateStreamKey(userId: number) {
