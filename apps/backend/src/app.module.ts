@@ -11,6 +11,7 @@ import path from 'node:path';
 import { StreamModule } from '@modules/stream/stream.module';
 import { RedisModule } from '@modules/redis/redis.module';
 import { FollowModule } from '@modules/follow/follow.module';
+import { IngestModule } from '@modules/ingest/ingest.module';
 
 @Module({
     imports: [
@@ -27,6 +28,7 @@ import { FollowModule } from '@modules/follow/follow.module';
         AuthModule,
         UserModule,
         StreamModule,
+        IngestModule,
         FollowModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
