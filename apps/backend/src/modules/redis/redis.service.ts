@@ -3,37 +3,42 @@ import { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
-    constructor(@Inject('REDIS_CLIENT') private readonly _client: Redis) {}
-
-    get client() {
-        return this._client;
-    }
+    constructor(@Inject('REDIS_CLIENT') private readonly redis: Redis) {}
 
     onModuleDestroy() {
-        this._client.disconnect();
+        this.redis.disconnect();
     }
 
-    async set<T = string>(
+    async getOrSet<T>(
         key: string,
-        value: T,
-        ttlInSeconds?: number,
-    ): Promise<void> {
-        const data = typeof value === 'string' ? value : JSON.stringify(value);
-
-        if (!ttlInSeconds || ttlInSeconds <= 0) {
-            await this._client.set(key, data);
-            return;
+        fetcher: () => Promise<T | null>,
+        ttl: number = 300,
+    ): Promise<T | null> {
+        const cached = await this.redis.get(key);
+        if (cached) {
+            return JSON.parse(cached) as T;
         }
 
-        await this._client.set(key, data, 'EX', ttlInSeconds);
+        const data = await fetcher();
+
+        if (data) {
+            await this.redis.set(key, JSON.stringify(data), 'EX', ttl);
+        }
+
+        return data;
+    }
+
+    async mdel(keys: string[]) {
+        if (keys.length === 0) return;
+        await this.redis.del(...keys);
     }
 
     async get<T>(key: string): Promise<T | null> {
-        const data = await this._client.get(key);
+        const data = await this.redis.get(key);
         return data ? (JSON.parse(data) as T) : null;
     }
 
-    async delete(key: string): Promise<number> {
-        return this._client.del(key);
+    async set(key: string, value: any, ttl: number = 300) {
+        await this.redis.set(key, JSON.stringify(value), 'EX', ttl);
     }
 }
