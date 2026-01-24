@@ -5,9 +5,10 @@ import { PrismaModule } from '@modules/prisma/prisma.module';
 import { UserModule } from '@modules/user/user.module';
 import { StreamRepository } from '@modules/stream/stream.repository';
 import { JwtModule } from '@nestjs/jwt';
+import { RedisModule } from '@modules/redis/redis.module';
 
 @Module({
-    imports: [PrismaModule, UserModule, JwtModule],
+    imports: [PrismaModule, UserModule, JwtModule, RedisModule],
     providers: [StreamService, StreamRepository],
     controllers: [StreamController],
     exports: [StreamService, StreamRepository],
