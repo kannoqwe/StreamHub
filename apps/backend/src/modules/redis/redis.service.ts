@@ -12,7 +12,7 @@ export class RedisService implements OnModuleDestroy {
     async getOrSet<T>(
         key: string,
         fetcher: () => Promise<T | null>,
-        ttl: number = 300,
+        ttlInSeconds: number = 300,
     ): Promise<T | null> {
         const cached = await this.redis.get(key);
         if (cached) {
@@ -22,7 +22,7 @@ export class RedisService implements OnModuleDestroy {
         const data = await fetcher();
 
         if (data) {
-            await this.redis.set(key, JSON.stringify(data), 'EX', ttl);
+            await this.redis.set(key, JSON.stringify(data), 'EX', ttlInSeconds);
         }
 
         return data;
