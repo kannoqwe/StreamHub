@@ -88,6 +88,33 @@ services:
     networks:
       - app_network
 
+  nats:
+    image: nats:alpine
+    command: "-js"
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - app_network
+
+  scylla:
+    image: scylladb/scylla
+    command: --smp 1 --memory 750M --overprovisioned 1
+    ports:
+      - "9042:9042"
+    networks:
+      - app_network
+
+  scylla-init:
+    image: scylladb/scylla
+    depends_on:
+      - scylla
+    volumes:
+      - ./scylla-init.cql:/init.cql
+    command: cqlsh scylla -f /init.cql
+    networks:
+      - app_network
+
 volumes:
   pgdata:
   redis_data:
