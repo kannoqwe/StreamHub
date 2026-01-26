@@ -94,6 +94,8 @@ services:
     ports:
       - "4222:4222"
       - "8222:8222"
+    volumes:
+      - nats-data:/data
     networks:
       - app_network
 
