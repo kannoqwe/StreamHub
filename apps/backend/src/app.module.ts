@@ -12,6 +12,7 @@ import { StreamModule } from '@modules/stream/stream.module';
 import { RedisModule } from '@modules/redis/redis.module';
 import { FollowModule } from '@modules/follow/follow.module';
 import { IngestModule } from '@modules/ingest/ingest.module';
+import { ChatModule } from '@modules/chat/chat.module';
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { IngestModule } from '@modules/ingest/ingest.module';
         UserModule,
         StreamModule,
         IngestModule,
+        ChatModule,
         FollowModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
