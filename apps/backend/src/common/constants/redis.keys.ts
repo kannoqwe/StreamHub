@@ -11,3 +11,7 @@ export const StreamKeys = {
 
     channelPage: (username: string) => `stream:page:${username}`,
 };
+
+export const ChatKeys = {
+    last100: (streamerId: number) => `chat:streamer:${streamerId}:last100`,
+};

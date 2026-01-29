@@ -4,6 +4,8 @@ import {
     CHAT_BROADCAST_PUBLISHER,
     ChatBroadcastPublisher,
 } from '@modules/chat/types/broadcast.publisher';
+import { RedisService } from '@modules/redis/redis.service';
+import { ChatKeys } from '@common/constants/redis.keys';
 
 @Injectable()
 export class IngestUseCase {
@@ -12,6 +14,7 @@ export class IngestUseCase {
     constructor(
         @Inject(CHAT_BROADCAST_PUBLISHER)
         private readonly broadcaster: ChatBroadcastPublisher,
+        private readonly redis: RedisService,
     ) {}
 
     async handle(event: ChatIngestEvent): Promise<void> {
@@ -30,6 +33,12 @@ export class IngestUseCase {
             content: event.content,
             timestamp: event.timestamp,
         };
+
+        await this.redis.lpushTrimJson(
+            ChatKeys.last100(out.streamer_id),
+            out,
+            100,
+        );
 
         await this.broadcaster.publish(event.streamer_id, out);
     }
