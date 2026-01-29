@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ChatIngestEvent } from '@modules/chat/chat-ingest.event';
+import { ChatIngestEvent } from '@modules/chat/types/chat-ingest.event';
 
 @Injectable()
 export class IngestUseCase {

@@ -7,10 +7,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { StringCodec } from 'nats';
 
-import { ChatIngestEvent } from '../chat-ingest.event';
-import { IngestUseCase } from '../application/ingest.usecase';
-import { NatsConnectionProvider } from '../infrastructure/nats/nats.connection';
-import { IngestTransport } from './ingest.transport';
+import { ChatIngestEvent } from '../types/chat-ingest.event';
+import { IngestUseCase } from './ingest.usecase';
+import { NatsConnectionProvider } from '@modules/chat/nats/nats.connection';
+import { IngestTransport } from '../types/ingest.transport';
 
 @Injectable()
 export class IngestSubscriberService
