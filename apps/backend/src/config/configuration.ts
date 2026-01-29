@@ -18,6 +18,12 @@ export default () => ({
         refreshExpiration: '14d',
     },
 
+    nats: {
+        url: process.env.NATS_URL,
+        ingestSubject: 'chat.ingest',
+        queueGroup: 'chat-worker',
+    },
+
     cookies: {
         refreshToken: {
             httpOnly: true,

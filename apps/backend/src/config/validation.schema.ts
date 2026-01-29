@@ -10,8 +10,9 @@ export const validationSchema = Joi.object({
     DATABASE_URL: Joi.string().required(),
 
     JWT_ACCESS_SECRET: Joi.string().min(32).required(),
-
     JWT_REFRESH_SECRET: Joi.string().min(32).required(),
+
+    NATS_URL: Joi.string().uri().required(),
 
     FRONTEND_URL: Joi.string().uri().default('http://localhost:5173'),
 
