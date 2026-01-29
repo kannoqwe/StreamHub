@@ -45,4 +45,36 @@ export class RedisService implements OnModuleDestroy {
     async delete(key: string): Promise<number> {
         return this.redis.del(key);
     }
+
+    async lpushJson(key: string, value: any): Promise<void> {
+        await this.redis.lpush(key, JSON.stringify(value));
+    }
+
+    async ltrim(key: string, start: number, stop: number): Promise<void> {
+        await this.redis.ltrim(key, start, stop);
+    }
+
+    async lrangeJson<T>(
+        key: string,
+        start: number,
+        stop: number,
+    ): Promise<T[]> {
+        const items = await this.redis.lrange(key, start, stop);
+        return items
+            .map((s) => {
+                try {
+                    return JSON.parse(s) as T;
+                } catch {
+                    return null;
+                }
+            })
+            .filter((x): x is T => x !== null);
+    }
+
+    async lpushTrimJson(key: string, value: any, keep: number): Promise<void> {
+        const multi = this.redis.multi();
+        multi.lpush(key, JSON.stringify(value));
+        multi.ltrim(key, 0, keep - 1);
+        await multi.exec();
+    }
 }
