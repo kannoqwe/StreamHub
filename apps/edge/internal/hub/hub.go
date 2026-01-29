@@ -36,3 +36,19 @@ func (h *Hub) Remove(c *Conn) {
 		delete(h.conns, c.StreamerID)
 	}
 }
+
+func (h *Hub) List(streamerID int64) []*Conn {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
+	m, ok := h.conns[streamerID]
+	if !ok || len(m) == 0 {
+		return nil
+	}
+
+	out := make([]*Conn, 0, len(m))
+	for _, c := range m {
+		out = append(out, c)
+	}
+	return out
+}
