@@ -23,6 +23,7 @@ type Server struct {
 	cfg     config.Config
 	http    *http.Server
 	ncClose func()
+	unsub   func()
 }
 
 func NewServer(cfg config.Config, logger *log.Logger) (*Server, error) {
@@ -45,6 +46,14 @@ func NewServer(cfg config.Config, logger *log.Logger) (*Server, error) {
 	}
 
 	h := hub.New()
+
+	bsub := bus.NewBroadcastSubscriber(logger, nc, h, "chat.broadcast")
+	sub, err := bsub.Start()
+	if err != nil {
+		nc.Close()
+		return nil, err
+	}
+
 	pub := bus.NewPublisher(js, "chat.ingest")
 	handler := ws.NewHandler(logger, verifier, h, pub, sf)
 
@@ -66,6 +75,11 @@ func NewServer(cfg config.Config, logger *log.Logger) (*Server, error) {
 		cfg:     cfg,
 		http:    httpServer,
 		ncClose: nc.Close,
+		unsub: func() {
+			if sub != nil {
+				_ = sub.Unsubscribe()
+			}
+		},
 	}, nil
 }
 
