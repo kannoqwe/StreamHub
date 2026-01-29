@@ -23,6 +23,7 @@ export default () => ({
         ingestSubject: 'chat.ingest',
         queueGroup: 'chat-worker',
         ingestStream: 'CHAT_INGEST',
+        broadcastPrefix: 'chat.broadcast',
     },
 
     cookies: {
