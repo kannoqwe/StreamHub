@@ -1,6 +1,10 @@
 package hub
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/coder/websocket"
+)
 
 type Hub struct {
 	mu    sync.RWMutex
@@ -51,4 +55,9 @@ func (h *Hub) List(streamerID int64) []*Conn {
 		out = append(out, c)
 	}
 	return out
+}
+
+func (h *Hub) Drop(c *Conn, status websocket.StatusCode, reason string) {
+	_ = c.WS.Close(status, reason)
+	h.Remove(c)
 }

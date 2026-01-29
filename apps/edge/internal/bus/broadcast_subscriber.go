@@ -37,13 +37,17 @@ func (s *BroadcastSubscriber) Start() (*nats.Subscription, error) {
 		}
 
 		conns := s.hub.List(ev.StreamerID)
+
 		for _, c := range conns {
 			if err := c.SendJSON(ev); err != nil {
-				_ = c.WS.Close(websocket.StatusGoingAway, "write failed")
-				s.hub.Remove(c)
-				s.log.Printf("broadcast: drop conn_id=%d streamer_id=%d err=%v", c.ID, ev.StreamerID, err)
+				s.hub.Drop(c, websocket.StatusGoingAway, "write failed")
+				s.log.Printf(
+					"broadcast: drop conn_id=%d streamer_id=%d err=%v",
+					c.ID, ev.StreamerID, err,
+				)
 			}
 		}
+
 	})
 	if err != nil {
 		return nil, err
