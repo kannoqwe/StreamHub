@@ -16,6 +16,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      nats:
+        condition: service_started
     env_file:
       - .env
     environment:
@@ -120,6 +122,7 @@ services:
 volumes:
   pgdata:
   redis_data:
+  nats-data:
 
 networks:
   app_network:
