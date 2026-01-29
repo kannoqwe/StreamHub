@@ -22,6 +22,7 @@ export default () => ({
         url: process.env.NATS_URL,
         ingestSubject: 'chat.ingest',
         queueGroup: 'chat-worker',
+        ingestStream: 'CHAT_INGEST',
     },
 
     cookies: {
