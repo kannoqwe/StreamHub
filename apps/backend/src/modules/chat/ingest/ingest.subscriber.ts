@@ -57,7 +57,7 @@ export class IngestSubscriberService
         opts.ackExplicit();
         opts.queue(this.queueGroup);
         opts.deliverTo(createInbox());
-        opts.deliverAll();
+        opts.deliverNew();
         opts.ackWait(30_000);
         opts.maxDeliver(5);
 
