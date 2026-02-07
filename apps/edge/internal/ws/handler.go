@@ -36,8 +36,13 @@ func NewHandler(logger *log.Logger, verifier auth.Verifier, h *hub.Hub, pub *bus
 }
 
 func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
+	h.log.Printf("ws incoming from=%s", ClientIP(r))
 	token := BearerToken(r.Header.Get("Authorization"))
 	if token == "" {
+		token = r.URL.Query().Get("token")
+	}
+	if token == "" {
+		h.log.Printf("ws auth missing token from=%s", ClientIP(r))
 		http.Error(w, "missing bearer token", http.StatusUnauthorized)
 		return
 	}
@@ -47,6 +52,7 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 
 	ar, err := h.verifier.Verify(authCtx, token)
 	if err != nil {
+		h.log.Printf("ws auth failed from=%s err=%v", ClientIP(r), err)
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -80,6 +86,7 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 		_ = wsConn.Close(websocket.StatusPolicyViolation, "invalid join")
 		return
 	}
+	h.log.Printf("ws join streamer_id=%d user_id=%d", join.StreamerID, ar.UserID)
 
 	c.StreamerID = join.StreamerID
 	h.hub.Add(c)
@@ -110,6 +117,7 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 		if content == "" {
 			continue
 		}
+		h.log.Printf("ws chat user_id=%d streamer_id=%d content_len=%d", c.UserID, c.StreamerID, len(content))
 
 		msgID := h.sf.Generate()
 		ev := model.IngestEvent{
@@ -149,3 +157,8 @@ func (h *Handler) safeSend(ctx context.Context, c *hub.Conn, v any) error {
 	}
 	return nil
 }
+
+
+
+
+

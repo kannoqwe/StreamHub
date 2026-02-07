@@ -25,6 +25,7 @@ func NewHTTPVerifier(verifyURL string, timeout time.Duration) *HTTPVerifier {
 
 type meResponse struct {
 	UserID   int64  `json:"user_id"`
+	ID       int64  `json:"id"`
 	Username string `json:"username"`
 }
 
@@ -57,11 +58,16 @@ func (v *HTTPVerifier) Verify(ctx context.Context, token string) (Result, error)
 		return Result{}, fmt.Errorf("decode: %w", err)
 	}
 
-	if out.UserID <= 0 || out.Username == "" {
+	userID := out.UserID
+	if userID <= 0 {
+		userID = out.ID
+	}
+
+	if userID <= 0 || out.Username == "" {
 		return Result{}, errors.New("invalid auth payload")
 	}
 
-	return Result{UserID: out.UserID, Username: out.Username}, nil
+	return Result{UserID: userID, Username: out.Username}, nil
 }
 
 type StubVerifier struct{}
