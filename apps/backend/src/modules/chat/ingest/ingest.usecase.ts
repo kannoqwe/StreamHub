@@ -36,11 +36,15 @@ export class IngestUseCase {
             timestamp: event.timestamp,
         };
 
-        await this.redis.lpushTrimExpireJson(
+        const ts = Date.parse(out.timestamp);
+        const score = Number.isNaN(ts) ? Date.now() : ts;
+
+        await this.redis.zaddTrimJson(
             ChatKeys.last100(out.streamer_id),
+            score,
             out,
-            100,
-            ChatKeys.TTL,
+            ChatKeys.MAX,
+            Date.now() - ChatKeys.TTL * 1000,
         );
 
         try {

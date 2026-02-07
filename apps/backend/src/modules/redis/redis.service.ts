@@ -90,4 +90,41 @@ export class RedisService implements OnModuleDestroy {
         multi.expire(key, ttlSeconds);
         await multi.exec();
     }
+
+    async zaddTrimJson(
+        key: string,
+        score: number,
+        value: any,
+        keep: number,
+        minScore: number,
+    ): Promise<void> {
+        const payload = JSON.stringify(value);
+        const multi = this.redis.multi();
+        multi.zadd(key, score.toString(), payload);
+        multi.zremrangebyscore(key, 0, minScore);
+        multi.zremrangebyrank(key, 0, -(keep + 1));
+        await multi.exec();
+    }
+
+    async zrevrangeJson<T>(key: string, start: number, stop: number) {
+        const items = await this.redis.zrevrange(key, start, stop);
+        return items
+            .map((s) => {
+                try {
+                    return JSON.parse(s) as T;
+                } catch {
+                    return null;
+                }
+            })
+            .filter((x): x is T => x !== null);
+    }
+
+    async setIfNotExists(
+        key: string,
+        value: string,
+        ttlSeconds: number,
+    ): Promise<boolean> {
+        const res = await this.redis.set(key, value, 'EX', ttlSeconds, 'NX');
+        return res === 'OK';
+    }
 }

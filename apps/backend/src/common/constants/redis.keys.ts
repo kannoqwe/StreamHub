@@ -14,5 +14,8 @@ export const StreamKeys = {
 
 export const ChatKeys = {
     TTL: 10 * 60,
+    MAX: 100,
     last100: (streamerId: number) => `chat:streamer:${streamerId}:last100`,
+    dedup: (streamerId: number, messageId: string) =>
+        `chat:streamer:${streamerId}:dedup:${messageId}`,
 };
