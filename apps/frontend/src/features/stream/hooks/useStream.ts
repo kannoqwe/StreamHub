@@ -40,6 +40,10 @@ export const useStream = () => {
         addMessage,
         reset,
     } = useStreamStore();
+    const isOwnChannel =
+        !!user &&
+        !!streamer &&
+        (user.id === streamer.id || user.username === streamer.username);
 
     useEffect(() => {
         if (username) {
@@ -145,8 +149,9 @@ export const useStream = () => {
     }, [streamer, addMessage]);
 
     useEffect(() => {
-        if (!streamer || !user || user.id === streamer.id) {
+        if (!streamer || !user || isOwnChannel) {
             setIsFollowed(false);
+            setIsFollowLoading(false);
             return;
         }
 
@@ -175,7 +180,7 @@ export const useStream = () => {
         return () => {
             cancelled = true;
         };
-    }, [streamer, user]);
+    }, [streamer, user, isOwnChannel]);
 
     const handleSendMessage = useCallback(
         async (text: string) => {
@@ -202,7 +207,7 @@ export const useStream = () => {
     );
 
     const handleFollow = async () => {
-        if (!user || !streamer || user.id === streamer.id || isFollowLoading) {
+        if (!user || !streamer || isOwnChannel || isFollowLoading) {
             return;
         }
 
@@ -228,7 +233,7 @@ export const useStream = () => {
         user,
         isFollowed,
         isFollowLoading,
-        canFollow: !!user && !!streamer && user.id !== streamer.id,
+        canFollow: !!user && !!streamer && !isOwnChannel,
         handleSendMessage,
         handleFollow,
     };
