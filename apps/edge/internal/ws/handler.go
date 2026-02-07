@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"math"
 	"net/http"
 	"time"
 
@@ -117,6 +118,13 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 		if content == "" {
 			continue
 		}
+		if !h.allowMessage(c) {
+			_ = h.safeSend(r.Context(), c, model.ServerPacket{
+				"type":  "error",
+				"error": "rate_limited",
+			})
+			continue
+		}
 		h.log.Printf("ws chat user_id=%d streamer_id=%d content_len=%d", c.UserID, c.StreamerID, len(content))
 
 		msgID := h.sf.Generate()
@@ -156,6 +164,29 @@ func (h *Handler) safeSend(ctx context.Context, c *hub.Conn, v any) error {
 		}
 	}
 	return nil
+}
+
+func (h *Handler) allowMessage(c *hub.Conn) bool {
+	const ratePerSec = 5.0
+	const burst = 10.0
+
+	now := time.Now()
+	if c.RateLast.IsZero() {
+		c.RateLast = now
+		c.RateTokens = burst
+	}
+
+	elapsed := now.Sub(c.RateLast).Seconds()
+	if elapsed > 0 {
+		c.RateTokens = math.Min(burst, c.RateTokens+elapsed*ratePerSec)
+		c.RateLast = now
+	}
+
+	if c.RateTokens < 1 {
+		return false
+	}
+	c.RateTokens -= 1
+	return true
 }
 
 

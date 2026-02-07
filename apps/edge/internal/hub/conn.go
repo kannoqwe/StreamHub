@@ -2,6 +2,7 @@ package hub
 
 import (
 	"sync"
+	"time"
 
 	"github.com/coder/websocket"
 )
@@ -14,4 +15,7 @@ type Conn struct {
 	StreamerID int64
 
 	SendMu sync.Mutex
+
+	RateTokens float64
+	RateLast   time.Time
 }
