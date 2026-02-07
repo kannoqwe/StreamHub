@@ -44,7 +44,7 @@ export class IngestUseCase {
         );
 
         try {
-            await this.history.append(out);
+            await this.history.enqueue(out);
         } catch (err) {
             this.logger.error(`scylla append failed: ${err}`);
         }
