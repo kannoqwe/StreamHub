@@ -23,6 +23,15 @@ export class IngestUseCase {
         if (!event.streamer_id || !event.user_id || !event.content?.trim())
             return;
 
+        const isNew = await this.redis.setIfNotExists(
+            ChatKeys.dedup(event.streamer_id, event.message_id),
+            '1',
+            ChatKeys.TTL,
+        );
+        if (!isNew) {
+            return;
+        }
+
         this.logger.log(
             `ingest message_id=${event.message_id} streamer_id=${event.streamer_id} user_id=${event.user_id} content_len=${event.content.length}`,
         );
