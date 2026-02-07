@@ -26,9 +26,9 @@ export interface Category {
 }
 
 export interface ChatMessage {
-    id: number;
+    id: string;
     user: string;
     color: string;
     text: string;
-    timestamp: number;
+    timestamp: string;
 }

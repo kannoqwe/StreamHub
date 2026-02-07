@@ -1,6 +1,6 @@
 import { $api } from '@api';
-import { ChatMessage } from '@types';
 import { ChannelDto } from '@streamhub/shared';
+import { ChatIngestEvent } from '../types/chat';
 
 export const StreamService = {
     async getChannelData(username: string) {
@@ -8,10 +8,9 @@ export const StreamService = {
         return data;
     },
 
-    async sendMessage(streamId: number, text: string) {
-        const { data } = await $api.post<ChatMessage>(
-            `/stream/${streamId}/chat`,
-            { text },
+    async getChatHistory(streamerId: number) {
+        const { data } = await $api.get<ChatIngestEvent[]>(
+            `/chat/history/${streamerId}`,
         );
         return data;
     },

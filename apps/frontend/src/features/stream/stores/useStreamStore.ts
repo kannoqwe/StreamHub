@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { ChatMessage } from '@types';
 import { StreamModel, UserModel } from '@streamhub/shared';
 import { StreamService } from '../services/streamService';
-import { MOCK_CHAT } from '../../../mock';
 
 interface StreamState {
     streamer: UserModel | null;
@@ -12,9 +11,12 @@ interface StreamState {
     error: string | null;
 
     fetchStream: (username: string) => Promise<void>;
+    setMessages: (messages: ChatMessage[]) => void;
     addMessage: (message: ChatMessage) => void;
     reset: () => void;
 }
+
+const MAX_CHAT_MESSAGES = 100;
 
 export const useStreamStore = create<StreamState>((set) => ({
     streamer: null,
@@ -30,7 +32,7 @@ export const useStreamStore = create<StreamState>((set) => ({
             set({
                 streamer: data.user,
                 currentStream: data.stream,
-                messages: MOCK_CHAT,
+                messages: [],
                 isLoading: false,
             });
         } catch (err: any) {
@@ -43,10 +45,17 @@ export const useStreamStore = create<StreamState>((set) => ({
         }
     },
 
+    setMessages: (messages) =>
+        set({ messages: messages.slice(-MAX_CHAT_MESSAGES) }),
+
     addMessage: (message) =>
-        set((state) => ({
-            messages: [...state.messages, message],
-        })),
+        set((state) => {
+            if (state.messages.some((m) => m.id === message.id)) {
+                return state;
+            }
+            const next = [...state.messages, message];
+            return { messages: next.slice(-MAX_CHAT_MESSAGES) };
+        }),
 
     reset: () =>
         set({
