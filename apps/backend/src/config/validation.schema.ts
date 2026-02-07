@@ -18,4 +18,9 @@ export const validationSchema = Joi.object({
 
     REDIS_HOST: Joi.string().required(),
     REDIS_PORT: Joi.number().default(6379),
+
+    SCYLLA_CONTACT_POINTS: Joi.string().required(),
+    SCYLLA_PORT: Joi.number().default(9042),
+    SCYLLA_DATACENTER: Joi.string().default('datacenter1'),
+    SCYLLA_KEYSPACE: Joi.string().default('streamplatform'),
 });

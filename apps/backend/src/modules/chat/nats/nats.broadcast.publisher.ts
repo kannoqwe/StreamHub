@@ -5,7 +5,6 @@ import { StringCodec } from 'nats';
 import { NatsConnectionProvider } from './nats.connection';
 import { ChatBroadcastPublisher } from '../types/broadcast.publisher';
 import { ChatIngestEvent } from '../types/chat-ingest.event';
-import { CHAT_BROADCAST_PUBLISHER } from '../types/broadcast.publisher';
 
 @Injectable()
 export class NatsBroadcastPublisher implements ChatBroadcastPublisher {

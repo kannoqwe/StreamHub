@@ -11,6 +11,13 @@ export default () => ({
         port: parseInt(process.env.REDIS_PORT!),
     },
 
+    scylla: {
+        contactPoints: process.env.SCYLLA_CONTACT_POINTS,
+        port: parseInt(process.env.SCYLLA_PORT || '9042', 10),
+        localDatacenter: process.env.SCYLLA_DATACENTER || 'datacenter1',
+        keyspace: process.env.SCYLLA_KEYSPACE || 'streamplatform',
+    },
+
     jwt: {
         accessSecret: process.env.JWT_ACCESS_SECRET,
         refreshSecret: process.env.JWT_REFRESH_SECRET,

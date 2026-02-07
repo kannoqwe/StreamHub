@@ -6,6 +6,7 @@ import {
 } from '@modules/chat/types/broadcast.publisher';
 import { RedisService } from '@modules/redis/redis.service';
 import { ChatKeys } from '@common/constants/redis.keys';
+import { ChatHistoryRepository } from '@modules/chat/scylla/chat-history.repository';
 
 @Injectable()
 export class IngestUseCase {
@@ -15,6 +16,7 @@ export class IngestUseCase {
         @Inject(CHAT_BROADCAST_PUBLISHER)
         private readonly broadcaster: ChatBroadcastPublisher,
         private readonly redis: RedisService,
+        private readonly history: ChatHistoryRepository,
     ) {}
 
     async handle(event: ChatIngestEvent): Promise<void> {
@@ -39,6 +41,12 @@ export class IngestUseCase {
             out,
             100,
         );
+
+        try {
+            await this.history.append(out);
+        } catch (err) {
+            this.logger.error(`scylla append failed: ${err}`);
+        }
 
         await this.broadcaster.publish(event.streamer_id, out);
     }
