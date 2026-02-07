@@ -5,7 +5,7 @@ import {
     OnApplicationShutdown,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { StringCodec } from 'nats';
+import { consumerOpts, createInbox, StringCodec } from 'nats';
 
 import { ChatIngestEvent } from '../types/chat-ingest.event';
 import { IngestUseCase } from './ingest.usecase';
@@ -49,10 +49,19 @@ export class IngestSubscriberService
         this.stopRequested = false;
 
         const nc = await this.nats.get();
+        const js = nc.jetstream();
 
-        const sub = nc.subscribe(this.ingestSubject, {
-            queue: this.queueGroup,
-        });
+        const opts = consumerOpts();
+        opts.durable(this.queueGroup);
+        opts.manualAck();
+        opts.ackExplicit();
+        opts.queue(this.queueGroup);
+        opts.deliverTo(createInbox());
+        opts.deliverAll();
+        opts.ackWait(30_000);
+        opts.maxDeliver(5);
+
+        const sub = await js.subscribe(this.ingestSubject, opts);
         this.subscription = sub;
 
         this.logger.log(
@@ -69,12 +78,15 @@ export class IngestSubscriberService
 
                     if (!ev?.message_id || !ev.streamer_id || !ev.user_id) {
                         this.logger.warn('invalid event payload (missing ids)');
+                        msg.ack();
                         continue;
                     }
 
                     await this.useCase.handle(ev);
+                    msg.ack();
                 } catch (err) {
                     this.logger.error(`failed to process message: ${err}`);
+                    msg.nak();
                 }
             }
         })().catch((err) => {
