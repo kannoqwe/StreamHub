@@ -43,4 +43,43 @@ export class StreamRepository {
             },
         });
     }
+
+    async findLiveStreams(limit: number) {
+        return this.prismaService.streamSession.findMany({
+            where: { isLive: true },
+            orderBy: { startedAt: 'desc' },
+            take: limit,
+            include: {
+                streamer: true,
+                category: true,
+            },
+        });
+    }
+
+    async findFollowedLiveStreams(followerId: number, limit: number) {
+        return this.prismaService.streamSession.findMany({
+            where: {
+                isLive: true,
+                streamer: {
+                    followers: {
+                        some: {
+                            followerId,
+                        },
+                    },
+                },
+            },
+            orderBy: { startedAt: 'desc' },
+            take: limit,
+            include: {
+                streamer: true,
+                category: true,
+            },
+        });
+    }
+
+    async findCategories() {
+        return this.prismaService.category.findMany({
+            orderBy: { name: 'asc' },
+        });
+    }
 }

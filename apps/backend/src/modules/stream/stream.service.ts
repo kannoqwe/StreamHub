@@ -12,6 +12,11 @@ import { StreamModel, ChannelDto } from '@streamhub/shared';
 import { Mapper } from '@common/utils/Mapper';
 import { RedisService } from '@modules/redis/redis.service';
 import { StreamKeys } from '@common/constants/redis.keys';
+import {
+    HomeFeedResponse,
+    PublicCategoryResponse,
+    PublicStreamCardResponse,
+} from '@modules/stream/interfaces/response.interface';
 
 @Injectable()
 export class StreamService {
@@ -98,6 +103,68 @@ export class StreamService {
 
         return {
             streamKey: newKey,
+        };
+    }
+
+    async getLiveStreams(limit: number): Promise<PublicStreamCardResponse[]> {
+        const safeLimit = this.normalizeLimit(limit, 24);
+        const streams = await this.streamRepository.findLiveStreams(safeLimit);
+        return streams.map((stream) => this.toPublicStreamCard(stream));
+    }
+
+    async getFollowedLiveStreams(
+        userId: number,
+        limit: number,
+    ): Promise<PublicStreamCardResponse[]> {
+        const safeLimit = this.normalizeLimit(limit, 24);
+        const streams = await this.streamRepository.findFollowedLiveStreams(
+            userId,
+            safeLimit,
+        );
+        return streams.map((stream) => this.toPublicStreamCard(stream));
+    }
+
+    async getCategories(): Promise<PublicCategoryResponse[]> {
+        const categories = await this.streamRepository.findCategories();
+        return categories.map((category) => ({
+            id: category.id,
+            name: category.name,
+            image: category.iconUrl,
+        }));
+    }
+
+    async getHomeFeed(limit: number): Promise<HomeFeedResponse> {
+        const streams = await this.getLiveStreams(limit);
+        const categories = await this.getCategories();
+
+        return {
+            featuredStream: streams[0] ?? null,
+            streams,
+            categories,
+        };
+    }
+
+    private normalizeLimit(limit: number, fallback: number): number {
+        if (!Number.isFinite(limit)) return fallback;
+        return Math.min(Math.max(limit, 1), 100);
+    }
+
+    private toPublicStreamCard(stream: any): PublicStreamCardResponse {
+        return {
+            id: stream.id,
+            title: stream.title,
+            thumbnail: stream.thumbnail ?? stream.streamer.avatarUrl,
+            viewerCount: 0,
+            category: stream.category?.name ?? 'Unknown',
+            tags: [],
+            startedAt: stream.startedAt.toISOString(),
+            streamer: {
+                id: stream.streamer.id,
+                username: stream.streamer.username,
+                displayName: stream.streamer.displayName,
+                avatar: stream.streamer.avatarUrl,
+                isOnline: true,
+            },
         };
     }
 }
