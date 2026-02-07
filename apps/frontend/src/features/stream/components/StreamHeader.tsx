@@ -9,6 +9,8 @@ interface StreamHeaderProps {
     stream: StreamModel | null;
     isFollowed: boolean;
     onFollow: () => void;
+    isFollowLoading?: boolean;
+    canFollow?: boolean;
     onSubscribe: () => void;
 }
 
@@ -17,6 +19,8 @@ export const StreamHeader: React.FC<StreamHeaderProps> = ({
     stream,
     isFollowed,
     onFollow,
+    isFollowLoading = false,
+    canFollow = true,
     onSubscribe,
 }) => {
     const isLive = !!stream;
@@ -73,8 +77,13 @@ export const StreamHeader: React.FC<StreamHeaderProps> = ({
                         )
                     }
                     onClick={onFollow}
+                    disabled={!canFollow || isFollowLoading}
                 >
-                    {isFollowed ? 'Following' : 'Follow'}
+                    {isFollowLoading
+                        ? 'Loading...'
+                        : isFollowed
+                          ? 'Following'
+                          : 'Follow'}
                 </Button>
                 <Button
                     variant="outline"

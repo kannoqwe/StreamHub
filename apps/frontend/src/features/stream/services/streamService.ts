@@ -2,6 +2,11 @@ import { $api } from '@api';
 import { ChannelDto } from '@streamhub/shared';
 import { ChatIngestEvent } from '../types/chat';
 
+interface FollowStateResponse {
+    following: boolean;
+    followedAt: string | null;
+}
+
 export const StreamService = {
     async getChannelData(username: string) {
         const { data } = await $api.get<ChannelDto>(`/stream/${username}`);
@@ -16,6 +21,23 @@ export const StreamService = {
     },
 
     async follow(streamerId: number) {
-        return $api.post(`/user/follow/${streamerId}`);
+        const { data } = await $api.post<FollowStateResponse>(
+            `/user/follow/${streamerId}`,
+        );
+        return data;
+    },
+
+    async unfollow(streamerId: number) {
+        const { data } = await $api.delete<FollowStateResponse>(
+            `/user/follow/${streamerId}`,
+        );
+        return data;
+    },
+
+    async followStatus(streamerId: number) {
+        const { data } = await $api.get<FollowStateResponse>(
+            `/user/follow/${streamerId}`,
+        );
+        return data;
     },
 };

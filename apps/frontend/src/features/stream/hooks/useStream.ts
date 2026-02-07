@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStreamStore } from '../stores/useStreamStore';
 import { useAuthStore } from '../../../stores/useAuthStore';
@@ -26,6 +26,8 @@ export const useStream = () => {
     const { user } = useAuthStore();
 
     const wsRef = useRef<WebSocket | null>(null);
+    const [isFollowed, setIsFollowed] = useState(false);
+    const [isFollowLoading, setIsFollowLoading] = useState(false);
 
     const {
         streamer,
@@ -142,6 +144,39 @@ export const useStream = () => {
         };
     }, [streamer, addMessage]);
 
+    useEffect(() => {
+        if (!streamer || !user || user.id === streamer.id) {
+            setIsFollowed(false);
+            return;
+        }
+
+        let cancelled = false;
+        const loadFollowStatus = async () => {
+            setIsFollowLoading(true);
+            try {
+                const data = await StreamService.followStatus(streamer.id);
+                if (!cancelled) {
+                    setIsFollowed(data.following);
+                }
+            } catch (e) {
+                if (!cancelled) {
+                    setIsFollowed(false);
+                }
+                console.error('Follow status error', e);
+            } finally {
+                if (!cancelled) {
+                    setIsFollowLoading(false);
+                }
+            }
+        };
+
+        void loadFollowStatus();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [streamer, user]);
+
     const handleSendMessage = useCallback(
         async (text: string) => {
             if (!user || !streamer || !text.trim()) return;
@@ -167,11 +202,20 @@ export const useStream = () => {
     );
 
     const handleFollow = async () => {
-        if (!user || !currentStream || !streamer) return;
+        if (!user || !streamer || user.id === streamer.id || isFollowLoading) {
+            return;
+        }
+
+        setIsFollowLoading(true);
         try {
-            await StreamService.follow(streamer.id);
+            const data = isFollowed
+                ? await StreamService.unfollow(streamer.id)
+                : await StreamService.follow(streamer.id);
+            setIsFollowed(data.following);
         } catch (e) {
             console.error('Follow error', e);
+        } finally {
+            setIsFollowLoading(false);
         }
     };
 
@@ -182,6 +226,9 @@ export const useStream = () => {
         isLoading,
         error,
         user,
+        isFollowed,
+        isFollowLoading,
+        canFollow: !!user && !!streamer && user.id !== streamer.id,
         handleSendMessage,
         handleFollow,
     };

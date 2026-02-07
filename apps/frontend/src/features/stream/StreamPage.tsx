@@ -12,6 +12,9 @@ export const StreamPage: React.FC = () => {
         messages,
         handleSendMessage,
         handleFollow,
+        isFollowed,
+        isFollowLoading,
+        canFollow,
         user,
         isLoading,
     } = useStream();
@@ -47,7 +50,9 @@ export const StreamPage: React.FC = () => {
                     <StreamHeader
                         streamer={streamer}
                         stream={stream}
-                        isFollowed={false}
+                        isFollowed={isFollowed}
+                        isFollowLoading={isFollowLoading}
+                        canFollow={canFollow}
                         onFollow={handleFollow}
                         onSubscribe={() => alert('Subscribed!')}
                     />
