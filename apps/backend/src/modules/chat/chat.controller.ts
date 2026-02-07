@@ -15,10 +15,13 @@ export class ChatController {
     async history(
         @Param('streamerId', ParseIntPipe) streamerId: number,
     ): Promise<ChatIngestEvent[]> {
-        const items = await this.redis.zrevrangeJson<ChatIngestEvent>(
+        const now = Date.now();
+        const minScore = now - ChatKeys.TTL * 1000;
+        const items = await this.redis.zrevrangeByScoreJson<ChatIngestEvent>(
             ChatKeys.last100(streamerId),
-            0,
-            ChatKeys.MAX - 1,
+            now,
+            minScore,
+            ChatKeys.MAX,
         );
 
         return items.reverse();

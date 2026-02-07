@@ -119,6 +119,32 @@ export class RedisService implements OnModuleDestroy {
             .filter((x): x is T => x !== null);
     }
 
+    async zrevrangeByScoreJson<T>(
+        key: string,
+        maxScore: number,
+        minScore: number,
+        limit: number,
+    ): Promise<T[]> {
+        const items = await this.redis.zrevrangebyscore(
+            key,
+            maxScore.toString(),
+            minScore.toString(),
+            'LIMIT',
+            0,
+            limit,
+        );
+
+        return items
+            .map((s) => {
+                try {
+                    return JSON.parse(s) as T;
+                } catch {
+                    return null;
+                }
+            })
+            .filter((x): x is T => x !== null);
+    }
+
     async setIfNotExists(
         key: string,
         value: string,
