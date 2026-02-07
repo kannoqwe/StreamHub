@@ -4,6 +4,7 @@ import { SidebarStreamItem } from './SidebarStreamItem';
 
 export const RecommendedList = () => {
     const { recommended, isLoading, fetchRecommended } = useGlobalStore();
+    const showSkeleton = isLoading || recommended.length === 0;
 
     useEffect(() => {
         void fetchRecommended();
@@ -15,7 +16,7 @@ export const RecommendedList = () => {
                 Recommended
             </p>
 
-            {isLoading
+            {showSkeleton
                 ? [1, 2, 3].map((i) => (
                       <div
                           key={i}

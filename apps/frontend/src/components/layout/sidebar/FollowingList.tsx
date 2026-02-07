@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 export const FollowingList = () => {
     const { user } = useAuthStore();
     const { followed, isLoading, fetchFollowed } = useGlobalStore();
+    const showSkeleton = isLoading || followed.length === 0;
 
     useEffect(() => {
         if (user) {
@@ -35,7 +36,7 @@ export const FollowingList = () => {
                         </Button>
                     </Link>
                 </div>
-            ) : isLoading ? (
+            ) : showSkeleton ? (
                 [1, 2].map((i) => (
                     <div
                         key={i}
@@ -51,12 +52,6 @@ export const FollowingList = () => {
                 followed.map((stream) => (
                     <SidebarStreamItem key={stream.id} stream={stream} />
                 ))
-            )}
-
-            {user && !isLoading && followed.length === 0 && (
-                <div className="px-3 text-xs text-zinc-500">
-                    You don't follow anyone yet.
-                </div>
             )}
         </div>
     );
