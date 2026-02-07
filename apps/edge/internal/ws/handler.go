@@ -73,6 +73,7 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 		WS:       wsConn,
 		UserID:   ar.UserID,
 		Username: ar.Username,
+		SendCh:   make(chan any, 64),
 	}
 
 	h.log.Printf("connected user_id=%d username=%s conn_id=%d from=%s",
@@ -91,7 +92,10 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 
 	c.StreamerID = join.StreamerID
 	h.hub.Add(c)
-	defer h.hub.Remove(c)
+	defer func() {
+		c.CloseSend()
+		h.hub.Remove(c)
+	}()
 
 	_ = h.safeSend(r.Context(), c, model.ServerPacket{
 		"type":        "joined",
@@ -152,16 +156,11 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) safeSend(ctx context.Context, c *hub.Conn, v any) error {
-	c.SendMu.Lock()
-	defer c.SendMu.Unlock()
-
-	writeCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
-	defer cancel()
-
-	if err := wsjson.Write(writeCtx, c.WS, v); err != nil {
+	if err := c.SendJSON(v); err != nil {
 		if errors.Is(err, context.Canceled) {
 			return err
 		}
+		return err
 	}
 	return nil
 }

@@ -25,6 +25,10 @@ func (h *Hub) Add(c *Conn) {
 		h.conns[c.StreamerID] = m
 	}
 	m[c.ID] = c
+
+	c.StartWriter(func(err error) {
+		h.Drop(c, websocket.StatusGoingAway, "write failed")
+	})
 }
 
 func (h *Hub) Remove(c *Conn) {
@@ -58,6 +62,7 @@ func (h *Hub) List(streamerID int64) []*Conn {
 }
 
 func (h *Hub) Drop(c *Conn, status websocket.StatusCode, reason string) {
+	c.CloseSend()
 	_ = c.WS.Close(status, reason)
 	h.Remove(c)
 }

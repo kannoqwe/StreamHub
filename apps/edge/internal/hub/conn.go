@@ -14,7 +14,8 @@ type Conn struct {
 	Username   string
 	StreamerID int64
 
-	SendMu sync.Mutex
+	SendCh    chan any
+	closeOnce sync.Once
 
 	RateTokens float64
 	RateLast   time.Time
