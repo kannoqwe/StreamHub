@@ -36,10 +36,11 @@ export class IngestUseCase {
             timestamp: event.timestamp,
         };
 
-        await this.redis.lpushTrimJson(
+        await this.redis.lpushTrimExpireJson(
             ChatKeys.last100(out.streamer_id),
             out,
             100,
+            ChatKeys.TTL,
         );
 
         try {

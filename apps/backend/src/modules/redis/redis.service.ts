@@ -77,4 +77,17 @@ export class RedisService implements OnModuleDestroy {
         multi.ltrim(key, 0, keep - 1);
         await multi.exec();
     }
+
+    async lpushTrimExpireJson(
+        key: string,
+        value: any,
+        keep: number,
+        ttlSeconds: number,
+    ): Promise<void> {
+        const multi = this.redis.multi();
+        multi.lpush(key, JSON.stringify(value));
+        multi.ltrim(key, 0, keep - 1);
+        multi.expire(key, ttlSeconds);
+        await multi.exec();
+    }
 }

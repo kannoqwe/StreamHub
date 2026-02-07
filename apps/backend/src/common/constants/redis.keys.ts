@@ -13,5 +13,6 @@ export const StreamKeys = {
 };
 
 export const ChatKeys = {
+    TTL: 10 * 60,
     last100: (streamerId: number) => `chat:streamer:${streamerId}:last100`,
 };
