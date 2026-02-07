@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Stream, Category } from '@types';
-import { MOCK_CATEGORIES, MOCK_STREAMS } from '../../../mock';
+import { streamService } from '../../../services/streamService';
 
 interface HomeState {
     featuredStream: Stream | null;
@@ -17,12 +17,22 @@ export const useHomeStore = create<HomeState>((set) => ({
     isLoading: false,
     fetchHomeData: async () => {
         set({ isLoading: true });
-
-        set({
-            featuredStream: MOCK_STREAMS[0],
-            streams: MOCK_STREAMS,
-            categories: MOCK_CATEGORIES,
-            isLoading: false,
-        });
+        try {
+            const data = await streamService.getHomeFeed();
+            set({
+                featuredStream: data.featuredStream,
+                streams: data.streams,
+                categories: data.categories,
+                isLoading: false,
+            });
+        } catch (error) {
+            console.error('Failed to fetch home feed', error);
+            set({
+                featuredStream: null,
+                streams: [],
+                categories: [],
+                isLoading: false,
+            });
+        }
     },
 }));
