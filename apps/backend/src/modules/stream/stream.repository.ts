@@ -82,4 +82,24 @@ export class StreamRepository {
             orderBy: { name: 'asc' },
         });
     }
+
+    async findCategoryByName(name: string) {
+        return this.prismaService.category.findUnique({
+            where: { name },
+        });
+    }
+
+    async findFirstCategory() {
+        return this.prismaService.category.findFirst({
+            orderBy: { id: 'asc' },
+        });
+    }
+
+    async upsertCategory(name: string, iconUrl: string) {
+        return this.prismaService.category.upsert({
+            where: { name },
+            create: { name, iconUrl },
+            update: { iconUrl },
+        });
+    }
 }

@@ -17,6 +17,11 @@ import {
     PublicCategoryResponse,
     PublicStreamCardResponse,
 } from '@modules/stream/interfaces/response.interface';
+import {
+    DEFAULT_STREAM_LIST_LIMIT,
+    MAX_STREAM_LIST_LIMIT,
+} from '@modules/stream/constants/stream.constants';
+import { StreamCategoryService } from '@modules/stream/services/stream-category.service';
 
 @Injectable()
 export class StreamService {
@@ -24,6 +29,7 @@ export class StreamService {
         private streamRepository: StreamRepository,
         private userService: UserService,
         private redisService: RedisService,
+        private streamCategoryService: StreamCategoryService,
     ) {}
 
     generateKey() {
@@ -34,12 +40,13 @@ export class StreamService {
         const user = await this.userService.findByStreamKey(streamKey);
         if (!user) throw new ForbiddenException('Invalid stream key');
 
-        // ensure user active stream
         await this.streamRepository.end(user.id);
 
+        const defaultCategoryId =
+            await this.streamCategoryService.getDefaultCategoryId();
         const session = await this.streamRepository.start(user.id, {
             title: 'Untitled Stream',
-            categoryId: 1,
+            categoryId: defaultCategoryId,
         });
 
         await this.redisService.delete(StreamKeys.channelPage(user.username));
@@ -52,7 +59,6 @@ export class StreamService {
         if (!user) throw new ForbiddenException('Invalid stream key');
 
         await this.streamRepository.end(user.id);
-
         await this.redisService.delete(StreamKeys.channelPage(user.username));
     }
 
@@ -107,7 +113,7 @@ export class StreamService {
     }
 
     async getLiveStreams(limit: number): Promise<PublicStreamCardResponse[]> {
-        const safeLimit = this.normalizeLimit(limit, 24);
+        const safeLimit = this.normalizeLimit(limit, DEFAULT_STREAM_LIST_LIMIT);
         const streams = await this.streamRepository.findLiveStreams(safeLimit);
         return streams.map((stream) => this.toPublicStreamCard(stream));
     }
@@ -116,7 +122,7 @@ export class StreamService {
         userId: number,
         limit: number,
     ): Promise<PublicStreamCardResponse[]> {
-        const safeLimit = this.normalizeLimit(limit, 24);
+        const safeLimit = this.normalizeLimit(limit, DEFAULT_STREAM_LIST_LIMIT);
         const streams = await this.streamRepository.findFollowedLiveStreams(
             userId,
             safeLimit,
@@ -125,12 +131,7 @@ export class StreamService {
     }
 
     async getCategories(): Promise<PublicCategoryResponse[]> {
-        const categories = await this.streamRepository.findCategories();
-        return categories.map((category) => ({
-            id: category.id,
-            name: category.name,
-            image: category.iconUrl,
-        }));
+        return this.streamCategoryService.getPublicCategories();
     }
 
     async getHomeFeed(limit: number): Promise<HomeFeedResponse> {
@@ -146,7 +147,7 @@ export class StreamService {
 
     private normalizeLimit(limit: number, fallback: number): number {
         if (!Number.isFinite(limit)) return fallback;
-        return Math.min(Math.max(limit, 1), 100);
+        return Math.min(Math.max(limit, 1), MAX_STREAM_LIST_LIMIT);
     }
 
     private toPublicStreamCard(stream: any): PublicStreamCardResponse {
@@ -167,4 +168,5 @@ export class StreamService {
             },
         };
     }
+
 }
