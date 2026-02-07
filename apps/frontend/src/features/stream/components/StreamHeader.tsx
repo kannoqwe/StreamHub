@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { StreamModel, UserModel } from '@streamhub/shared';
 import { Avatar, Button } from '@components/ui';
-import { LuCheck, LuHeart, LuShare2, LuStar } from 'react-icons/lu';
+import { LuHeart, LuShare2, LuStar, LuUserMinus } from 'react-icons/lu';
 
 interface StreamHeaderProps {
     streamer: UserModel;
@@ -71,7 +71,7 @@ export const StreamHeader: React.FC<StreamHeaderProps> = ({
                     className="flex-1 md:flex-none"
                     icon={
                         isFollowed ? (
-                            <LuCheck className="w-4 h-4" />
+                            <LuUserMinus className="w-4 h-4" />
                         ) : (
                             <LuHeart className="w-4 h-4" />
                         )
@@ -82,7 +82,7 @@ export const StreamHeader: React.FC<StreamHeaderProps> = ({
                     {isFollowLoading
                         ? 'Loading...'
                         : isFollowed
-                          ? 'Following'
+                          ? 'Unfollow'
                           : 'Follow'}
                 </Button>
                 <Button
