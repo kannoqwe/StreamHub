@@ -4,6 +4,7 @@ import {
     LoginDto,
     RegisterDto,
     LoginResponse,
+    LogoutResponse,
     RegisterResponse,
 } from '@streamhub/shared';
 
@@ -30,10 +31,14 @@ export const AuthService = {
         return response.data;
     },
 
-    async logout() {
-        const response = await $api.post<LoginResponse>('/auth/logout', {
-            withCredentials: true,
-        });
+    async logout(): Promise<LogoutResponse> {
+        const response = await $api.post<LogoutResponse>(
+            '/auth/logout',
+            null,
+            {
+                withCredentials: true,
+            },
+        );
         return response.data;
     },
 };
