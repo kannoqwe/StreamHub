@@ -18,6 +18,20 @@ interface StreamState {
 
 const MAX_CHAT_MESSAGES = 100;
 
+const getErrorMessage = (error: unknown): string => {
+    if (typeof error !== 'object' || error === null) {
+        return 'Stream not found';
+    }
+
+    const response = (error as { response?: { data?: { message?: unknown } } })
+        .response;
+    const message = response?.data?.message;
+
+    return typeof message === 'string' && message.length > 0
+        ? message
+        : 'Stream not found';
+};
+
 export const useStreamStore = create<StreamState>((set) => ({
     streamer: null,
     currentStream: null,
@@ -35,9 +49,9 @@ export const useStreamStore = create<StreamState>((set) => ({
                 messages: [],
                 isLoading: false,
             });
-        } catch (err: any) {
+        } catch (err: unknown) {
             set({
-                error: err.response?.data?.message || 'Stream not found',
+                error: getErrorMessage(err),
                 isLoading: false,
                 streamer: null,
                 currentStream: null,

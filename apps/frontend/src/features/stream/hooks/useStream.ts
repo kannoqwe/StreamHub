@@ -21,6 +21,23 @@ const buildWsUrl = (base: string, token: string) => {
     return url.toString();
 };
 
+const isChatIngestEvent = (value: unknown): value is ChatIngestEvent => {
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+
+    const data = value as Record<string, unknown>;
+
+    return (
+        typeof data.message_id === 'string' &&
+        typeof data.streamer_id === 'number' &&
+        typeof data.user_id === 'number' &&
+        typeof data.username === 'string' &&
+        typeof data.content === 'string' &&
+        typeof data.timestamp === 'string'
+    );
+};
+
 export const useStream = () => {
     const { username } = useParams<{ username: string }>();
     const { user } = useAuthStore();
@@ -101,15 +118,21 @@ export const useStream = () => {
 
             ws.onmessage = (event) => {
                 try {
-                    const data = JSON.parse(event.data) as any;
+                    if (typeof event.data !== 'string') return;
+                    const data: unknown = JSON.parse(event.data);
 
-                    if (data?.type === 'joined') return;
-                    if (data?.type === 'ack') return;
-                    if (data?.type === 'error') return;
+                    if (typeof data !== 'object' || data === null) {
+                        return;
+                    }
 
-                    if (data?.message_id && data?.content) {
-                        const ev = data as ChatIngestEvent;
-                        addMessage(mapIngestToChatMessage(ev));
+                    const packet = data as Record<string, unknown>;
+
+                    if (packet.type === 'joined') return;
+                    if (packet.type === 'ack') return;
+                    if (packet.type === 'error') return;
+
+                    if (isChatIngestEvent(data)) {
+                        addMessage(mapIngestToChatMessage(data));
                     }
                 } catch {
                     return;
