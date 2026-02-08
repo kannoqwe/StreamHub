@@ -13,7 +13,7 @@ interface AuthState {
         email: string,
         password: string,
     ) => Promise<void>;
-    logout: () => void;
+    logout: () => Promise<void>;
     checkAuth: () => Promise<void>;
 }
 
@@ -70,9 +70,15 @@ export const useAuthStore = create<AuthState>()(
             },
 
             logout: async () => {
+                // Always clear local auth state, even if request fails.
                 localStorage.removeItem('token');
-                await AuthService.logout();
-                set({ user: null, isLoading: false });
+                set({ user: null, isLoading: false, error: null });
+
+                try {
+                    await AuthService.logout();
+                } catch {
+                    return;
+                }
             },
 
             checkAuth: async () => {

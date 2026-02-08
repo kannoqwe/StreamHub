@@ -14,8 +14,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
     const { logout } = useAuthStore();
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
         setIsOpen(false);
         navigate('/');
     };
