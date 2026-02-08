@@ -1,23 +1,10 @@
 import React, {
-    createContext,
-    useContext,
     useState,
     useEffect,
     ReactNode,
     useMemo,
 } from 'react';
-
-export interface ThemeContextType {
-    isDark: boolean;
-    toggleTheme: () => void;
-}
-
-const ThemeContext = createContext<ThemeContextType>({
-    isDark: true,
-    toggleTheme: () => {},
-});
-
-export const useTheme = () => useContext(ThemeContext);
+import { ThemeContext } from './theme-context';
 
 interface ThemeProviderProps {
     children: ReactNode;

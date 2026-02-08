@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from '@components/layout/navbar/Navbar';
 import { useState } from 'react';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../contexts/theme-context';
 import { Sidebar } from '@components/layout/sidebar/Sidebar';
 
 export const MainLayout = () => {
