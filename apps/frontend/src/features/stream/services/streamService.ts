@@ -1,13 +1,40 @@
 import { $api } from '@api';
-import { ChannelDto } from '@streamhub/shared';
+import {
+    ChannelDto,
+    FollowStateResponse,
+    HomeFeedResponse,
+    PublicCategoryResponse,
+    PublicStreamCardResponse,
+} from '@streamhub/shared';
 import { ChatIngestEvent } from '../types/chat';
 
-interface FollowStateResponse {
-    following: boolean;
-    followedAt: string | null;
-}
-
 export const StreamService = {
+    async getRecommendedStreams(): Promise<PublicStreamCardResponse[]> {
+        const { data } = await $api.get<PublicStreamCardResponse[]>(
+            '/stream/live',
+        );
+        return data;
+    },
+
+    async getFollowedStreams(): Promise<PublicStreamCardResponse[]> {
+        const { data } = await $api.get<PublicStreamCardResponse[]>(
+            '/stream/live/following',
+        );
+        return data;
+    },
+
+    async getCategories(): Promise<PublicCategoryResponse[]> {
+        const { data } = await $api.get<PublicCategoryResponse[]>(
+            '/stream/categories',
+        );
+        return data;
+    },
+
+    async getHomeFeed(): Promise<HomeFeedResponse> {
+        const { data } = await $api.get<HomeFeedResponse>('/stream/home');
+        return data;
+    },
+
     async getChannelData(username: string) {
         const { data } = await $api.get<ChannelDto>(`/stream/${username}`);
         return data;

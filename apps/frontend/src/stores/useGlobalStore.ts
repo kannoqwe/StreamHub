@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Stream } from '@types';
-import { streamService } from '../services/streamService';
+import { StreamService } from '@features/stream/services/streamService';
 
 interface GlobalState {
     recommended: Stream[];
@@ -19,7 +19,7 @@ export const useGlobalStore = create<GlobalState>((set) => ({
     fetchRecommended: async () => {
         set({ isLoading: true });
         try {
-            const data = await streamService.getRecommendedStreams();
+            const data = await StreamService.getRecommendedStreams();
             set({ recommended: data, isLoading: false });
         } catch (error) {
             console.error('Failed to fetch recommended', error);
@@ -30,7 +30,7 @@ export const useGlobalStore = create<GlobalState>((set) => ({
     fetchFollowed: async () => {
         set({ isLoading: true });
         try {
-            const data = await streamService.getFollowedStreams();
+            const data = await StreamService.getFollowedStreams();
             set({ followed: data, isLoading: false });
         } catch (error) {
             console.error('Failed to fetch followed', error);

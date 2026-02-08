@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Stream, Category } from '@types';
-import { streamService } from '../../../services/streamService';
+import { StreamService } from '@features/stream/services/streamService';
 
 interface HomeState {
     featuredStream: Stream | null;
@@ -18,7 +18,7 @@ export const useHomeStore = create<HomeState>((set) => ({
     fetchHomeData: async () => {
         set({ isLoading: true });
         try {
-            const data = await streamService.getHomeFeed();
+            const data = await StreamService.getHomeFeed();
             set({
                 featuredStream: data.featuredStream,
                 streams: data.streams,

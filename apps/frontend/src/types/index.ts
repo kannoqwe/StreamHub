@@ -1,29 +1,12 @@
-export interface User {
-    id: number;
-    username: string;
-    displayName: string;
-    avatar: string;
-    bio?: string;
-    followers: number;
-    isOnline: boolean;
-}
+import {
+    PublicCategoryResponse,
+    PublicStreamCardResponse,
+    UserModel,
+} from '@streamhub/shared';
 
-export interface Stream {
-    id: number;
-    title: string;
-    thumbnail: string;
-    viewerCount: number;
-    category: string;
-    tags: string[];
-    startedAt: string;
-    streamer: User;
-}
-
-export interface Category {
-    id: number;
-    name: string;
-    image: string;
-}
+export type User = UserModel;
+export type Stream = PublicStreamCardResponse;
+export type Category = PublicCategoryResponse;
 
 export interface ChatMessage {
     id: string;
