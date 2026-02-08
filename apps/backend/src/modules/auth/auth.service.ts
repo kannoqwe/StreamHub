@@ -27,7 +27,10 @@ export class AuthService {
 
         const user = Mapper.mapToUserProfile(userEntity);
 
-        const payload: JwtPayload = { userId: user.id, username };
+        const payload: JwtPayload = {
+            userId: user.id,
+            username: user.username,
+        };
         const tokens = {
             accessToken: await this.generateAccessToken(payload),
             refreshToken: await this.generateRefreshToken(payload),
@@ -106,7 +109,9 @@ export class AuthService {
     }
 
     async validateUser(username: string, password: string) {
-        const user = await this.usersService.findByUsername(username);
+        const normalizedUsername = username.trim().toLowerCase();
+        const user =
+            await this.usersService.findByUsername(normalizedUsername);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
