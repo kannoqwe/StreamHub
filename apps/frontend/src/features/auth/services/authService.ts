@@ -4,6 +4,7 @@ import {
     LoginDto,
     RegisterDto,
     LoginResponse,
+    RegisterResponse,
 } from '@streamhub/shared';
 
 export const AuthService = {
@@ -14,8 +15,11 @@ export const AuthService = {
         return response.data;
     },
 
-    async register(data: RegisterDto): Promise<LoginResponse> {
-        const response = await $api.post<LoginResponse>('/auth/register', data);
+    async register(data: RegisterDto): Promise<RegisterResponse> {
+        const response = await $api.post<RegisterResponse>(
+            '/auth/register',
+            data,
+        );
         return response.data;
     },
 
