@@ -5,6 +5,7 @@ import { NotFoundPage } from '@features/notfound/NotFoundPage';
 import { LoginPage } from '@features/auth/LoginPage';
 import { RegisterPage } from '@features/auth/RegisterPage';
 import { StreamPage } from '@features/stream/StreamPage';
+import { ProfileSettingsPage } from '@features/settings/ProfileSettingsPage';
 import { useAuthStore } from '../stores/useAuthStore';
 
 export const AppRoutes = () => {
@@ -25,6 +26,16 @@ export const AppRoutes = () => {
                     path="/signup"
                     element={
                         !user ? <RegisterPage /> : <Navigate to="/" replace />
+                    }
+                />
+                <Route
+                    path="/settings"
+                    element={
+                        user ? (
+                            <ProfileSettingsPage />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
                     }
                 />
 

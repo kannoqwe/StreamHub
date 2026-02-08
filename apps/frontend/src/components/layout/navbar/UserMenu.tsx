@@ -62,9 +62,13 @@ export const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                                 >
                                     <LuUser className="w-4 h-4" /> Profile
                                 </Link>
-                                <button className="w-full flex items-center gap-3 px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 transition-colors text-sm">
+                                <Link
+                                    to="/settings"
+                                    onClick={() => setIsOpen(false)}
+                                    className="w-full flex items-center gap-3 px-3 py-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 transition-colors text-sm"
+                                >
                                     <LuSettings className="w-4 h-4" /> Settings
-                                </button>
+                                </Link>
                                 <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1 mx-2" />
                                 <button
                                     onClick={handleLogout}

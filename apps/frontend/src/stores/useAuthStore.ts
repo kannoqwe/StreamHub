@@ -7,6 +7,7 @@ interface AuthState {
     user: User | null;
     isLoading: boolean;
     error: string | null;
+    setUser: (user: User | null) => void;
     login: (username: string, password: string) => Promise<void>;
     register: (
         username: string,
@@ -17,12 +18,25 @@ interface AuthState {
     checkAuth: () => Promise<void>;
 }
 
+const getAuthErrorMessage = (error: unknown): string | null => {
+    if (typeof error !== 'object' || error === null) {
+        return null;
+    }
+
+    const response = (error as { response?: { data?: { error?: unknown } } })
+        .response;
+    const message = response?.data?.error;
+
+    return typeof message === 'string' ? message : null;
+};
+
 export const useAuthStore = create<AuthState>()(
     persist(
         (set) => ({
             user: null,
             isLoading: true,
             error: null,
+            setUser: (user: User | null) => set({ user }),
 
             login: async (username: string, password: string) => {
                 set({ isLoading: true, error: null });
@@ -33,9 +47,9 @@ export const useAuthStore = create<AuthState>()(
                     });
                     localStorage.setItem('token', token);
                     set({ user, isLoading: false });
-                } catch (error: any) {
+                } catch (error: unknown) {
                     set({
-                        error: error.response?.data?.error,
+                        error: getAuthErrorMessage(error),
                         isLoading: false,
                     });
                     throw error;
@@ -60,9 +74,9 @@ export const useAuthStore = create<AuthState>()(
                     });
                     localStorage.setItem('token', token);
                     set({ user, isLoading: false });
-                } catch (error: any) {
+                } catch (error: unknown) {
                     set({
-                        error: error.response?.data?.error,
+                        error: getAuthErrorMessage(error),
                         isLoading: false,
                     });
                     throw error;
