@@ -33,3 +33,7 @@ export interface FollowStateResponse {
     following: boolean;
     followedAt: string | null;
 }
+
+export interface StreamKeyResponse {
+    streamKey: string;
+}

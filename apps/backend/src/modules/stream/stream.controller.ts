@@ -18,18 +18,24 @@ import {
     HomeFeedResponse,
     PublicCategoryResponse,
     PublicStreamCardResponse,
-    RegenerateResponse,
 } from '@modules/stream/interfaces/response.interface';
-import { ChannelDto } from '@streamhub/shared';
+import { ChannelDto, StreamKeyResponse } from '@streamhub/shared';
 
 @Controller('stream')
 export class StreamController {
     constructor(private streamService: StreamService) {}
 
     @UseGuards(JwtGuard)
+    @Get('key')
+    @HttpCode(HttpStatus.OK)
+    async getStreamKey(@Req() req: Request): Promise<StreamKeyResponse> {
+        return this.streamService.getCurrentStreamKey(req.user.userId);
+    }
+
+    @UseGuards(JwtGuard)
     @Post('generate_key')
     @HttpCode(HttpStatus.OK)
-    async generateKey(@Req() req: Request): Promise<RegenerateResponse> {
+    async generateKey(@Req() req: Request): Promise<StreamKeyResponse> {
         return this.streamService.regenerateStreamKey(req.user.userId);
     }
 
