@@ -62,15 +62,25 @@ export class StreamService {
         await this.redisService.delete(StreamKeys.channelPage(user.username));
     }
 
-    async getActiveStream(username: string): Promise<StreamModel | null> {
+    async getActiveStream(
+        username: string,
+        includePrivateKey = false,
+    ): Promise<StreamModel | null> {
         const stream =
             await this.streamRepository.findStreamByUsername(username);
         if (!stream) return null;
 
-        return Mapper.mapToStream(stream, stream.streamer);
+        return Mapper.mapToStream(
+            stream,
+            stream.streamer,
+            includePrivateKey,
+        );
     }
 
-    async getStreamPage(username: string): Promise<ChannelDto> {
+    async getStreamPage(
+        username: string,
+        requesterUserId?: number,
+    ): Promise<ChannelDto> {
         const page = await this.redisService.getOrSet<ChannelDto>(
             StreamKeys.channelPage(username),
             async () => {
@@ -89,6 +99,13 @@ export class StreamService {
 
         if (!page) {
             throw new NotFoundException('User not found');
+        }
+
+        if (requesterUserId === page.user.id && page.stream) {
+            return {
+                ...page,
+                stream: await this.getActiveStream(username, true),
+            };
         }
 
         return page;

@@ -68,8 +68,13 @@ export class StreamController {
     @Get(':username')
     @HttpCode(HttpStatus.OK)
     async getChannelData(
+        @Req() req: Request,
         @Param('username') username: string,
     ): Promise<ChannelDto> {
-        return this.streamService.getStreamPage(username);
+        const requesterUserId = (
+            req as Request & { user?: { userId: number } }
+        ).user?.userId;
+
+        return this.streamService.getStreamPage(username, requesterUserId);
     }
 }

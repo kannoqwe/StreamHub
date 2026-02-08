@@ -15,14 +15,18 @@ export class Mapper {
         };
     }
 
-    static mapToStream(stream: StreamSession, streamer: User): StreamModel {
+    static mapToStream(
+        stream: StreamSession,
+        streamer: User,
+        includePrivateKey = false,
+    ): StreamModel {
         return {
             id: stream.id,
             title: stream.title,
             streamerId: streamer.id,
             thumbnail: stream.thumbnail,
             category: stream.categoryId,
-            key: streamer.streamKey,
+            ...(includePrivateKey ? { key: streamer.streamKey } : {}),
             viewerCount: 0,
             startedAt: dateToTimestamp(stream.startedAt),
         };
