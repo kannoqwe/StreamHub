@@ -87,6 +87,15 @@ func (s *Server) Run() error {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
+	cleanup := func() {
+		if s.unsub != nil {
+			s.unsub()
+		}
+		if s.ncClose != nil {
+			s.ncClose()
+		}
+	}
+
 	errCh := make(chan error, 1)
 
 	go func() {
@@ -100,6 +109,7 @@ func (s *Server) Run() error {
 	case <-ctx.Done():
 		s.log.Println("shutdown requested")
 	case err := <-errCh:
+		cleanup()
 		return err
 	}
 
@@ -107,7 +117,7 @@ func (s *Server) Run() error {
 	defer cancel()
 
 	_ = s.http.Shutdown(shutdownCtx)
-	s.ncClose()
+	cleanup()
 	s.log.Println("bye")
 	return nil
 }
