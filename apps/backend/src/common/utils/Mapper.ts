@@ -7,7 +7,7 @@ export class Mapper {
         return {
             id: user.id,
             username: user.username,
-            displayName: user.username,
+            displayName: user.displayName,
             avatar: user.avatarUrl,
             bio: user.bio,
             followers: user.followersCount,
