@@ -9,6 +9,11 @@ import { urlencoded } from 'express';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    const configService = app.get(ConfigService);
+    const frontendUrl =
+        configService.get<string>('frontend.url') ??
+        'http://localhost:5173';
+    const port = configService.get('PORT') as string;
 
     app.use(cookieParser());
     app.use(helmet());
@@ -20,15 +25,12 @@ async function bootstrap() {
         }),
     );
     app.enableCors({
-        origin: 'http://localhost:5173',
+        origin: frontendUrl,
         credentials: true,
         methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
     });
     app.use(urlencoded({ extended: true }));
-
-    const configService = app.get(ConfigService);
-    const port = configService.get('PORT') as string;
 
     await app.listen(port);
 }
