@@ -11,7 +11,6 @@ export const AuthService = {
         const response = await $api.post<LoginResponse>('/auth/login', data, {
             withCredentials: true,
         });
-        console.log(response);
         return response.data;
     },
 

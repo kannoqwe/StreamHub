@@ -21,8 +21,7 @@ export const useGlobalStore = create<GlobalState>((set) => ({
         try {
             const data = await StreamService.getRecommendedStreams();
             set({ recommended: data, isLoading: false });
-        } catch (error) {
-            console.error('Failed to fetch recommended', error);
+        } catch {
             set({ isLoading: false });
         }
     },
@@ -32,8 +31,7 @@ export const useGlobalStore = create<GlobalState>((set) => ({
         try {
             const data = await StreamService.getFollowedStreams();
             set({ followed: data, isLoading: false });
-        } catch (error) {
-            console.error('Failed to fetch followed', error);
+        } catch {
             set({ isLoading: false });
         }
     },

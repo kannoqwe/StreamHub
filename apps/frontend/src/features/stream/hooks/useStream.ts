@@ -59,8 +59,7 @@ export const useStream = () => {
             try {
                 const history = await StreamService.getChatHistory(streamer.id);
                 setMessages(history.map(mapIngestToChatMessage));
-            } catch (e) {
-                console.error('Failed to load chat history', e);
+            } catch {
                 setMessages([]);
             }
         };
@@ -92,7 +91,6 @@ export const useStream = () => {
                     ws.close(1000, 'leave');
                     return;
                 }
-                console.log('[chat] ws open', wsUrl);
                 ws.send(
                     JSON.stringify({
                         type: 'join',
@@ -107,26 +105,18 @@ export const useStream = () => {
 
                     if (data?.type === 'joined') return;
                     if (data?.type === 'ack') return;
-                    if (data?.type === 'error') {
-                        console.error('chat error', data.error);
-                        return;
-                    }
+                    if (data?.type === 'error') return;
 
                     if (data?.message_id && data?.content) {
                         const ev = data as ChatIngestEvent;
                         addMessage(mapIngestToChatMessage(ev));
                     }
-                } catch (err) {
-                    console.error('ws message parse error', err);
+                } catch {
+                    return;
                 }
             };
 
-            ws.onerror = (err) => {
-                console.error('ws error', err);
-            };
-
-            ws.onclose = (ev) => {
-                console.warn('[chat] ws closed', ev.code, ev.reason);
+            ws.onclose = () => {
                 if (wsRef.current === ws) {
                     wsRef.current = null;
                 }
@@ -163,11 +153,10 @@ export const useStream = () => {
                 if (!cancelled) {
                     setIsFollowed(data.following);
                 }
-            } catch (e) {
+            } catch {
                 if (!cancelled) {
                     setIsFollowed(false);
                 }
-                console.error('Follow status error', e);
             } finally {
                 if (!cancelled) {
                     setIsFollowLoading(false);
@@ -188,14 +177,9 @@ export const useStream = () => {
 
             const ws = wsRef.current;
             if (!ws || ws.readyState !== WebSocket.OPEN) {
-                console.warn(
-                    '[chat] ws not open',
-                    ws?.readyState ?? 'no-socket',
-                );
                 return;
             }
 
-            console.log('[chat] send', text);
             ws.send(
                 JSON.stringify({
                     type: 'chat',
@@ -217,8 +201,8 @@ export const useStream = () => {
                 ? await StreamService.unfollow(streamer.id)
                 : await StreamService.follow(streamer.id);
             setIsFollowed(data.following);
-        } catch (e) {
-            console.error('Follow error', e);
+        } catch {
+            return;
         } finally {
             setIsFollowLoading(false);
         }

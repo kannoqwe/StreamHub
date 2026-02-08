@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import videojs from 'video.js';
 import { VideoJS } from './VideoJsPlayer';
 
@@ -36,17 +36,10 @@ export const StreamPlayer: React.FC<StreamPlayerProps> = ({
         [streamKey],
     );
 
-    const handlePlayerReady = useCallback((player: videojs.Player) => {
-        player.on('error', () => {
-            const error = player.error();
-            console.warn(error?.message);
-        });
-    }, []);
-
     return (
         <div className="w-full h-full bg-black relative overflow-hidden rounded-xl shadow-2xl">
             {isLive ? (
-                <VideoJS options={playerOptions} onReady={handlePlayerReady} />
+                <VideoJS options={playerOptions} />
             ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
                     <img

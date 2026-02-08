@@ -25,8 +25,7 @@ export const useHomeStore = create<HomeState>((set) => ({
                 categories: data.categories,
                 isLoading: false,
             });
-        } catch (error) {
-            console.error('Failed to fetch home feed', error);
+        } catch {
             set({
                 featuredStream: null,
                 streams: [],
