@@ -2,6 +2,16 @@ import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { RefreshResponse } from '@streamhub/shared';
 import { useAuthStore } from '../stores/useAuthStore';
 
+const shouldSkipRefresh = (requestUrl: unknown): boolean => {
+    if (typeof requestUrl !== 'string') {
+        return false;
+    }
+
+    return ['/auth/login', '/auth/register', '/auth/refresh'].some((path) =>
+        requestUrl.includes(path),
+    );
+};
+
 export const $api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
@@ -21,8 +31,12 @@ $api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        const shouldRetryWithRefresh =
+            error.response?.status === 401 &&
+            !originalRequest?._isRetry &&
+            !shouldSkipRefresh(originalRequest?.url);
 
-        if (error.response?.status === 401 && !originalRequest._isRetry) {
+        if (shouldRetryWithRefresh) {
             originalRequest._isRetry = true;
             try {
                 const response: AxiosResponse<RefreshResponse> =
@@ -36,7 +50,9 @@ $api.interceptors.response.use(
                 const newToken = response.data.token;
                 localStorage.setItem('token', newToken);
 
-                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                if (originalRequest.headers) {
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                }
                 return $api.request(originalRequest);
             } catch (reAuthError) {
                 useAuthStore.getState().logout();
