@@ -17,6 +17,7 @@ export const ProfileSettingsPage = () => {
         saveError,
         isStreamKeyLoading,
         isResettingKey,
+        streamKeyError,
         fileInputRef,
         updateField,
         handleSave,
@@ -65,6 +66,7 @@ export const ProfileSettingsPage = () => {
                 copyButtonFeedback={copyButtonFeedback}
                 isStreamKeyLoading={isStreamKeyLoading}
                 isResettingKey={isResettingKey}
+                streamKeyError={streamKeyError}
                 onToggleVisibility={toggleStreamKeyVisibility}
                 onCopy={() => void handleCopyStreamKey()}
                 onReset={() => void handleStreamKeyReset()}
