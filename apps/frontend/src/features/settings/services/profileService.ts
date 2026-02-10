@@ -1,19 +1,19 @@
 import { $api } from '@api';
-import { StreamKeyResponse } from '@streamhub/shared';
+import { StreamKeyResponse, UserModel } from '@streamhub/shared';
 import { UpdateProfilePayload, UpdateProfileResult } from '../types/profileSettings.types';
-
-const wait = (ms: number) =>
-    new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
 
 export const ProfileService = {
     async updateProfile(
         payload: UpdateProfilePayload,
     ): Promise<UpdateProfileResult> {
-        // TODO: replace with backend call when profile endpoint is ready.
-        await wait(180);
-        return { profile: { ...payload } };
+        const { data } = await $api.post<UserModel>('/user/profile', payload);
+        return {
+            profile: {
+                username: data.username,
+                displayName: data.displayName,
+                bio: data.bio ?? '',
+            },
+        };
     },
 
     async getStreamKey(): Promise<StreamKeyResponse> {

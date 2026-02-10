@@ -37,10 +37,6 @@ export const ProfileSettingsPage = () => {
                 <h1 className="text-2xl font-semibold text-zinc-900 dark:text-white">
                     Settings
                 </h1>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Profile controls are UI-only for now. Backend integration will
-                    be added later.
-                </p>
             </header>
 
             <ProfilePictureSection
