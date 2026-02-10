@@ -1,194 +1,79 @@
-import {
-    ForbiddenException,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
-import { randomBytes } from 'crypto';
-import { StreamRepository } from '@modules/stream/stream.repository';
+import { Injectable } from '@nestjs/common';
 import { StreamSession } from '@generated/client';
-import { UserService } from '@modules/user/user.service';
-import { ONE_HOUR_MS, validateCooldown } from '@common/utils/time';
 import { StreamModel, ChannelDto, StreamKeyResponse } from '@streamhub/shared';
-import { Mapper } from '@common/utils/Mapper';
-import { RedisService } from '@modules/redis/redis.service';
-import { StreamKeys } from '@common/constants/redis.keys';
 import {
     HomeFeedResponse,
     PublicCategoryResponse,
     PublicStreamCardResponse,
 } from '@modules/stream/interfaces/response.interface';
-import {
-    DEFAULT_STREAM_LIST_LIMIT,
-    MAX_STREAM_LIST_LIMIT,
-} from '@modules/stream/constants/stream.constants';
-import { StreamCategoryService } from '@modules/stream/services/stream-category.service';
-import { PublicStreamSource } from '@modules/stream/types/streamSource';
+import { StreamLifecycleService } from '@modules/stream/services/lifecycle.service';
+import { StreamPageService } from '@modules/stream/services/page.service';
+import { StreamFeedService } from '@modules/stream/services/feed.service';
 
 @Injectable()
 export class StreamService {
     constructor(
-        private streamRepository: StreamRepository,
-        private userService: UserService,
-        private redisService: RedisService,
-        private streamCategoryService: StreamCategoryService,
+        private readonly streamLifecycleService: StreamLifecycleService,
+        private readonly streamPageService: StreamPageService,
+        private readonly streamFeedService: StreamFeedService,
     ) {}
 
-    generateKey() {
-        return `live_${randomBytes(16).toString('hex')}`;
+    generateKey(): string {
+        return this.streamLifecycleService.generateKey();
     }
 
     async startStream(streamKey: string): Promise<StreamSession | null> {
-        const user = await this.userService.findByStreamKey(streamKey);
-        if (!user) throw new ForbiddenException('Invalid stream key');
-
-        await this.streamRepository.end(user.id);
-
-        const defaultCategoryId =
-            await this.streamCategoryService.getDefaultCategoryId();
-        const session = await this.streamRepository.start(user.id, {
-            title: 'Untitled Stream',
-            categoryId: defaultCategoryId,
-        });
-
-        await this.redisService.delete(StreamKeys.channelPage(user.username));
-
-        return session;
+        return this.streamLifecycleService.startStream(streamKey);
     }
 
-    async endStream(streamKey: string) {
-        const user = await this.userService.findByStreamKey(streamKey);
-        if (!user) throw new ForbiddenException('Invalid stream key');
-
-        await this.streamRepository.end(user.id);
-        await this.redisService.delete(StreamKeys.channelPage(user.username));
+    async endStream(streamKey: string): Promise<void> {
+        return this.streamLifecycleService.endStream(streamKey);
     }
 
     async getActiveStream(
         username: string,
         includePrivateKey = false,
     ): Promise<StreamModel | null> {
-        const stream =
-            await this.streamRepository.findStreamByUsername(username);
-        if (!stream) return null;
-
-        return Mapper.mapToStream(stream, stream.streamer, includePrivateKey);
+        return this.streamPageService.getActiveStream(
+            username,
+            includePrivateKey,
+        );
     }
 
     async getStreamPage(
         username: string,
         requesterUserId?: number,
     ): Promise<ChannelDto> {
-        const page = await this.redisService.getOrSet<ChannelDto>(
-            StreamKeys.channelPage(username),
-            async () => {
-                const user = await this.userService.findByUsername(username);
-                if (!user) throw new NotFoundException('User not found');
-
-                const stream = await this.getActiveStream(username);
-
-                return {
-                    user: Mapper.mapToUserProfile(user),
-                    stream,
-                };
-            },
-            StreamKeys.TTL_PAGE,
+        return this.streamPageService.getStreamPage(
+            username,
+            requesterUserId,
         );
-
-        if (!page) {
-            throw new NotFoundException('User not found');
-        }
-
-        if (requesterUserId === page.user.id && page.stream) {
-            return {
-                ...page,
-                stream: await this.getActiveStream(username, true),
-            };
-        }
-
-        return page;
     }
 
-    async regenerateStreamKey(userId: number) {
-        const user = await this.userService.findById(userId);
-        if (!user) throw new NotFoundException('User not found');
-
-        validateCooldown(user.streamKeyLastRegenerated, ONE_HOUR_MS);
-
-        const newKey = this.generateKey();
-
-        await this.userService.updateUser(userId, {
-            streamKey: newKey,
-            streamKeyLastRegenerated: new Date(),
-        });
-
-        return {
-            streamKey: newKey,
-        };
+    async regenerateStreamKey(userId: number): Promise<StreamKeyResponse> {
+        return this.streamLifecycleService.regenerateStreamKey(userId);
     }
 
     async getCurrentStreamKey(userId: number): Promise<StreamKeyResponse> {
-        const user = await this.userService.findById(userId);
-        if (!user) throw new NotFoundException('User not found');
-
-        return { streamKey: user.streamKey };
+        return this.streamLifecycleService.getCurrentStreamKey(userId);
     }
 
     async getLiveStreams(limit: number): Promise<PublicStreamCardResponse[]> {
-        const safeLimit = this.normalizeLimit(limit, DEFAULT_STREAM_LIST_LIMIT);
-        const streams = await this.streamRepository.findLiveStreams(safeLimit);
-        return streams.map((stream) => this.toPublicStreamCard(stream));
+        return this.streamFeedService.getLiveStreams(limit);
     }
 
     async getFollowedLiveStreams(
         userId: number,
         limit: number,
     ): Promise<PublicStreamCardResponse[]> {
-        const safeLimit = this.normalizeLimit(limit, DEFAULT_STREAM_LIST_LIMIT);
-        const streams = await this.streamRepository.findFollowedLiveStreams(
-            userId,
-            safeLimit,
-        );
-        return streams.map((stream) => this.toPublicStreamCard(stream));
+        return this.streamFeedService.getFollowedLiveStreams(userId, limit);
     }
 
     async getCategories(): Promise<PublicCategoryResponse[]> {
-        return this.streamCategoryService.getPublicCategories();
+        return this.streamFeedService.getCategories();
     }
 
     async getHomeFeed(limit: number): Promise<HomeFeedResponse> {
-        const streams = await this.getLiveStreams(limit);
-        const categories = await this.getCategories();
-
-        return {
-            featuredStream: streams[0] ?? null,
-            streams,
-            categories,
-        };
-    }
-
-    private normalizeLimit(limit: number, fallback: number): number {
-        if (!Number.isFinite(limit)) return fallback;
-        return Math.min(Math.max(limit, 1), MAX_STREAM_LIST_LIMIT);
-    }
-
-    private toPublicStreamCard(
-        stream: PublicStreamSource,
-    ): PublicStreamCardResponse {
-        return {
-            id: stream.id,
-            title: stream.title,
-            thumbnail: stream.thumbnail ?? stream.streamer.avatarUrl,
-            viewerCount: 0,
-            category: stream.category?.name ?? 'Unknown',
-            tags: [],
-            startedAt: stream.startedAt.toISOString(),
-            streamer: {
-                id: stream.streamer.id,
-                username: stream.streamer.username,
-                displayName: stream.streamer.displayName,
-                avatar: stream.streamer.avatarUrl,
-                isOnline: true,
-            },
-        };
+        return this.streamFeedService.getHomeFeed(limit);
     }
 }

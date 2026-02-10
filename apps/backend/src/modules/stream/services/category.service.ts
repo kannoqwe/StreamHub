@@ -9,7 +9,7 @@ import { TWITCH_DEFAULT_CATEGORIES } from '@config/categories';
 import { PublicCategoryResponse } from '@modules/stream/interfaces/response.interface';
 
 @Injectable()
-export class StreamCategoryService implements OnApplicationBootstrap {
+export class CategoryService implements OnApplicationBootstrap {
     constructor(private readonly streamRepository: StreamRepository) {}
 
     async onApplicationBootstrap() {
