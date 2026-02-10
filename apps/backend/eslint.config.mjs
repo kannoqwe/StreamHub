@@ -26,8 +26,7 @@ export default tseslint.config(
     },
     {
         rules: {
-            '@typescript-eslint/require-await': 'off',
-            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-floating-promises': 'warn',
             'prettier/prettier': ['warn', { endOfLine: 'auto' }],
         },
