@@ -8,6 +8,7 @@ interface ProfileSettingsSectionProps {
     formData: ProfileFormValues;
     isDirty: boolean;
     isSaving: boolean;
+    saveError: string | null;
     onSubmit: (event: FormEvent) => void;
     onUsernameChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onDisplayNameChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -18,6 +19,7 @@ export const ProfileSettingsSection = ({
     formData,
     isDirty,
     isSaving,
+    saveError,
     onSubmit,
     onUsernameChange,
     onDisplayNameChange,
@@ -65,6 +67,12 @@ export const ProfileSettingsSection = ({
                     icon={<LuUserRoundPen className="w-4 h-4" />}
                 />
             </div>
+
+            {saveError ? (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                    {saveError}
+                </p>
+            ) : null}
 
             <Button
                 type="submit"

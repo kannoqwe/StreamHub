@@ -14,6 +14,7 @@ export const ProfileSettingsPage = () => {
         copyButtonFeedback,
         isDirty,
         isSaving,
+        saveError,
         isStreamKeyLoading,
         isResettingKey,
         fileInputRef,
@@ -51,6 +52,7 @@ export const ProfileSettingsPage = () => {
                 formData={formData}
                 isDirty={isDirty}
                 isSaving={isSaving}
+                saveError={saveError}
                 onSubmit={(event) => void handleSave(event)}
                 onUsernameChange={updateField('username')}
                 onDisplayNameChange={updateField('displayName')}
