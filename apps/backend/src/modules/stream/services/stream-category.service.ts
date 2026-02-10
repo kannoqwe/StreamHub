@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { StreamRepository } from '@modules/stream/stream.repository';
 import { DEFAULT_STREAM_CATEGORY_NAME } from '@modules/stream/constants/stream.constants';
-import { TWITCH_DEFAULT_CATEGORIES } from '@modules/stream/constants/twitch-default-categories';
+import { TWITCH_DEFAULT_CATEGORIES } from '@config/categories';
 import { PublicCategoryResponse } from '@modules/stream/interfaces/response.interface';
 
 @Injectable()
