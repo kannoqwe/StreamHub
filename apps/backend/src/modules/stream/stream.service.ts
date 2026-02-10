@@ -22,6 +22,7 @@ import {
     MAX_STREAM_LIST_LIMIT,
 } from '@modules/stream/constants/stream.constants';
 import { StreamCategoryService } from '@modules/stream/services/stream-category.service';
+import { PublicStreamSource } from '@modules/stream/types/streamSource';
 
 @Injectable()
 export class StreamService {
@@ -70,11 +71,7 @@ export class StreamService {
             await this.streamRepository.findStreamByUsername(username);
         if (!stream) return null;
 
-        return Mapper.mapToStream(
-            stream,
-            stream.streamer,
-            includePrivateKey,
-        );
+        return Mapper.mapToStream(stream, stream.streamer, includePrivateKey);
     }
 
     async getStreamPage(
@@ -174,7 +171,9 @@ export class StreamService {
         return Math.min(Math.max(limit, 1), MAX_STREAM_LIST_LIMIT);
     }
 
-    private toPublicStreamCard(stream: any): PublicStreamCardResponse {
+    private toPublicStreamCard(
+        stream: PublicStreamSource,
+    ): PublicStreamCardResponse {
         return {
             id: stream.id,
             title: stream.title,
@@ -192,5 +191,4 @@ export class StreamService {
             },
         };
     }
-
 }

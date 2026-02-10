@@ -118,7 +118,7 @@ export class ChatHistoryRepository
 
         let query =
             'SELECT streamer_id, user_id, message_id, username, content, ts FROM user_channel_history WHERE streamer_id = ? AND user_id = ?';
-        const params: any[] = [streamerId, userId];
+        const params: Array<number | types.TimeUuid> = [streamerId, userId];
 
         if (before) {
             const date = new Date(before);

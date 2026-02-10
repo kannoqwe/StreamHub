@@ -38,7 +38,7 @@ export class RedisService implements OnModuleDestroy {
         return data ? (JSON.parse(data) as T) : null;
     }
 
-    async set(key: string, value: any, ttl: number = 300) {
+    async set<T>(key: string, value: T, ttl: number = 300) {
         await this.redis.set(key, JSON.stringify(value), 'EX', ttl);
     }
 
@@ -46,7 +46,7 @@ export class RedisService implements OnModuleDestroy {
         return this.redis.del(key);
     }
 
-    async lpushJson(key: string, value: any): Promise<void> {
+    async lpushJson<T>(key: string, value: T): Promise<void> {
         await this.redis.lpush(key, JSON.stringify(value));
     }
 
@@ -71,16 +71,20 @@ export class RedisService implements OnModuleDestroy {
             .filter((x): x is T => x !== null);
     }
 
-    async lpushTrimJson(key: string, value: any, keep: number): Promise<void> {
+    async lpushTrimJson<T>(
+        key: string,
+        value: T,
+        keep: number,
+    ): Promise<void> {
         const multi = this.redis.multi();
         multi.lpush(key, JSON.stringify(value));
         multi.ltrim(key, 0, keep - 1);
         await multi.exec();
     }
 
-    async lpushTrimExpireJson(
+    async lpushTrimExpireJson<T>(
         key: string,
-        value: any,
+        value: T,
         keep: number,
         ttlSeconds: number,
     ): Promise<void> {
@@ -91,10 +95,10 @@ export class RedisService implements OnModuleDestroy {
         await multi.exec();
     }
 
-    async zaddTrimJson(
+    async zaddTrimJson<T>(
         key: string,
         score: number,
-        value: any,
+        value: T,
         keep: number,
         minScore: number,
     ): Promise<void> {
