@@ -46,7 +46,7 @@ export class StreamFeedService {
         const categories = await this.getCategories();
 
         return {
-            featuredStream: streams[0] ?? null,
+            featuredStream: null,
             streams,
             categories,
         };
