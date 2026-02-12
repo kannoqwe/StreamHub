@@ -13,6 +13,10 @@ export const StreamPlayer: React.FC<StreamPlayerProps> = ({
     isLive,
     thumbnail,
 }) => {
+    const canPlay = isLive && streamKey.length > 0;
+    const hlsBaseUrl = import.meta.env.VITE_HLS_URL || 'http://localhost:8080';
+    const hlsPath = import.meta.env.VITE_HLS_PATH || '/hls';
+    const normalizedHlsPath = hlsPath.startsWith('/') ? hlsPath : `/${hlsPath}`;
     const playerOptions: videojs.PlayerOptions = useMemo(
         () => ({
             autoplay: true,
@@ -23,7 +27,7 @@ export const StreamPlayer: React.FC<StreamPlayerProps> = ({
             liveui: true,
             sources: [
                 {
-                    src: `http://localhost:8080/hls/${streamKey}.m3u8`,
+                    src: `${hlsBaseUrl}${normalizedHlsPath}/${streamKey}.m3u8`,
                     type: 'application/x-mpegURL',
                 },
             ],
@@ -33,12 +37,12 @@ export const StreamPlayer: React.FC<StreamPlayerProps> = ({
                 },
             },
         }),
-        [streamKey],
+        [hlsBaseUrl, normalizedHlsPath, streamKey],
     );
 
     return (
         <div className="w-full h-full bg-black relative overflow-hidden rounded-xl shadow-2xl">
-            {isLive ? (
+            {canPlay ? (
                 <VideoJS options={playerOptions} />
             ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">

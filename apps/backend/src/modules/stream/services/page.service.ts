@@ -27,7 +27,7 @@ export class StreamPageService {
 
     async getStreamPage(
         username: string,
-        requesterUserId?: number,
+        _requesterUserId?: number,
     ): Promise<ChannelDto> {
         const page = await this.redisService.getOrSet<ChannelDto>(
             StreamKeys.channelPage(username),
@@ -35,7 +35,7 @@ export class StreamPageService {
                 const user = await this.userService.findByUsername(username);
                 if (!user) throw new NotFoundException('User not found');
 
-                const stream = await this.getActiveStream(username);
+                const stream = await this.getActiveStream(username, true);
 
                 return {
                     user: Mapper.mapToUserProfile(user),
@@ -47,13 +47,6 @@ export class StreamPageService {
 
         if (!page) {
             throw new NotFoundException('User not found');
-        }
-
-        if (requesterUserId === page.user.id && page.stream) {
-            return {
-                ...page,
-                stream: await this.getActiveStream(username, true),
-            };
         }
 
         return page;
