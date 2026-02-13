@@ -4,7 +4,7 @@ import {
     HomeFeedResponse,
     PublicCategoryResponse,
     PublicStreamCardResponse,
-} from '@modules/stream/interfaces/response.interface';
+} from '@modules/stream/types/response.interface';
 import {
     DEFAULT_STREAM_LIST_LIMIT,
     MAX_STREAM_LIST_LIMIT,
@@ -22,7 +22,9 @@ export class StreamFeedService {
     async getLiveStreams(limit: number): Promise<PublicStreamCardResponse[]> {
         const safeLimit = this.normalizeLimit(limit, DEFAULT_STREAM_LIST_LIMIT);
         const streams = await this.streamRepository.findLiveStreams(safeLimit);
-        return streams.map((stream) => this.toPublicStreamCard(stream));
+        return streams.map((stream: PublicStreamSource) =>
+            this.toPublicStreamCard(stream),
+        );
     }
 
     async getFollowedLiveStreams(
@@ -34,7 +36,9 @@ export class StreamFeedService {
             userId,
             safeLimit,
         );
-        return streams.map((stream) => this.toPublicStreamCard(stream));
+        return streams.map((stream: PublicStreamSource) =>
+            this.toPublicStreamCard(stream),
+        );
     }
 
     async getCategories(): Promise<PublicCategoryResponse[]> {

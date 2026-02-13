@@ -5,7 +5,7 @@ import {
     HomeFeedResponse,
     PublicCategoryResponse,
     PublicStreamCardResponse,
-} from '@modules/stream/interfaces/response.interface';
+} from '@modules/stream/types/response.interface';
 import { StreamLifecycleService } from '@modules/stream/services/lifecycle.service';
 import { StreamPageService } from '@modules/stream/services/page.service';
 import { StreamFeedService } from '@modules/stream/services/feed.service';

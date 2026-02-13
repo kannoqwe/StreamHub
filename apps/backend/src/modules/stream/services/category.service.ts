@@ -6,7 +6,8 @@ import {
 import { StreamRepository } from '@modules/stream/stream.repository';
 import { DEFAULT_STREAM_CATEGORY_NAME } from '@modules/stream/constants/stream.constants';
 import { TWITCH_DEFAULT_CATEGORIES } from '@config/categories';
-import { PublicCategoryResponse } from '@modules/stream/interfaces/response.interface';
+import { PublicCategoryResponse } from '@modules/stream/types/response.interface';
+import { CategoryListItem } from '@modules/stream/types/categoryListItem';
 
 @Injectable()
 export class CategoryService implements OnApplicationBootstrap {
@@ -30,7 +31,7 @@ export class CategoryService implements OnApplicationBootstrap {
 
     async getPublicCategories(): Promise<PublicCategoryResponse[]> {
         const categories = await this.streamRepository.findCategories();
-        return categories.map((category) => ({
+        return categories.map((category: CategoryListItem) => ({
             id: category.id,
             name: category.name,
             image: category.iconUrl,

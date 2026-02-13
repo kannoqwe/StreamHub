@@ -18,7 +18,7 @@ import {
     HomeFeedResponse,
     PublicCategoryResponse,
     PublicStreamCardResponse,
-} from '@modules/stream/interfaces/response.interface';
+} from '@modules/stream/types/response.interface';
 import { ChannelDto, StreamKeyResponse } from '@streamhub/shared';
 
 @Controller('stream')
