@@ -55,7 +55,7 @@ func NewServer(cfg config.Config, logger *log.Logger) (*Server, error) {
 	}
 
 	pub := bus.NewPublisher(js, "chat.ingest")
-	handler := ws.NewHandler(logger, verifier, h, pub, sf)
+	handler := ws.NewHandler(logger, verifier, h, pub, sf, cfg.AllowedOrigins)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ws", handler.ServeWS)

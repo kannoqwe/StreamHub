@@ -24,15 +24,17 @@ type Handler struct {
 	hub       *hub.Hub
 	publisher *bus.Publisher
 	sf        *snowflake.Node
+	origins   []string
 }
 
-func NewHandler(logger *log.Logger, verifier auth.Verifier, h *hub.Hub, pub *bus.Publisher, sf *snowflake.Node) *Handler {
+func NewHandler(logger *log.Logger, verifier auth.Verifier, h *hub.Hub, pub *bus.Publisher, sf *snowflake.Node, origins []string) *Handler {
 	return &Handler{
 		log:       logger,
 		verifier:  verifier,
 		hub:       h,
 		publisher: pub,
 		sf:        sf,
+		origins:   origins,
 	}
 }
 
@@ -59,7 +61,7 @@ func (h *Handler) ServeWS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	wsConn, err := websocket.Accept(w, r, &websocket.AcceptOptions{
-		InsecureSkipVerify: true,
+		OriginPatterns: h.origins,
 	})
 	if err != nil {
 		h.log.Printf("ws accept: %v", err)
@@ -187,8 +189,3 @@ func (h *Handler) allowMessage(c *hub.Conn) bool {
 	c.RateTokens -= 1
 	return true
 }
-
-
-
-
-

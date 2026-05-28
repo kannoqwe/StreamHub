@@ -87,6 +87,8 @@ services:
     volumes:
       - ./apps/srs/srs.conf:/usr/local/srs/conf/my_srs.conf
     command: ./objs/srs -c conf/my_srs.conf
+    env_file:
+      - .env
     depends_on:
       - backend
     networks:
@@ -148,6 +150,7 @@ services:
       - AUTH_VERIFY_URL=http://backend:3000/auth/me
       - AUTH_TIMEOUT_MS=5000
       - EDGE_NODE_ID=1
+      - EDGE_ALLOWED_ORIGINS=${EDGE_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}
       - BACKEND_URL=http://backend:3000
     networks:
       - app_network
