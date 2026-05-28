@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { StreamModel, ChannelDto } from '@streamhub/shared';
+import type { StreamModel, ChannelDto } from '@streamhub/shared';
 import { StreamRepository } from '@modules/stream/stream.repository';
 import { UserService } from '@modules/user/user.service';
 import { Mapper } from '@common/utils/Mapper';
@@ -14,28 +14,22 @@ export class StreamPageService {
         private readonly redisService: RedisService,
     ) {}
 
-    async getActiveStream(
-        username: string,
-        includePrivateKey = false,
-    ): Promise<StreamModel | null> {
+    async getActiveStream(username: string): Promise<StreamModel | null> {
         const stream =
             await this.streamRepository.findStreamByUsername(username);
         if (!stream) return null;
 
-        return Mapper.mapToStream(stream, stream.streamer, includePrivateKey);
+        return Mapper.mapToStream(stream, stream.streamer);
     }
 
-    async getStreamPage(
-        username: string,
-        _requesterUserId?: number,
-    ): Promise<ChannelDto> {
+    async getStreamPage(username: string): Promise<ChannelDto> {
         const page = await this.redisService.getOrSet<ChannelDto>(
             StreamKeys.channelPage(username),
             async () => {
                 const user = await this.userService.findByUsername(username);
                 if (!user) throw new NotFoundException('User not found');
 
-                const stream = await this.getActiveStream(username, true);
+                const stream = await this.getActiveStream(username);
 
                 return {
                     user: Mapper.mapToUserProfile(user),

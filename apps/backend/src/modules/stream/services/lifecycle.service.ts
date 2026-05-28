@@ -8,7 +8,7 @@ import { StreamSession } from '@generated/client';
 import { StreamRepository } from '@modules/stream/stream.repository';
 import { UserService } from '@modules/user/user.service';
 import { ONE_HOUR_MS, validateCooldown } from '@common/utils/time';
-import { StreamKeyResponse } from '@streamhub/shared';
+import type { StreamKeyResponse } from '@streamhub/shared';
 import { RedisService } from '@modules/redis/redis.service';
 import { StreamKeys } from '@common/constants/redis.keys';
 import { CategoryService } from '@modules/stream/services/category.service';

@@ -30,7 +30,7 @@ export const StreamPage: React.FC = () => {
     }
 
     const isLive = !!stream;
-    const streamKey = stream?.key ?? '';
+    const playbackId = stream?.playbackId ?? '';
     const thumbnail = stream?.thumbnail ?? streamer.avatar;
 
     return (
@@ -39,7 +39,7 @@ export const StreamPage: React.FC = () => {
                 <div className="w-full max-w-[1300px] mx-auto lg:pt-4 pb-4">
                     <div className="aspect-video w-full shadow-2xl shadow-black/20">
                         <StreamPlayer
-                            streamKey={streamKey}
+                            playbackId={playbackId}
                             isLive={isLive}
                             thumbnail={thumbnail}
                         />

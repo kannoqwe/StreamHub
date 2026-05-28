@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Controller,
     DefaultValuePipe,
     Get,
@@ -9,17 +10,19 @@ import {
     Post,
     Query,
     Req,
+    Res,
     UseGuards,
 } from '@nestjs/common';
 import { StreamService } from '@modules/stream/stream.service';
 import { JwtGuard } from '@common/guards/jwt.guard';
-import { Request } from 'express';
+import { SkipThrottle } from '@nestjs/throttler';
+import { Request, Response } from 'express';
 import {
     HomeFeedResponse,
     PublicCategoryResponse,
     PublicStreamCardResponse,
 } from '@modules/stream/types/response.interface';
-import { ChannelDto, StreamKeyResponse } from '@streamhub/shared';
+import type { ChannelDto, StreamKeyResponse } from '@streamhub/shared';
 
 @Controller('stream')
 export class StreamController {
@@ -62,7 +65,10 @@ export class StreamController {
         @Req() req: Request,
         @Query('limit', new DefaultValuePipe(24), ParseIntPipe) limit: number,
     ): Promise<PublicStreamCardResponse[]> {
-        return this.streamService.getFollowedLiveStreams(req.user.userId, limit);
+        return this.streamService.getFollowedLiveStreams(
+            req.user.userId,
+            limit,
+        );
     }
 
     @Get('categories')
@@ -71,15 +77,35 @@ export class StreamController {
         return this.streamService.getCategories();
     }
 
+    @SkipThrottle()
+    @Get('hls/:playbackId/:file')
+    async proxyHls(
+        @Param('playbackId') playbackId: string,
+        @Param('file') file: string,
+        @Res() res: Response,
+    ): Promise<void> {
+        if (!/^\d+$/.test(playbackId) || !/^[a-zA-Z0-9_.-]+$/.test(file)) {
+            throw new BadRequestException('Invalid playback path');
+        }
+
+        const upstream = await this.streamService.getHlsAsset(
+            Number(playbackId),
+            file,
+        );
+
+        res.setHeader('Content-Type', upstream.contentType);
+        res.setHeader('Cache-Control', upstream.cacheControl);
+        res.send(upstream.body);
+    }
+
     @Get(':username')
     @HttpCode(HttpStatus.OK)
     async getChannelData(
         @Req() req: Request,
         @Param('username') username: string,
     ): Promise<ChannelDto> {
-        const requesterUserId = (
-            req as Request & { user?: { userId: number } }
-        ).user?.userId;
+        const requesterUserId = (req as Request & { user?: { userId: number } })
+            .user?.userId;
 
         return this.streamService.getStreamPage(username, requesterUserId);
     }

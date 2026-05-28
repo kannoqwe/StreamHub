@@ -3,20 +3,18 @@ import videojs from 'video.js';
 import { VideoJS } from './VideoJsPlayer';
 
 interface StreamPlayerProps {
-    streamKey: string;
+    playbackId: string;
     isLive: boolean;
     thumbnail: string;
 }
 
 export const StreamPlayer: React.FC<StreamPlayerProps> = ({
-    streamKey,
+    playbackId,
     isLive,
     thumbnail,
 }) => {
-    const canPlay = isLive && streamKey.length > 0;
-    const hlsBaseUrl = import.meta.env.VITE_HLS_URL || 'http://localhost:8080';
-    const hlsPath = import.meta.env.VITE_HLS_PATH || '/hls';
-    const normalizedHlsPath = hlsPath.startsWith('/') ? hlsPath : `/${hlsPath}`;
+    const canPlay = isLive && playbackId.length > 0;
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
     const playerOptions: videojs.PlayerOptions = useMemo(
         () => ({
             autoplay: true,
@@ -27,7 +25,7 @@ export const StreamPlayer: React.FC<StreamPlayerProps> = ({
             liveui: true,
             sources: [
                 {
-                    src: `${hlsBaseUrl}${normalizedHlsPath}/${streamKey}.m3u8`,
+                    src: `${apiBaseUrl}/stream/hls/${playbackId}/index.m3u8`,
                     type: 'application/x-mpegURL',
                 },
             ],
@@ -37,7 +35,7 @@ export const StreamPlayer: React.FC<StreamPlayerProps> = ({
                 },
             },
         }),
-        [hlsBaseUrl, normalizedHlsPath, streamKey],
+        [apiBaseUrl, playbackId],
     );
 
     return (

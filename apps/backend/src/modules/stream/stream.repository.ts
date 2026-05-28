@@ -44,6 +44,19 @@ export class StreamRepository {
         });
     }
 
+    async findActiveStreamById(id: number) {
+        return this.prismaService.streamSession.findFirst({
+            where: {
+                id,
+                isLive: true,
+            },
+            include: {
+                streamer: true,
+                category: true,
+            },
+        });
+    }
+
     async findLiveStreams(limit: number) {
         return this.prismaService.streamSession.findMany({
             where: { isLive: true },

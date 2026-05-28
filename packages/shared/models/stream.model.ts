@@ -3,7 +3,7 @@ export interface StreamModel {
     title: string;
     streamerId: number;
     thumbnail?: string | null;
-    key?: string;
+    playbackId: string;
     viewerCount: number;
     category: number;
     tags?: string[];

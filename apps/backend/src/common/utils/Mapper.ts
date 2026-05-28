@@ -1,5 +1,5 @@
 import { StreamSession, User } from '@generated/client';
-import { UserModel, StreamModel } from '@streamhub/shared';
+import type { UserModel, StreamModel } from '@streamhub/shared';
 import { dateToTimestamp } from '@common/utils/time';
 
 export class Mapper {
@@ -15,18 +15,16 @@ export class Mapper {
         };
     }
 
-    static mapToStream(
-        stream: StreamSession,
-        streamer: User,
-        includePrivateKey = false,
-    ): StreamModel {
+    static mapToStream(stream: StreamSession, streamer: User): StreamModel {
+        void streamer;
+
         return {
             id: stream.id,
             title: stream.title,
-            streamerId: streamer.id,
+            streamerId: stream.streamerId,
             thumbnail: stream.thumbnail,
             category: stream.categoryId,
-            ...(includePrivateKey ? { key: streamer.streamKey } : {}),
+            playbackId: String(stream.id),
             viewerCount: 0,
             startedAt: dateToTimestamp(stream.startedAt),
         };

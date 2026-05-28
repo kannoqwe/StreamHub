@@ -9,7 +9,9 @@ import { ChatIngestEvent } from '../types/chat';
 const buildWsUrl = (base: string, token: string) => {
     let url: URL;
     try {
-        url = new URL(base);
+        url = base.startsWith('/')
+            ? new URL(base, window.location.origin)
+            : new URL(base);
     } catch {
         url = new URL('ws://localhost:8081/ws');
     }

@@ -29,7 +29,7 @@ vhost __defaultVhost__ {
 
     http_hooks {
         enabled         on;
-        on_publish      http://backend:3000/ingest/on_publish?secret=dev_ingest_secret_change_me_32chars;
-        on_unpublish    http://backend:3000/ingest/on_unpublish?secret=dev_ingest_secret_change_me_32chars;
+        on_publish      http://backend:3000/ingest/on_publish?secret=__INGEST_HOOK_SECRET__;
+        on_unpublish    http://backend:3000/ingest/on_unpublish?secret=__INGEST_HOOK_SECRET__;
     }
 }
