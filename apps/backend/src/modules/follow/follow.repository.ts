@@ -35,7 +35,10 @@ export class FollowRepository {
         });
     }
 
-    findFollow(followerId: number, followingId: number): Promise<Follow | null> {
+    findFollow(
+        followerId: number,
+        followingId: number,
+    ): Promise<Follow | null> {
         return this.prisma.follow.findUnique({
             where: {
                 followerId_followingId: {

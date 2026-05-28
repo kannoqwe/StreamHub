@@ -36,7 +36,7 @@ export class ChatHistoryRepository
         stop: () => void;
     };
 
-    async onApplicationBootstrap() {
+    onApplicationBootstrap() {
         this.startQueue();
     }
 
@@ -78,8 +78,7 @@ export class ChatHistoryRepository
             const ts = this.eventTimeUuid(event.timestamp);
             return [
                 {
-                    query:
-                        'INSERT INTO chat_log (streamer_id, ts, message_id, user_id, username, content) VALUES (?, ?, ?, ?, ?, ?)',
+                    query: 'INSERT INTO chat_log (streamer_id, ts, message_id, user_id, username, content) VALUES (?, ?, ?, ?, ?, ?)',
                     params: [
                         event.streamer_id,
                         ts,
@@ -90,8 +89,7 @@ export class ChatHistoryRepository
                     ],
                 },
                 {
-                    query:
-                        'INSERT INTO user_channel_history (streamer_id, user_id, ts, message_id, username, content) VALUES (?, ?, ?, ?, ?, ?)',
+                    query: 'INSERT INTO user_channel_history (streamer_id, user_id, ts, message_id, username, content) VALUES (?, ?, ?, ?, ?, ?)',
                     params: [
                         event.streamer_id,
                         event.user_id,
@@ -178,9 +176,7 @@ export class ChatHistoryRepository
                     try {
                         await this.flushBatch(batch);
                     } catch (err) {
-                        this.logger.error(
-                            `scylla batch flush failed: ${err}`,
-                        );
+                        this.logger.error(`scylla batch flush failed: ${err}`);
                     }
                     lastFlush = Date.now();
                 }

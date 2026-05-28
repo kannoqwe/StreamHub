@@ -94,8 +94,8 @@ export class IngestSubscriberService
         });
     }
 
-    async stop(): Promise<void> {
-        if (!this.started) return;
+    stop(): Promise<void> {
+        if (!this.started) return Promise.resolve();
         this.stopRequested = true;
 
         if (this.subscription) {
@@ -105,5 +105,6 @@ export class IngestSubscriberService
         }
 
         this.logger.log('ingest subscriber stopped');
+        return Promise.resolve();
     }
 }

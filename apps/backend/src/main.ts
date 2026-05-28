@@ -11,8 +11,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const configService = app.get(ConfigService);
     const frontendUrl =
-        configService.get<string>('frontend.url') ??
-        'http://localhost:5173';
+        configService.get<string>('frontend.url') ?? 'http://localhost:5173';
     const port = configService.get('PORT') as string;
 
     app.use(cookieParser());

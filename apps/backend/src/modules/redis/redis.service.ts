@@ -71,11 +71,7 @@ export class RedisService implements OnModuleDestroy {
             .filter((x): x is T => x !== null);
     }
 
-    async lpushTrimJson<T>(
-        key: string,
-        value: T,
-        keep: number,
-    ): Promise<void> {
+    async lpushTrimJson<T>(key: string, value: T, keep: number): Promise<void> {
         const multi = this.redis.multi();
         multi.lpush(key, JSON.stringify(value));
         multi.ltrim(key, 0, keep - 1);

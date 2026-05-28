@@ -15,7 +15,7 @@ import { UserService } from '@modules/user/user.service';
 import { FollowService } from '@modules/follow/follow.service';
 import { JwtGuard } from '@common/guards/jwt.guard';
 import { Request } from 'express';
-import { UserModel } from '@streamhub/shared';
+import type { UserModel } from '@streamhub/shared';
 import { Mapper } from '@common/utils/Mapper';
 import { UpdateProfileDto } from '@modules/user/dto/update-profile.dto';
 

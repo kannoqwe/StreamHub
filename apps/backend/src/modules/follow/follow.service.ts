@@ -53,7 +53,11 @@ export class FollowService {
         }
 
         await this.prisma.$transaction(async (tx) => {
-            await this.followRepository.deleteFollow(tx, followerId, followingId);
+            await this.followRepository.deleteFollow(
+                tx,
+                followerId,
+                followingId,
+            );
             await this.followRepository.decrementUserFollowers(tx, followingId);
             await this.followRepository.decrementUserFollowing(tx, followerId);
         });
