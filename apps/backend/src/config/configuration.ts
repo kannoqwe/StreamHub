@@ -18,6 +18,15 @@ export default () => ({
         keyspace: process.env.SCYLLA_KEYSPACE || 'streamplatform',
     },
 
+    ingest: {
+        hookSecret: process.env.INGEST_HOOK_SECRET,
+    },
+
+    srs: {
+        hlsBaseUrl: process.env.SRS_HLS_BASE_URL || 'http://srs:8080',
+        hlsPath: process.env.SRS_HLS_PATH || '/hls',
+    },
+
     jwt: {
         accessSecret: process.env.JWT_ACCESS_SECRET,
         refreshSecret: process.env.JWT_REFRESH_SECRET,

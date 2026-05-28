@@ -23,4 +23,9 @@ export const validationSchema = Joi.object({
     SCYLLA_PORT: Joi.number().default(9042),
     SCYLLA_DATACENTER: Joi.string().default('datacenter1'),
     SCYLLA_KEYSPACE: Joi.string().default('streamplatform'),
+
+    INGEST_HOOK_SECRET: Joi.string().min(16).optional(),
+
+    SRS_HLS_BASE_URL: Joi.string().uri().default('http://srs:8080'),
+    SRS_HLS_PATH: Joi.string().default('/hls'),
 });
