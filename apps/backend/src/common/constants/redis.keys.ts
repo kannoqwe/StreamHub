@@ -19,3 +19,7 @@ export const ChatKeys = {
     dedup: (streamerId: number, messageId: string) =>
         `chat:streamer:${streamerId}:dedup:${messageId}`,
 };
+
+export const AuthKeys = {
+    revokedRefresh: (jti: string) => `auth:refresh:revoked:${jti}`,
+};

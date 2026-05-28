@@ -1,5 +1,5 @@
 import { IsEmail, IsString, MinLength, Matches } from 'class-validator';
-import { RegisterDto as RegisterDtoBase } from '@streamhub/shared';
+import type { RegisterDto as RegisterDtoBase } from '@streamhub/shared';
 
 export class RegisterDto implements RegisterDtoBase {
     @IsString()

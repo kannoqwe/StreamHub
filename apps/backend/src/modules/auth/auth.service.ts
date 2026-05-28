@@ -12,6 +12,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '@/types';
 import { StreamService } from '@modules/stream/stream.service';
 import { Mapper } from '@common/utils/Mapper';
+import { randomUUID } from 'crypto';
+import { RedisService } from '@modules/redis/redis.service';
+import { AuthKeys } from '@common/constants/redis.keys';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +23,7 @@ export class AuthService {
         private jwtService: JwtService,
         private configService: ConfigService,
         private streamService: StreamService,
+        private redisService: RedisService,
     ) {}
 
     async login(username: string, password: string) {
@@ -69,10 +73,13 @@ export class AuthService {
 
     async logout(refreshToken: string) {
         try {
-            await this.jwtService.verifyAsync<JwtPayload>(refreshToken, {
-                secret: this.configService.get('jwt.refreshSecret'),
-            });
-            // future...
+            const payload = await this.jwtService.verifyAsync<JwtPayload>(
+                refreshToken,
+                {
+                    secret: this.configService.get('jwt.refreshSecret'),
+                },
+            );
+            await this.revokeRefreshToken(payload);
         } catch {
             return;
         }
@@ -86,6 +93,10 @@ export class AuthService {
             });
         } catch {
             throw new UnauthorizedException('Refresh Token expired');
+        }
+
+        if (payload.jti && (await this.isRefreshTokenRevoked(payload.jti))) {
+            throw new UnauthorizedException('Refresh Token revoked');
         }
 
         const user = await this.usersService.findById(payload.userId);
@@ -110,8 +121,7 @@ export class AuthService {
 
     async validateUser(username: string, password: string) {
         const normalizedUsername = username.trim().toLowerCase();
-        const user =
-            await this.usersService.findByUsername(normalizedUsername);
+        const user = await this.usersService.findByUsername(normalizedUsername);
         if (!user) {
             throw new UnauthorizedException('Invalid credentials');
         }
@@ -132,9 +142,36 @@ export class AuthService {
     }
 
     async generateRefreshToken(payload: JwtPayload) {
-        return this.jwtService.signAsync(payload, {
-            secret: this.configService.get<string>('jwt.refreshSecret'),
-            expiresIn: this.configService.get('jwt.refreshExpiration'),
-        });
+        return this.jwtService.signAsync(
+            {
+                ...payload,
+                jti: randomUUID(),
+            },
+            {
+                secret: this.configService.get<string>('jwt.refreshSecret'),
+                expiresIn: this.configService.get('jwt.refreshExpiration'),
+            },
+        );
+    }
+
+    private async revokeRefreshToken(payload: JwtPayload): Promise<void> {
+        if (!payload.jti || !payload.exp) return;
+
+        const ttl = payload.exp - Math.floor(Date.now() / 1000);
+        if (ttl <= 0) return;
+
+        await this.redisService.set(
+            AuthKeys.revokedRefresh(payload.jti),
+            true,
+            ttl,
+        );
+    }
+
+    private async isRefreshTokenRevoked(jti: string): Promise<boolean> {
+        return (
+            (await this.redisService.get<boolean>(
+                AuthKeys.revokedRefresh(jti),
+            )) === true
+        );
     }
 }

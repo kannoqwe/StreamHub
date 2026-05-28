@@ -16,7 +16,7 @@ import { RegisterDto } from '@modules/auth/dto/register.dto';
 import { JwtGuard } from '@common/guards/jwt.guard';
 import { CookieOptions, Response, Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import {
+import type {
     LoginResponse,
     LogoutResponse,
     RefreshResponse,
@@ -71,7 +71,9 @@ export class AuthController {
         const refreshToken = req.cookies['refreshToken'] as string;
         if (refreshToken) await this.authService.logout(refreshToken);
 
-        res.clearCookie('refreshToken');
+        res.clearCookie('refreshToken', {
+            path: this.cookieOptions.path,
+        });
 
         return {
             success: true,
