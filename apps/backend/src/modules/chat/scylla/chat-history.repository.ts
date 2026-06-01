@@ -132,17 +132,42 @@ export class ChatHistoryRepository
         const res = await this.scylla.execute(query, params);
 
         return res.rows.map((row: Row) => {
-            const r = row as unknown as UserChannelHistoryRow;
-
             return {
-                message_id: r.message_id,
-                streamer_id: r.streamer_id,
-                user_id: r.user_id,
-                username: r.username,
-                content: r.content,
-                timestamp: r.ts.getDate().toISOString(),
+                message_id: this.getString(row, 'message_id'),
+                streamer_id: this.getNumber(row, 'streamer_id'),
+                user_id: this.getNumber(row, 'user_id'),
+                username: this.getString(row, 'username'),
+                content: this.getString(row, 'content'),
+                timestamp: this.getTimeUuid(row, 'ts').getDate().toISOString(),
             };
         });
+    }
+
+    private getString(row: Row, column: keyof UserChannelHistoryRow): string {
+        const value: unknown = row.get(column);
+        if (typeof value !== 'string') {
+            throw new TypeError(`Expected ${column} to be a string`);
+        }
+        return value;
+    }
+
+    private getNumber(row: Row, column: keyof UserChannelHistoryRow): number {
+        const value: unknown = row.get(column);
+        if (typeof value !== 'number') {
+            throw new TypeError(`Expected ${column} to be a number`);
+        }
+        return value;
+    }
+
+    private getTimeUuid(
+        row: Row,
+        column: keyof UserChannelHistoryRow,
+    ): types.TimeUuid {
+        const value: unknown = row.get(column);
+        if (!(value instanceof types.TimeUuid)) {
+            throw new TypeError(`Expected ${column} to be a TimeUuid`);
+        }
+        return value;
     }
 
     private startQueue() {
