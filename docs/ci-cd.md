@@ -38,7 +38,8 @@ Jobs:
    - installs dependencies with pnpm;
    - generates Prisma client;
    - lints backend;
-   - runs backend Jest tests from `apps/backend/test`;
+   - runs backend unit tests from `apps/backend/test/unit`;
+   - runs backend integration tests from `apps/backend/test/integration`;
    - builds backend;
    - lints frontend;
    - builds frontend.
@@ -91,11 +92,18 @@ It:
 2. uploads `docker-compose.prod.yml`, `scylla-init.cql`, and `apps/srs/srs.conf.template`;
 3. writes the production `.env` from the `DEPLOY_ENV` GitHub secret;
 4. logs in to GitHub Container Registry if `GHCR_TOKEN` is set;
-5. runs:
+5. pulls the requested images;
+6. runs Prisma migrations through the one-shot `migrate` compose service;
+7. restarts services;
+8. runs smoke checks against frontend, `/api/health`, and `/api/ready`.
 
 ```bash
 docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up migrate
 docker compose -f docker-compose.prod.yml up -d --remove-orphans
+curl --fail --retry 20 "http://localhost:${FRONTEND_PORT}/"
+curl --fail --retry 20 "http://localhost:${FRONTEND_PORT}/api/health"
+curl --fail --retry 20 "http://localhost:${FRONTEND_PORT}/api/ready"
 docker image prune -f
 ```
 
@@ -200,23 +208,33 @@ The deploy workflow sets:
 - `GHCR_REPOSITORY=ghcr.io/<owner>/<repo>`
 - `IMAGE_TAG=<workflow input>`
 
-## Database Schema
+## Database Migrations
 
-The current Docker Compose setup does not run Prisma schema changes automatically.
+Database changes are versioned with Prisma migrations under:
 
-For local Docker development, run this after creating a fresh database volume or changing `apps/backend/prisma/schema.prisma`:
-
-```bash
-docker compose exec backend npx prisma db push
+```text
+apps/backend/prisma/migrations
 ```
 
-For production, do not rely on the backend container startup to mutate the database schema. Add an explicit migration/schema step to the deploy process before routing traffic to a new backend version.
+For local Docker development:
 
-Current baseline:
+```bash
+docker compose exec backend pnpm prisma:migrate:deploy
+```
 
-- local development uses `prisma db push`;
-- production deploy documentation assumes you run schema changes deliberately;
-- a future improvement should add a dedicated migration job or switch to Prisma migrations.
+For production, the deploy workflow runs this before restarting the app:
+
+```bash
+docker compose -f docker-compose.prod.yml up migrate
+```
+
+When changing `apps/backend/prisma/schema.prisma`, create a new migration locally:
+
+```bash
+pnpm --filter @streamhub/api prisma:migrate:dev --name describe_change
+```
+
+Do not use `prisma db push` for project changes that should reach CI or production. `db push` mutates a database without creating a reviewed migration file.
 
 ## SRS Hook Secret
 
@@ -284,11 +302,9 @@ This is a working baseline, not a full enterprise deployment platform.
 
 Known follow-ups:
 
-- add a dedicated database migration/schema step before backend starts;
-- add healthcheck endpoints for backend and edge;
 - put TLS/domain routing in front of frontend, for example Caddy, Traefik, or cloud load balancer;
-- add smoke tests after deploy;
-- split frontend bundle to remove the current Vite chunk-size warning.
+- add external uptime monitoring for `/api/health`;
+- add centralized logs and metrics for production.
 
 ## Test Layout
 

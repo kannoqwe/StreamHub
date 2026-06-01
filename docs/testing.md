@@ -1,13 +1,15 @@
 # Testing
 
-Tests are kept outside production source files. Backend unit tests live under:
+Tests are kept outside production source files. Backend tests live under:
 
 ```text
 apps/backend/test/unit
+apps/backend/test/integration
 ```
 
 Current layout:
 
+- `integration` - HTTP-level checks for app wiring and health/readiness behavior.
 - `auth` - authentication and refresh-token behavior.
 - `chat` - chat ingest use cases.
 - `follow` - follow/unfollow service invariants.
@@ -19,7 +21,19 @@ Current layout:
 Run backend unit tests:
 
 ```bash
-pnpm --filter @streamhub/api exec jest --runInBand
+pnpm --filter @streamhub/api test:unit
+```
+
+Run backend integration tests:
+
+```bash
+pnpm --filter @streamhub/api test:integration
+```
+
+Run all backend tests:
+
+```bash
+pnpm --filter @streamhub/api test
 ```
 
 Run backend lint and build:
@@ -32,7 +46,7 @@ pnpm --filter @streamhub/api build
 Run the full local backend check:
 
 ```bash
-pnpm --filter @streamhub/api exec jest --runInBand
+pnpm --filter @streamhub/api test
 pnpm --filter @streamhub/api lint
 pnpm --filter @streamhub/api build
 ```
@@ -93,11 +107,16 @@ Current backend unit coverage includes:
 - follow/unfollow counters and duplicate handling;
 - chat ingest deduplication, history enqueue, and broadcast flow.
 
+Current backend integration coverage includes:
+
+- `/health` liveness without dependency checks;
+- `/ready` readiness with PostgreSQL and Redis dependency status;
+- `/ready` failure response when a dependency is unavailable.
+
 ## Next Tests To Add
 
 Recommended next steps:
 
 - backend integration tests for auth login -> refresh -> logout -> revoked refresh;
 - backend integration tests for SRS publish hook -> active stream page -> unpublish;
-- edge Go tests for origin validation and HTTP auth verifier behavior;
-- Docker Compose smoke tests for frontend, backend, edge, and SRS startup.
+- Docker Compose smoke tests for full frontend/backend/edge/SRS startup.
