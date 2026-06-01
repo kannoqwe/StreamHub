@@ -1,25 +1,47 @@
 import { AuthService } from './auth.service';
+import { Test } from '@nestjs/testing';
+import { UserService } from '@modules/user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { StreamService } from '@modules/stream/stream.service';
+import { RedisService } from '@modules/redis/redis.service';
 
 describe('AuthService refresh revocation', () => {
-    const users = {};
-    const jwt = {
+    let service: AuthService;
+
+    type ConfigServiceMock = {
+        get: jest.Mock<string | undefined, [string]>;
+    };
+
+    const jwt: jest.Mocked<Pick<JwtService, 'verifyAsync' | 'signAsync'>> = {
         verifyAsync: jest.fn(),
         signAsync: jest.fn(),
     };
-    const config = {
+    const config: ConfigServiceMock = {
         get: jest.fn((key: string) => {
             if (key === 'jwt.refreshSecret') return 'refresh-secret';
             return undefined;
         }),
     };
-    const stream = {};
-    const redis = {
+    const redis: jest.Mocked<Pick<RedisService, 'set' | 'get'>> = {
         set: jest.fn(),
         get: jest.fn(),
     };
 
-    beforeEach(() => {
+    beforeEach(async () => {
         jest.clearAllMocks();
+        const moduleRef = await Test.createTestingModule({
+            providers: [
+                AuthService,
+                { provide: UserService, useValue: {} },
+                { provide: JwtService, useValue: jwt },
+                { provide: ConfigService, useValue: config },
+                { provide: StreamService, useValue: {} },
+                { provide: RedisService, useValue: redis },
+            ],
+        }).compile();
+
+        service = moduleRef.get(AuthService);
     });
 
     it('stores a revoked refresh token until token expiry on logout', async () => {
@@ -30,14 +52,6 @@ describe('AuthService refresh revocation', () => {
             jti: 'refresh-id',
             exp,
         });
-
-        const service = new AuthService(
-            users as never,
-            jwt as never,
-            config as never,
-            stream as never,
-            redis as never,
-        );
 
         await service.logout('refresh-token');
 
