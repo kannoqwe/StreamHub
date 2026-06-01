@@ -18,6 +18,7 @@
 
 - `apps/frontend` - React + Vite web client
 - `apps/backend` - NestJS API (Prisma, PostgreSQL, Redis, NATS, Scylla)
+- `apps/backend/test` - backend unit tests grouped by domain
 - `apps/edge` - Go edge service for realtime/WebSocket flow
 - `apps/srs` - SRS config for RTMP/HLS
 - `packages/shared` - shared models/contracts used across apps
@@ -33,6 +34,7 @@
 ## Prerequisites
 
 - Docker Desktop (or Docker Engine) with Compose
+- Node.js 22 and pnpm 10.22.0 for local checks
 - Git
 
 ## Quick Start (Docker)
@@ -56,12 +58,64 @@ cp .env.example .env
 docker compose up --build
 ```
 
-4. Open apps:
+4. Apply the Prisma schema to the local Postgres database:
+
+```bash
+docker compose exec backend npx prisma db push
+```
+
+This project does not run Prisma schema changes automatically on container start. Run this after creating a fresh database volume or after changing `apps/backend/prisma/schema.prisma`.
+
+5. Open apps:
 
 - Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:3000`
 - Edge WS: `ws://localhost:8081/ws`
 - SRS HTTP: `http://localhost:8080`
+
+## Development Checks
+
+Install dependencies:
+
+```bash
+pnpm install --frozen-lockfile
+```
+
+Generate Prisma client:
+
+```bash
+pnpm --filter @streamhub/api prisma:generate
+```
+
+Run backend unit tests:
+
+```bash
+pnpm --filter @streamhub/api exec jest --runInBand
+```
+
+Run backend checks:
+
+```bash
+pnpm --filter @streamhub/api lint
+pnpm --filter @streamhub/api build
+```
+
+Run frontend checks:
+
+```bash
+pnpm --filter @streamhub/web lint
+pnpm --filter @streamhub/web build
+```
+
+Run edge checks:
+
+```bash
+cd apps/edge
+go test ./...
+go build ./cmd/edge
+```
+
+Backend tests live in `apps/backend/test`, not beside production files in `src`. See `docs/testing.md` for the test layout and typing rules.
 
 ## Screenshots
 
@@ -80,6 +134,11 @@ docker compose up --build
 ## Environment Variables
 
 Use `.env.example` as a base and update values for your environment.
+
+## Documentation
+
+- `docs/testing.md` - backend test structure and typed mock rules.
+- `docs/ci-cd.md` - GitHub Actions, image publishing, and deployment flow.
 
 ## License
 

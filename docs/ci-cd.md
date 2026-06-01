@@ -38,7 +38,7 @@ Jobs:
    - installs dependencies with pnpm;
    - generates Prisma client;
    - lints backend;
-   - runs backend Jest tests;
+   - runs backend Jest tests from `apps/backend/test`;
    - builds backend;
    - lints frontend;
    - builds frontend.
@@ -200,6 +200,24 @@ The deploy workflow sets:
 - `GHCR_REPOSITORY=ghcr.io/<owner>/<repo>`
 - `IMAGE_TAG=<workflow input>`
 
+## Database Schema
+
+The current Docker Compose setup does not run Prisma schema changes automatically.
+
+For local Docker development, run this after creating a fresh database volume or changing `apps/backend/prisma/schema.prisma`:
+
+```bash
+docker compose exec backend npx prisma db push
+```
+
+For production, do not rely on the backend container startup to mutate the database schema. Add an explicit migration/schema step to the deploy process before routing traffic to a new backend version.
+
+Current baseline:
+
+- local development uses `prisma db push`;
+- production deploy documentation assumes you run schema changes deliberately;
+- a future improvement should add a dedicated migration job or switch to Prisma migrations.
+
 ## SRS Hook Secret
 
 SRS needs the same ingest hook secret as backend.
@@ -266,8 +284,19 @@ This is a working baseline, not a full enterprise deployment platform.
 
 Known follow-ups:
 
-- add database migration step before backend starts;
+- add a dedicated database migration/schema step before backend starts;
 - add healthcheck endpoints for backend and edge;
 - put TLS/domain routing in front of frontend, for example Caddy, Traefik, or cloud load balancer;
 - add smoke tests after deploy;
 - split frontend bundle to remove the current Vite chunk-size warning.
+
+## Test Layout
+
+Backend tests live under `apps/backend/test`.
+
+See `docs/testing.md` for:
+
+- unit test folder structure;
+- typed mock rules;
+- commands for local verification;
+- recommended next integration and smoke tests.
