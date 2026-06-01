@@ -47,8 +47,11 @@ jobs:
       - name: Lint backend
         run: pnpm --filter @streamhub/api lint
 
-      - name: Test backend
-        run: pnpm --filter @streamhub/api exec jest --runInBand
+      - name: Test backend unit
+        run: pnpm --filter @streamhub/api test:unit
+
+      - name: Test backend integration
+        run: pnpm --filter @streamhub/api test:integration
 
       - name: Build backend
         run: pnpm --filter @streamhub/api build
