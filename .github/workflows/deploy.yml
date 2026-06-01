@@ -61,7 +61,14 @@ jobs:
             GHCR_REPOSITORY="$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
             export GHCR_REPOSITORY
             export IMAGE_TAG
+            export FRONTEND_PORT="$(grep -E '^FRONTEND_PORT=' .env | tail -n 1 | cut -d '=' -f 2- || true)"
+            FRONTEND_PORT="${FRONTEND_PORT:-80}"
 
             docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up migrate
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose -f docker-compose.prod.yml ps
+            curl --fail --silent --show-error --retry 20 --retry-connrefused --retry-delay 3 "http://localhost:${FRONTEND_PORT}/" >/dev/null
+            curl --fail --silent --show-error --retry 20 --retry-connrefused --retry-delay 3 "http://localhost:${FRONTEND_PORT}/api/health" >/dev/null
+            curl --fail --silent --show-error --retry 20 --retry-connrefused --retry-delay 3 "http://localhost:${FRONTEND_PORT}/api/ready" >/dev/null
             docker image prune -f
