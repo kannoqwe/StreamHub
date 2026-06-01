@@ -59,10 +59,8 @@ func NewServer(cfg config.Config, logger *log.Logger) (*Server, error) {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ws", handler.ServeWS)
-	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ok"))
-	})
+	mux.HandleFunc("/health", handleHealth)
+	mux.HandleFunc("/ready", handleReady)
 
 	httpServer := &http.Server{
 		Addr:              cfg.HTTPAddr,
