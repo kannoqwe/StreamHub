@@ -1,4 +1,4 @@
-import { StreamService } from './stream.service';
+import { StreamService } from '@modules/stream/stream.service';
 import { Test } from '@nestjs/testing';
 import { StreamLifecycleService } from '@modules/stream/services/lifecycle.service';
 import { StreamPageService } from '@modules/stream/services/page.service';

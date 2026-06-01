@@ -2,7 +2,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { StreamService } from '@modules/stream/stream.service';
-import { IngestController } from './ingest.controller';
+import { IngestController } from '@modules/ingest/ingest.controller';
 
 describe('IngestController', () => {
     let controller: IngestController;

@@ -1,4 +1,4 @@
-import { AuthService } from './auth.service';
+import { AuthService } from '@modules/auth/auth.service';
 import { Test } from '@nestjs/testing';
 import { UserService } from '@modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
