@@ -27,5 +27,26 @@ export default defineConfig(() => {
                 '@types': resolve(__dirname, 'src/types/index.ts'),
             },
         },
+        build: {
+            rollupOptions: {
+                output: {
+                    manualChunks(id) {
+                        if (!id.includes('node_modules')) return;
+                        if (id.includes('video.js')) return 'video';
+                        if (id.includes('@heroicons') || id.includes('react-icons')) {
+                            return 'icons';
+                        }
+                        if (
+                            id.includes('react') ||
+                            id.includes('react-dom') ||
+                            id.includes('react-router-dom')
+                        ) {
+                            return 'react';
+                        }
+                        return 'vendor';
+                    },
+                },
+            },
+        },
     };
 });
