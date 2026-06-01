@@ -15,6 +15,7 @@ export const validationSchema = Joi.object({
     NATS_URL: Joi.string().uri().required(),
 
     FRONTEND_URL: Joi.string().uri().default('http://localhost:5173'),
+    FRONTEND_ALLOWED_ORIGINS: Joi.string().optional(),
 
     REDIS_HOST: Joi.string().required(),
     REDIS_PORT: Joi.number().default(6379),

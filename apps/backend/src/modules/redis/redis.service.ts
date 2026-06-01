@@ -153,4 +153,8 @@ export class RedisService implements OnModuleDestroy {
         const res = await this.redis.set(key, value, 'EX', ttlSeconds, 'NX');
         return res === 'OK';
     }
+
+    async ping(): Promise<string> {
+        return this.redis.ping();
+    }
 }

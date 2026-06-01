@@ -13,6 +13,7 @@ import { RedisModule } from '@modules/redis/redis.module';
 import { FollowModule } from '@modules/follow/follow.module';
 import { IngestModule } from '@modules/ingest/ingest.module';
 import { ChatModule } from '@modules/chat/chat.module';
+import { HealthModule } from '@modules/health/health.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { ChatModule } from '@modules/chat/chat.module';
         IngestModule,
         ChatModule,
         FollowModule,
+        HealthModule,
     ],
     providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

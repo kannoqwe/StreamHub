@@ -54,5 +54,13 @@ export default () => ({
 
     frontend: {
         url: process.env.FRONTEND_URL || 'http://localhost:5173',
+        allowedOrigins: (
+            process.env.FRONTEND_ALLOWED_ORIGINS ||
+            process.env.FRONTEND_URL ||
+            'http://localhost:5173'
+        )
+            .split(',')
+            .map((origin) => origin.trim())
+            .filter(Boolean),
     },
 });
