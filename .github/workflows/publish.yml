@@ -1,9 +1,14 @@
 name: Publish Images
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
     branches:
       - main
+  push:
     tags:
       - "v*.*.*"
   workflow_dispatch:
@@ -23,6 +28,7 @@ jobs:
   publish:
     name: Build and push ${{ matrix.service.name }}
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
 
     strategy:
       fail-fast: false
@@ -38,6 +44,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
@@ -64,6 +72,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=ref,event=branch
+            type=raw,value=main,enable=${{ github.event_name == 'workflow_run' }}
             type=sha,prefix=sha-
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}

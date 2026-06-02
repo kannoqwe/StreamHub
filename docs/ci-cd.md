@@ -18,10 +18,13 @@ The intended flow is:
 1. You push a branch or open a pull request.
 2. `CI` runs lint, tests, builds, and Docker image build checks.
 3. You merge to `main`.
-4. `Publish Images` builds production Docker images and pushes them to GitHub Container Registry.
-5. You run `Deploy` manually when you want the VPS to pull a specific image tag and restart.
+4. `CI` runs again on `main`.
+5. If `CI` succeeds, `Publish Images` builds production Docker images and pushes them to GitHub Container Registry.
+6. If publishing succeeds, `Deploy` connects to the VPS, runs migrations, restarts services, and performs smoke checks.
 
-Manual deployment is intentional. It gives you a clear checkpoint before replacing the running app.
+Deployment is automatic for `main`, but it is still gated. If tests, lint, builds, Docker image publishing, migrations, or smoke checks fail, the pipeline stops.
+
+Manual deployment is still available for rollbacks or redeploying a specific image tag.
 
 ## CI Workflow
 
@@ -62,7 +65,7 @@ File: `.github/workflows/publish.yml`
 
 Runs on:
 
-- push to `main`;
+- successful completion of `CI` on `main`;
 - tags like `v1.2.0`;
 - manual run through GitHub Actions.
 
@@ -84,7 +87,10 @@ For production, prefer deploying `sha-<commit>` or a version tag. `main` is conv
 
 File: `.github/workflows/deploy.yml`
 
-Runs only manually through GitHub Actions.
+Runs on:
+
+- successful completion of `Publish Images` on `main`;
+- manual run through GitHub Actions.
 
 It:
 
@@ -107,7 +113,9 @@ curl --fail --retry 20 "http://localhost:${FRONTEND_PORT}/api/ready"
 docker image prune -f
 ```
 
-The deploy workflow has one input:
+Automatic deployment uses the moving `main` image tag.
+
+Manual deployment has one input:
 
 - `image_tag`: the Docker tag to deploy, for example `main`, `sha-abc1234`, or `1.2.0`.
 
@@ -262,27 +270,24 @@ Normal development:
 3. Open pull request.
 4. Wait for `CI` to pass.
 5. Merge to `main`.
-
-Publish:
-
-1. Merge to `main`.
-2. `Publish Images` runs automatically.
-3. Check GitHub `Actions` and `Packages`.
-
-Deploy:
-
-1. Open GitHub `Actions`.
-2. Choose `Deploy`.
-3. Click `Run workflow`.
-4. Enter `image_tag`, usually `main` at first.
-5. Watch logs.
-6. SSH into server and check:
+6. `CI` runs on `main`.
+7. If `CI` passes, `Publish Images` runs.
+8. If image publishing passes, `Deploy` runs.
+9. Watch GitHub Actions logs and check production:
 
 ```bash
 cd /opt/streamhub
 docker compose -f docker-compose.prod.yml ps
 docker compose -f docker-compose.prod.yml logs -f backend
 ```
+
+Manual deployment:
+
+1. Open GitHub `Actions`.
+2. Choose `Deploy`.
+3. Click `Run workflow`.
+4. Enter `image_tag`, for example `main`, `sha-abc1234`, or `1.2.0`.
+5. Watch logs.
 
 ## Rollback
 
