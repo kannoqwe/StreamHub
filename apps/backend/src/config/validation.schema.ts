@@ -28,5 +28,5 @@ export const validationSchema = Joi.object({
     INGEST_HOOK_SECRET: Joi.string().min(16).optional(),
 
     SRS_HLS_BASE_URL: Joi.string().uri().default('http://srs:8080'),
-    SRS_HLS_PATH: Joi.string().default('/hls'),
+    SRS_HLS_PATH: Joi.string().default('/live'),
 });

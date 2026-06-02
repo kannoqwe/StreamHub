@@ -24,7 +24,7 @@ export default () => ({
 
     srs: {
         hlsBaseUrl: process.env.SRS_HLS_BASE_URL || 'http://srs:8080',
-        hlsPath: process.env.SRS_HLS_PATH || '/hls',
+        hlsPath: process.env.SRS_HLS_PATH || '/live',
     },
 
     jwt: {

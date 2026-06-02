@@ -32,7 +32,7 @@ describe('StreamService HLS proxy', () => {
     const config: ConfigServiceMock = {
         get: jest.fn((key: string) => {
             if (key === 'srs.hlsBaseUrl') return 'http://srs:8080';
-            if (key === 'srs.hlsPath') return '/hls';
+            if (key === 'srs.hlsPath') return '/live';
             return undefined;
         }),
     };
@@ -81,7 +81,7 @@ describe('StreamService HLS proxy', () => {
         const result = await service.getHlsAsset(10, 'index.m3u8');
 
         expect(fetchMock).toHaveBeenCalledWith(
-            'http://srs:8080/hls/live_private_secret.m3u8',
+            'http://srs:8080/live/live_private_secret.m3u8',
         );
         expect(result.body).not.toContain('/stream/hls/10/');
         expect(result.body).not.toContain('live_private_secret');
@@ -126,11 +126,11 @@ describe('StreamService HLS proxy', () => {
 
         expect(fetchMock).toHaveBeenNthCalledWith(
             1,
-            'http://srs:8080/hls/live_private_secret.m3u8',
+            'http://srs:8080/live/live_private_secret.m3u8',
         );
         expect(fetchMock).toHaveBeenNthCalledWith(
             2,
-            'http://srs:8080/hls/live_private_secret-0.ts',
+            'http://srs:8080/live/live_private_secret-0.ts',
         );
         expect(result.body).toEqual(Buffer.from('segment'));
         expect(redis.set).toHaveBeenCalledWith(
@@ -164,7 +164,7 @@ describe('StreamService HLS proxy', () => {
         const result = await service.getHlsAsset(10, 'variant-token');
 
         expect(fetchMock).toHaveBeenCalledWith(
-            'http://srs:8080/hls/live_private_secret.m3u8?hls_ctx=abc123',
+            'http://srs:8080/live/live_private_secret.m3u8?hls_ctx=abc123',
         );
         expect(result.contentType).toBe('application/vnd.apple.mpegurl');
         expect(result.body).not.toContain('live_private_secret');
