@@ -3,22 +3,11 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { PrismaService } from '@modules/prisma/prisma.service';
 import { RedisService } from '@modules/redis/redis.service';
 import { Response } from 'express';
-
-type HealthResponse = {
-    status: DependencyStatus;
-    service: 'api';
-    timestamp: string;
-    uptime: number;
-};
-
-type DependencyStatus = 'ok' | 'error';
-
-type ReadinessResponse = HealthResponse & {
-    dependencies: {
-        postgres: DependencyStatus;
-        redis: DependencyStatus;
-    };
-};
+import {
+    HealthResponse,
+    ReadinessResponse,
+    DependencyStatus,
+} from './types/health.types';
 
 @SkipThrottle()
 @Controller()
