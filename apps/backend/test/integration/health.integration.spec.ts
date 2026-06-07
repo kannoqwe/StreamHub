@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { Server } from 'node:http';
 import { HealthController } from '@modules/health/health.controller';
+import { HealthService } from '@modules/health/health.service';
 import { PrismaService } from '@modules/prisma/prisma.service';
 import { RedisService } from '@modules/redis/redis.service';
 
@@ -29,6 +30,7 @@ describe('Health endpoints integration', () => {
         const moduleRef = await Test.createTestingModule({
             controllers: [HealthController],
             providers: [
+                HealthService,
                 { provide: PrismaService, useValue: prisma },
                 { provide: RedisService, useValue: redis },
             ],
