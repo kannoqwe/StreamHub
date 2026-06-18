@@ -83,10 +83,7 @@ export class StreamController {
         @Param('categoryName') categoryName: string,
         @Query('limit', new DefaultValuePipe(48), ParseIntPipe) limit: number,
     ): Promise<PublicStreamCardResponse[]> {
-        return this.streamService.getLiveStreamsByCategory(
-            categoryName,
-            limit,
-        );
+        return this.streamService.getLiveStreamsByCategory(categoryName, limit);
     }
 
     @SkipThrottle()

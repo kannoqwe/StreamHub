@@ -14,11 +14,10 @@ export const CategoryPage: React.FC = () => {
     );
     const [category, setCategory] = useState<Category | null>(null);
     const [streams, setStreams] = useState<Stream[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(Boolean(decodedCategoryName));
 
     useEffect(() => {
         if (!decodedCategoryName) {
-            setIsLoading(false);
             return;
         }
 
