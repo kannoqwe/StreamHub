@@ -6,6 +6,8 @@ import { LoginPage } from '@features/auth/LoginPage';
 import { RegisterPage } from '@features/auth/RegisterPage';
 import { StreamPage } from '@features/stream/StreamPage';
 import { ProfileSettingsPage } from '@features/settings/ProfileSettingsPage';
+import { BrowsePage } from '@features/browse/BrowsePage';
+import { CategoryPage } from '@features/browse/CategoryPage';
 import { useAuthStore } from '../stores/useAuthStore';
 
 export const AppRoutes = () => {
@@ -15,6 +17,8 @@ export const AppRoutes = () => {
         <Routes>
             <Route path="/" element={<MainLayout />}>
                 <Route index element={<HomePage />} />
+                <Route path="/browse" element={<BrowsePage />} />
+                <Route path="/browse/:categoryName" element={<CategoryPage />} />
 
                 <Route
                     path="/login"

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Category } from '@types';
 
 export const CategoryGrid: React.FC<{ categories: Category[] }> = ({
@@ -10,7 +11,11 @@ export const CategoryGrid: React.FC<{ categories: Category[] }> = ({
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {categories.map((category) => (
-                <div key={category.id} className="group cursor-pointer">
+                <Link
+                    key={category.id}
+                    to={`/browse/${encodeURIComponent(category.name)}`}
+                    className="group block"
+                >
                     <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-2 bg-zinc-800">
                         <img
                             src={category.image}
@@ -21,7 +26,7 @@ export const CategoryGrid: React.FC<{ categories: Category[] }> = ({
                     <h3 className="font-semibold text-sm dark:text-zinc-200 group-hover:text-accent-500">
                         {category.name}
                     </h3>
-                </div>
+                </Link>
             ))}
         </div>
     </section>

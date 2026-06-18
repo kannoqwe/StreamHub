@@ -20,9 +20,12 @@ export const useGlobalStore = create<GlobalState>((set) => ({
         set({ isLoading: true });
         try {
             const data = await StreamService.getRecommendedStreams();
-            set({ recommended: data, isLoading: false });
+            set({
+                recommended: Array.isArray(data) ? data : [],
+                isLoading: false,
+            });
         } catch {
-            set({ isLoading: false });
+            set({ recommended: [], isLoading: false });
         }
     },
 
@@ -30,9 +33,12 @@ export const useGlobalStore = create<GlobalState>((set) => ({
         set({ isLoading: true });
         try {
             const data = await StreamService.getFollowedStreams();
-            set({ followed: data, isLoading: false });
+            set({
+                followed: Array.isArray(data) ? data : [],
+                isLoading: false,
+            });
         } catch {
-            set({ isLoading: false });
+            set({ followed: [], isLoading: false });
         }
     },
 }));

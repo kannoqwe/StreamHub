@@ -13,25 +13,48 @@ export const StreamService = {
         const { data } = await $api.get<PublicStreamCardResponse[]>(
             '/stream/live',
         );
-        return data;
+        return Array.isArray(data) ? data : [];
     },
 
     async getFollowedStreams(): Promise<PublicStreamCardResponse[]> {
         const { data } = await $api.get<PublicStreamCardResponse[]>(
             '/stream/live/following',
         );
-        return data;
+        return Array.isArray(data) ? data : [];
     },
 
     async getCategories(): Promise<PublicCategoryResponse[]> {
         const { data } = await $api.get<PublicCategoryResponse[]>(
             '/stream/categories',
         );
-        return data;
+        return Array.isArray(data) ? data : [];
+    },
+
+    async getStreamsByCategory(
+        categoryName: string,
+    ): Promise<PublicStreamCardResponse[]> {
+        const { data } = await $api.get<PublicStreamCardResponse[]>(
+            `/stream/categories/${encodeURIComponent(categoryName)}/live`,
+            { params: { limit: 48 } },
+        );
+        return Array.isArray(data) ? data : [];
     },
 
     async getHomeFeed(): Promise<HomeFeedResponse> {
         const { data } = await $api.get<HomeFeedResponse>('/stream/home');
+        if (
+            !data ||
+            typeof data !== 'object' ||
+            !Array.isArray(data.streams) ||
+            !Array.isArray(data.categories)
+        ) {
+            return {
+                featuredStream: null,
+                streams: [],
+                categories: [],
+            };
+        }
+
         return data;
     },
 
