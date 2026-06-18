@@ -69,6 +69,16 @@ export class StreamService {
         return this.streamFeedService.getLiveStreams(limit);
     }
 
+    async getLiveStreamsByCategory(
+        categoryName: string,
+        limit: number,
+    ): Promise<PublicStreamCardResponse[]> {
+        return this.streamFeedService.getLiveStreamsByCategory(
+            categoryName,
+            limit,
+        );
+    }
+
     async getFollowedLiveStreams(
         userId: number,
         limit: number,

@@ -27,6 +27,21 @@ export class StreamFeedService {
         );
     }
 
+    async getLiveStreamsByCategory(
+        categoryName: string,
+        limit: number,
+    ): Promise<PublicStreamCardResponse[]> {
+        const safeLimit = this.normalizeLimit(limit, DEFAULT_STREAM_LIST_LIMIT);
+        const streams =
+            await this.streamRepository.findLiveStreamsByCategoryName(
+                categoryName,
+                safeLimit,
+            );
+        return streams.map((stream: PublicStreamSource) =>
+            this.toPublicStreamCard(stream),
+        );
+    }
+
     async getFollowedLiveStreams(
         userId: number,
         limit: number,

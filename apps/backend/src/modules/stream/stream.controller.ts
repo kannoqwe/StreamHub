@@ -77,6 +77,18 @@ export class StreamController {
         return this.streamService.getCategories();
     }
 
+    @Get('categories/:categoryName/live')
+    @HttpCode(HttpStatus.OK)
+    async getLiveStreamsByCategory(
+        @Param('categoryName') categoryName: string,
+        @Query('limit', new DefaultValuePipe(48), ParseIntPipe) limit: number,
+    ): Promise<PublicStreamCardResponse[]> {
+        return this.streamService.getLiveStreamsByCategory(
+            categoryName,
+            limit,
+        );
+    }
+
     @SkipThrottle()
     @Get('hls/:playbackId/:file')
     async proxyHls(
